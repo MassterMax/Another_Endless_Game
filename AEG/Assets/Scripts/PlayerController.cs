@@ -2,18 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : Creature
 {
-    [SerializeField] float swordOffset;
-    [SerializeField] float swordDistance;
-
     [SerializeField] float playerSpeed;
-    [SerializeField] SwordController sword;
+    [SerializeField] float playerHealth;
+    [SerializeField] float playerDamage;
+
     SpriteRenderer spriteRenderer;
     Animator animator;
     Vector2 direction;
     float dashTimer = 0f;
-    Vector2 dashDirection;
+
+    SpriteRenderer stickSpriteRenderer;
+    GameObject stick;
 
 
     Dictionary<KeyCode, Vector2> keyToVector = new Dictionary<KeyCode, Vector2>() {
@@ -28,6 +29,11 @@ public class PlayerController : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+
+        stick = transform.GetChild(0).gameObject;
+        stickSpriteRenderer = stick.GetComponent<SpriteRenderer>();
+
+        SetAttributes(playerHealth, playerDamage);
     }
 
     // Update is called once per frame
@@ -36,7 +42,7 @@ public class PlayerController : MonoBehaviour
         Move();
         Dash();
         Rotate();
-        Attack();
+        // Attack();
         HandleAnimation();
     }
 
@@ -72,7 +78,7 @@ public class PlayerController : MonoBehaviour
             dashTimer = 0.25f;
         }
     }
-
+    /*
     void Attack()
     {
         var dir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
@@ -95,7 +101,7 @@ public class PlayerController : MonoBehaviour
         {
             sword.OnAttack();
         }
-    }
+    }*/
 
     void Rotate()
     {
@@ -106,7 +112,15 @@ public class PlayerController : MonoBehaviour
         if (spriteRenderer.flipX != Mathf.Sign(dir.x) < 0)
         {
             spriteRenderer.flipX = !spriteRenderer.flipX;
+            RotateStick();
         }
+    }
+
+    void RotateStick()
+    {
+        stickSpriteRenderer.flipX = !stickSpriteRenderer.flipX;
+        stick.transform.localPosition *= -1;  // change x position
+        stick.transform.Rotate(0, 0, 90 * Mathf.Sign(-stick.transform.rotation.z), Space.Self);
     }
 
     void HandleAnimation()
