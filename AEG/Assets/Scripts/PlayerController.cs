@@ -105,7 +105,7 @@ public class PlayerController : Creature
 
     void Rotate()
     {
-        var dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
+        Vector2 dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
 
         //transform.localScale = new Vector3(Mathf.Sign(dir.x), 1, 1);
 
@@ -114,13 +114,28 @@ public class PlayerController : Creature
             spriteRenderer.flipX = !spriteRenderer.flipX;
             RotateStick();
         }
+
+        //dir = dir.normalized;
+        //print(dir);
+        var angle = Vector2.Angle(Vector2.right, dir);
+        //print("Angle (Pi)2: " + Vector2.Angle(dir, transform.right));
+        if (dir.y < 0)
+        {
+            angle = -angle;
+            if (dir.x < 0) angle = 360+angle;
+        }
+
+        print("Angle (180): " + angle);
+        print("Angle (Pi): " + angle * Mathf.Deg2Rad);
+        stick.transform.eulerAngles = new Vector3(0, 0, angle / 2 - 45);
+
     }
 
     void RotateStick()
     {
         stickSpriteRenderer.flipX = !stickSpriteRenderer.flipX;
         stick.transform.localPosition *= -1;  // change x position
-        stick.transform.Rotate(0, 0, 90 * Mathf.Sign(-stick.transform.rotation.z), Space.Self);
+        //stick.transform.Rotate(0, 0, 90 * Mathf.Sign(-stick.transform.rotation.z), Space.Self);
     }
 
     void HandleAnimation()
