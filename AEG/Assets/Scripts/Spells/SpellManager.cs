@@ -5,6 +5,9 @@ using UnityEngine;
 public class SpellManager : MonoBehaviour
 {
     private Drawing drawingManager;
+    private MonsterController monsterController;
+    private PlayerController player;
+
     private Dictionary<string, string> spellPrefixToSpell = new Dictionary<string, string>() {
         { "lightning", "lightning_1" },
         { "circle", "bubble1"} };
@@ -13,24 +16,42 @@ public class SpellManager : MonoBehaviour
     private void Awake()
     {
         drawingManager = FindObjectOfType<Drawing>();
+        monsterController = FindObjectOfType<MonsterController>();
+        player = FindObjectOfType<PlayerController>();
     }
 
-    public void CastSpell(string name)
+    public void CastSpell(string name) // todo do not cast if error is high
     {
         foreach (var el in spellPrefixToSpell)
         {
             if (name.StartsWith(el.Key))
             {
-                var coords = drawingManager.coords;  // todo maybe method that give us last coord
-                //Lightning lightning = 
-                GameObject spell = Instantiate(Resources.Load($"Prefabs/{el.Value}"), coords[coords.Count - 1], Quaternion.identity) as GameObject;
-                //print(spell);
-                //print(spell == null);
-                spell.GetComponent<ICastable>().CastSpell(coords[0], coords[coords.Count - 1], (coords[0] + coords[coords.Count - 1]) / 2);
-                //spell.CastSpell(coords[0], coords[coords.Count - 1], (coords[0] + coords[coords.Count - 1]) / 2);
+                var spellPrefab = Resources.Load($"Prefabs/{el.Value}");
+
+                GameObject spellObject = Instantiate(spellPrefab, drawingManager.GetLastPoint(), Quaternion.identity) as GameObject;
+                ICastable spell = spellObject.GetComponent<ICastable>();
+
+                // print(spell is SpellKnowMonsters);
+                // print(spell is Lightning);
+                SetSpellRequirements(spell);
+
+
+                spell.CastSpell(drawingManager.GetFirstPoint(), drawingManager.GetLastPoint(), drawingManager.GetMeanPoint());
                 return;
             }
         }
         Debug.LogWarning("unknown spell: " + name);
+    }
+
+    private void SetSpellRequirements(ICastable spell)
+    {
+        if (spell is SpellKnowMonsters)
+        {
+            ((SpellKnowMonsters)spell).SetMonsterController(monsterController);
+        }
+        if (spell is SpellKnowPlayer)
+        {
+            ((SpellKnowPlayer)spell).SetPlayer(player);
+        }
     }
 }

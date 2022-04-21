@@ -15,7 +15,7 @@ public class Zombie : Creature
     // Start is called before the first frame update
     void Start()
     {
-        SetAttributes(10, 1);
+        SetAttributes(10, 1, false);
         player = FindObjectOfType<PlayerController>();
         changeDirectionTimer = changeDirectonLimit;
     }

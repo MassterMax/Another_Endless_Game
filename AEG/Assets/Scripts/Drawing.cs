@@ -5,8 +5,31 @@ public class Drawing : MonoBehaviour
 {
     [SerializeField] Camera cam;
     [SerializeField] float minDistance = 10f;
-    public List<Vector2> coords = new List<Vector2>();
+    List<Vector2> coords = new List<Vector2>();
     LineRenderer lr;
+
+    public Vector2 GetFirstPoint()
+    {
+        return coords[0];
+    }
+
+    public Vector2 GetLastPoint()
+    {
+        return coords[coords.Count - 1];
+    }
+
+    public Vector2 GetMeanPoint()
+    {
+        float x = 0;
+        float y = 0;
+        foreach(var point in coords)
+        {
+            x += point.x;
+            y += point.y;
+        }
+
+        return new Vector2(x / coords.Count, y / coords.Count);
+    }
 
     private void Start()
     {

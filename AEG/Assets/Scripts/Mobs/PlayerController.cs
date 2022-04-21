@@ -12,6 +12,8 @@ public class PlayerController : Creature
     Animator animator;
     Vector2 direction;
     float dashTimer = 0f;
+    float invincibilityTime = 0f;
+    float invincibilityDuration = 1f;
 
     SpriteRenderer stickSpriteRenderer;
     GameObject stick;
@@ -33,7 +35,7 @@ public class PlayerController : Creature
         stick = transform.GetChild(0).gameObject;
         stickSpriteRenderer = stick.GetComponent<SpriteRenderer>();
 
-        SetAttributes(playerHealth, playerDamage);
+        SetAttributes(playerHealth, playerDamage, true);
     }
 
     // Update is called once per frame
@@ -72,66 +74,31 @@ public class PlayerController : Creature
 
     void Dash()
     {
-        // if can dash check
         if (Input.GetKeyDown(KeyCode.Space) && dashTimer == 0)
         {
             dashTimer = 0.25f;
         }
     }
-    /*
-    void Attack()
-    {
-        var dir = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
-        dir.z = 0;
-        //Debug.Log("after" + dir);
-
-        dir = dir.normalized;
-        float a = Mathf.Acos(dir.x);
-        if (dir.y < 0) a = -a;
-        // if (dir.x < 0) a = a - Mathf.PI;
-
-        sword.gameObject.transform.rotation = new Quaternion();
-
-        sword.gameObject.transform.localPosition = dir * swordDistance + Vector3.up * swordOffset + dir * sword.getAnimationBias();
-        sword.gameObject.transform.Rotate(new Vector3(0, 0, -90 + a * Mathf.Rad2Deg), Space.Self);
-        //sword.gameObject.transform.RotateAround(newSwordPos - dir * 0.5f, new Vector3(0, 0, 1), -45); 
-
-
-        if (Input.GetKey(KeyCode.Mouse0))
-        {
-            sword.OnAttack();
-        }
-    }*/
 
     void Rotate()
     {
         Vector2 dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
 
-        //transform.localScale = new Vector3(Mathf.Sign(dir.x), 1, 1);
-
         if (spriteRenderer.flipX != Mathf.Sign(dir.x) < 0)
         {
             spriteRenderer.flipX = !spriteRenderer.flipX;
-            RotateStick();
+            FlipStick();
         }
 
-        //dir = dir.normalized;
-        //print(dir);
-        var angle = Vector2.Angle(Vector2.right, dir);
-        //print("Angle (Pi)2: " + Vector2.Angle(dir, transform.right));
-        if (dir.y < 0)
-        {
-            angle = -angle;
-            if (dir.x < 0) angle = 360 + angle;
-        }
+        var angle = VectorToAngle(dir);
 
-        print("Angle (180): " + angle);
-        print("Angle (Pi): " + angle * Mathf.Deg2Rad);
+        //print("Angle (180): " + angle);
+        //print("Angle (Pi): " + angle * Mathf.Deg2Rad);
         stick.transform.eulerAngles = new Vector3(0, 0, angle / 2 - 45);
 
     }
 
-    void RotateStick()
+    void FlipStick()
     {
         stickSpriteRenderer.flipX = !stickSpriteRenderer.flipX;
         stick.transform.localPosition *= -1;  // change x position
@@ -141,5 +108,59 @@ public class PlayerController : Creature
     void HandleAnimation()
     {
         animator.SetBool("isRun", direction.sqrMagnitude != 0);
+    }
+
+    float VectorToAngle(Vector2 vector)
+    {
+        var angle = Vector2.Angle(Vector2.right, vector);
+        if (vector.y < 0)
+        {
+            angle = -angle;
+            if (vector.x < 0) angle = 360 + angle;
+        }
+        return angle;
+    }
+
+    public override void TakeDamage(float damage)
+    {
+        if (Time.time - invincibilityTime > invincibilityDuration)  // todo make as a parameter
+        {
+            invincibilityTime = Time.time;
+
+            if (Protection)
+            {
+                Protection = false;
+                var circle = transform.GetComponentInChildren<Circle>(); // bye-bye
+                Destroy(circle.gameObject);
+                return;
+            }
+
+            base.TakeDamage(damage);
+            float dilation = 0.1f;
+            StartCoroutine(blinking((int)(invincibilityDuration / dilation / 2), dilation));
+        }
+    }
+
+
+    IEnumerator blinking(int times, float dilation)
+    {
+        for (var n = 0; n < times; n++)
+        {
+            spriteRenderer.enabled = true;
+            yield return new WaitForSeconds(dilation);
+            spriteRenderer.enabled = false;
+            yield return new WaitForSeconds(dilation);
+        }
+        spriteRenderer.enabled = true;
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)  // todo Am I using correct Rigidboy settings???
+    {
+        var creature = collision.gameObject.GetComponent<Creature>();
+        if (!creature || creature.Friendly) return;
+
+        TakeDamage(creature.Damage);
+
+        //Debug.Log(collision.gameObject.name + " collided " + gameObject.name + ": " + Time.time);
     }
 }

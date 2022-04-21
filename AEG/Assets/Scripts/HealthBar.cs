@@ -8,7 +8,7 @@ public class HealthBar : MonoBehaviour
     //Creature parentCreature;
     Slider slider;
 
-    public void Setup(float currentHealth, float maxHealth)
+    public void Setup(float currentHealth, float maxHealth, bool friendly)
     {
         //var canvas = transform.parent;
         //canvas.GetComponent<Canvas>().worldCamera = FindObjectOfType<Camera>(); // todo wtf
@@ -21,6 +21,13 @@ public class HealthBar : MonoBehaviour
         slider = GetComponent<Slider>();
         slider.value = currentHealth;
         slider.maxValue = maxHealth;
+
+        if (friendly)
+        {
+            // todo this is very creepy
+            slider.fillRect.gameObject.GetComponent<Image>().color = Color.green; 
+            slider.GetComponentInParent<Canvas>().sortingOrder = 1;
+        }
     }
 
     public void SetHealth(float value)
