@@ -122,7 +122,7 @@ public class PlayerController : Creature
         if (dir.y < 0)
         {
             angle = -angle;
-            if (dir.x < 0) angle = 360+angle;
+            if (dir.x < 0) angle = 360 + angle;
         }
 
         print("Angle (180): " + angle);
