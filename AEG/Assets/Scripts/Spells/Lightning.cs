@@ -6,6 +6,7 @@ public class Lightning : SpellKnowMonsters
 {
     float damageRadius = 1f;
 
+
     public override void CastSpell(Vector2 start, Vector2 end, Vector2 center)
     {
         print("casting lightning...");
@@ -33,6 +34,11 @@ public class Lightning : SpellKnowMonsters
         {
             monster.TakeDamage(1);
         }
+    }
+
+    public override float GetManaCost()
+    {
+        return 10;
     }
 
     void Start()

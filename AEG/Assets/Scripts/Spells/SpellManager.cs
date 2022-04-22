@@ -27,9 +27,16 @@ public class SpellManager : MonoBehaviour
             if (name.StartsWith(el.Key))
             {
                 var spellPrefab = Resources.Load($"Prefabs/{el.Value}");
+                float cost = (((GameObject)spellPrefab).GetComponent<Spell>().GetManaCost());
+                if (!player.SpendMana(cost))
+                {
+                    Debug.Log("not enough mana!");
+                    return;
+                }
+                //print(spellPrefab);
 
                 GameObject spellObject = Instantiate(spellPrefab, drawingManager.GetLastPoint(), Quaternion.identity) as GameObject;
-                ICastable spell = spellObject.GetComponent<ICastable>();
+                Spell spell = spellObject.GetComponent<Spell>();
 
                 // print(spell is SpellKnowMonsters);
                 // print(spell is Lightning);
@@ -43,7 +50,7 @@ public class SpellManager : MonoBehaviour
         Debug.LogWarning("unknown spell: " + name);
     }
 
-    private void SetSpellRequirements(ICastable spell)
+    private void SetSpellRequirements(Spell spell)
     {
         if (spell is SpellKnowMonsters)
         {

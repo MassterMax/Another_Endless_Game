@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class Creature : MonoBehaviour
 {
-    HealthBar healthBar;
+    Bar healthBar;
 
     private float maxHealth; // todo
     private float health;
@@ -22,7 +22,7 @@ public abstract class Creature : MonoBehaviour
     public virtual void TakeDamage(float damage)
     {
         health -= damage;
-        healthBar.SetHealth(health);
+        healthBar.SetValue(health);
         if (health <= 0)
         {
             Destroy(gameObject);  // todo maybe add getter/setter
@@ -42,8 +42,13 @@ public abstract class Creature : MonoBehaviour
 
         GameObject healthBarObject = Instantiate(Resources.Load("Prefabs/HealthCanvas"), transform.position, Quaternion.identity) as GameObject;
         healthBarObject.transform.parent = transform;
-        healthBar = healthBarObject.GetComponentInChildren<HealthBar>();
-        healthBar.Setup(health, maxHealth, friendly);
+        healthBar = healthBarObject.GetComponentInChildren<Bar>();
+        healthBar.Setup(health, maxHealth);
+    }
+
+    internal void SetStyle(string colorName = "red", int sorterOrder = 0)
+    {
+        healthBar.SetStyle(colorName, sorterOrder);
     }
 
     /*

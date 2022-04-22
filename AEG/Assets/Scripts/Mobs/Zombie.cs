@@ -16,6 +16,7 @@ public class Zombie : Creature
     void Start()
     {
         SetAttributes(10, 1, false);
+        SetStyle();
         player = FindObjectOfType<PlayerController>();
         changeDirectionTimer = changeDirectonLimit;
     }

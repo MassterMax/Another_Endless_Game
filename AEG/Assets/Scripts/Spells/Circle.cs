@@ -22,6 +22,11 @@ public class Circle : SpellKnowPlayer
         }
     }
 
+    public override float GetManaCost()
+    {
+        return 35;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
