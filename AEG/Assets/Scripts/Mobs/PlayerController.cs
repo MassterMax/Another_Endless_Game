@@ -8,7 +8,7 @@ public class PlayerController : Creature
     [SerializeField] float playerHealth;
     [SerializeField] float playerDamage;
 
-    SpriteRenderer spriteRenderer;
+    SpriteRenderer playerSpriteRenderer;
     Animator animator;
     Vector2 direction;
 
@@ -19,9 +19,11 @@ public class PlayerController : Creature
     float invincibilityTime = 0f;
     float invincibilityDuration = 1f;
 
+    // todo maybe separate mana as entity
+    Bar manaBar;
     float mana = 100;  // todo change
     float maxMana = 100;
-    Bar manaBar;
+    float manaRegen = 3f;
 
     Dictionary<KeyCode, Vector2> keyToVector = new Dictionary<KeyCode, Vector2>() {
         { KeyCode.W, Vector2.up},
@@ -30,43 +32,46 @@ public class PlayerController : Creature
         { KeyCode.A, Vector2.left }
     };
 
-    // Start is called before the first frame update
     void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        playerSpriteRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
 
         stick = transform.GetChild(0).gameObject;
         stickSpriteRenderer = stick.GetComponent<SpriteRenderer>();
 
         SetAttributes(playerHealth, playerDamage, true);
-        SetStyle("green", 1);
-
-        // todo make separated function
-        var bars = FindObjectsOfType<Bar>();
-        foreach(var bar in bars)
-        {
-            //print("found: " + bar.name);
-            if (bar.name.Equals("ManaBar"))  // :(
-            {
-                //print("found!!!!!!!!");
-                manaBar = bar;
-                break;
-            }
-        }
-        manaBar.Setup(mana, maxMana);
-
-        //mana = new ManaPool()
+        SetBarStyle("green", 1);
+        SetupManaBar();
     }
 
-    // Update is called once per frame
     void Update()
     {
         Move();
         Dash();
         Rotate();
-        // Attack();
+        RegenMana();
         HandleAnimation();
+    }
+
+    void SetupManaBar()
+    {
+        var bars = FindObjectsOfType<Bar>();
+        foreach (var bar in bars)
+        {
+            if (bar.name.Equals("ManaBar"))  // :(
+            {
+                manaBar = bar;
+                break;
+            }
+        }
+        manaBar.Setup(mana, maxMana);
+    }
+
+    void RegenMana()
+    {
+        mana = Mathf.Min(mana + manaRegen * Time.deltaTime, maxMana);
+        manaBar.SetValue(mana);
     }
 
 
@@ -105,25 +110,20 @@ public class PlayerController : Creature
     {
         Vector2 dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
 
-        if (spriteRenderer.flipX != Mathf.Sign(dir.x) < 0)
+        if (playerSpriteRenderer.flipX != Mathf.Sign(dir.x) < 0)
         {
-            spriteRenderer.flipX = !spriteRenderer.flipX;
+            playerSpriteRenderer.flipX = !playerSpriteRenderer.flipX;
             FlipStick();
         }
 
         var angle = VectorToAngle(dir);
-
-        //print("Angle (180): " + angle);
-        //print("Angle (Pi): " + angle * Mathf.Deg2Rad);
         stick.transform.eulerAngles = new Vector3(0, 0, angle / 2 - 45);
-
     }
 
     void FlipStick()
     {
         stickSpriteRenderer.flipX = !stickSpriteRenderer.flipX;
         stick.transform.localPosition *= -1;  // change x position
-        //stick.transform.Rotate(0, 0, 90 * Mathf.Sign(-stick.transform.rotation.z), Space.Self);
     }
 
     void HandleAnimation()
@@ -158,7 +158,7 @@ public class PlayerController : Creature
         float dilation = 0.1f;
         int times = (int)(invincibilityDuration / dilation / 2);
 
-        if (Time.time - invincibilityTime > invincibilityDuration)  // todo make as a parameter
+        if (Time.time - invincibilityTime > invincibilityDuration)
         {
             invincibilityTime = Time.time;
 
@@ -173,12 +173,12 @@ public class PlayerController : Creature
 
             base.TakeDamage(damage);
             
-            StartCoroutine(blinking(spriteRenderer, times, dilation));
+            StartCoroutine(blinking(playerSpriteRenderer, times, dilation));
         }
     }
 
 
-    IEnumerator blinking(SpriteRenderer spriteRenderer, int times, float dilation)
+    public IEnumerator blinking(SpriteRenderer spriteRenderer, int times, float dilation)
     {
         for (var n = 0; n < times; n++)
         {
@@ -196,25 +196,5 @@ public class PlayerController : Creature
         if (!creature || creature.Friendly) return;
 
         TakeDamage(creature.Damage);
-
-        //Debug.Log(collision.gameObject.name + " collided " + gameObject.name + ": " + Time.time);
     }
-
-
 }
-
-
-
-
-/*
-public struct ManaPool
-{
-    public ManaPool(float maxMana, float currentMana)
-    {
-        MaxMana = maxMana;
-        CurrentMana = currentMana;
-    }
-
-    public double MaxMana { get; }
-    public double CurrentMana { get; }
-}*/

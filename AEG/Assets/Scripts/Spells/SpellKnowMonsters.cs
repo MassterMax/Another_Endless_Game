@@ -10,4 +10,10 @@ public abstract class SpellKnowMonsters : Spell
     {
         this.monsterController = monsterController;
     }
+
+    public override void CastSpell(Vector2 start, Vector2 end, Vector2 center)
+    {
+        if (this.monsterController == null)
+            throw new System.ArgumentNullException("monster controller should be set before calling cast spell");
+    }
 }

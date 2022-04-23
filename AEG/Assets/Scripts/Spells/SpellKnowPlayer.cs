@@ -10,4 +10,10 @@ public abstract class SpellKnowPlayer : Spell
     {
         this.player = player;
     }
+
+    public override void CastSpell(Vector2 start, Vector2 end, Vector2 center)
+    {
+        if (this.player == null)
+            throw new System.ArgumentNullException("player should be set before calling cast spell");
+    }
 }

@@ -7,6 +7,10 @@ public class Drawing : MonoBehaviour
     [SerializeField] float minDistance = 10f;
     List<Vector2> coords = new List<Vector2>();
     LineRenderer lr;
+    Color defaultColor;
+
+    float lastPointTime = 0f;
+    float afterGestureDuration = 0.25f;  // duration of gesture on the screen when user stop drawing
 
     public Vector2 GetFirstPoint()
     {
@@ -34,6 +38,7 @@ public class Drawing : MonoBehaviour
     private void Start()
     {
         lr = GetComponent<LineRenderer>();
+        defaultColor = lr.startColor;
     }
 
     void Update()
@@ -43,11 +48,12 @@ public class Drawing : MonoBehaviour
             Vector2 newPos = Input.mousePosition;
             newPos = cam.ScreenToWorldPoint(newPos);
 
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (Input.GetKeyDown(KeyCode.Mouse0)) // reset line
             {
                 coords = new List<Vector2> { newPos };
                 lr.positionCount = 1;
                 lr.SetPosition(0, newPos);
+                SetColor(defaultColor);
             }
             else
             {
@@ -58,7 +64,21 @@ public class Drawing : MonoBehaviour
                     lr.positionCount += 1;
                     lr.SetPosition(lr.positionCount - 1, newPos);
                 }
+                lastPointTime = Time.time;
+            }
+        } else
+        {
+            if (lr.positionCount > 0 && Time.time - lastPointTime > afterGestureDuration)
+            {
+                coords.Clear();
+                lr.positionCount = 0;
             }
         }
+    }
+
+    public void SetColor(Color color)
+    {
+        lr.startColor = color;
+        lr.endColor = color;
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,10 +9,16 @@ public class SpellManager : MonoBehaviour
     private MonsterController monsterController;
     private PlayerController player;
 
+    // mapping from name of spell in gesture recogniser to spell prefab in resources
     private Dictionary<string, string> spellPrefixToSpell = new Dictionary<string, string>() {
         { "lightning", "lightning_1" },
         { "circle", "bubble1"} };
 
+    // maybe use this approach with manacost or create a script with constants?
+    private Dictionary<Type, Color> spellToColor = new Dictionary<Type, Color>() {
+        { typeof(Lightning), Color.white},
+        { typeof(Circle), new Color(0.4f, 0.6f, 1) }
+    };
 
     private void Awake()
     {
@@ -33,15 +40,11 @@ public class SpellManager : MonoBehaviour
                     Debug.Log("not enough mana!");
                     return;
                 }
-                //print(spellPrefab);
 
                 GameObject spellObject = Instantiate(spellPrefab, drawingManager.GetLastPoint(), Quaternion.identity) as GameObject;
                 Spell spell = spellObject.GetComponent<Spell>();
-
-                // print(spell is SpellKnowMonsters);
-                // print(spell is Lightning);
                 SetSpellRequirements(spell);
-
+                SetColorOfSpell(spell);
 
                 spell.CastSpell(drawingManager.GetFirstPoint(), drawingManager.GetLastPoint(), drawingManager.GetMeanPoint());
                 return;
@@ -60,5 +63,17 @@ public class SpellManager : MonoBehaviour
         {
             ((SpellKnowPlayer)spell).SetPlayer(player);
         }
+    }
+
+    private void SetColorOfSpell(Spell spell)
+    {
+        Type spellType = spell.GetType();
+        if (!spellToColor.ContainsKey(spellType))
+        {
+            Debug.LogError("the spell not set in colors!");
+            return;
+        }
+
+        drawingManager.SetColor(spellToColor[spellType]);
     }
 }

@@ -31,13 +31,15 @@ public class GestureRecognizer : MonoBehaviour
     private TwoDPoint[] reducedPoints;
     private GestureTemplates templates;
     private float tempTime = 0f;
+
+
     SpellManager spellManager;
-
-
+    Drawing drawing;
 
     private void Awake()
     {
         spellManager = FindObjectOfType<SpellManager>();
+        drawing = FindObjectOfType<Drawing>();
     }
 
     void Start()
@@ -148,13 +150,6 @@ public class GestureRecognizer : MonoBehaviour
         }
 
         if (templates == null) templates = new GestureTemplates();
-        /*
-        foreach(var gesture in templates.templates)
-        {
-            Debug.Log(gesture.GetName() + ": ");
-            foreach(var point in gesture.GetPoints())
-                Debug.Log("    " + point);
-        }*/
     }
 
 
@@ -244,7 +239,15 @@ public class GestureRecognizer : MonoBehaviour
             //DrawnGesture m = FindMatch(currentGesture, templates);
             var result = FindMatchAndDifference(currentGesture, templates);
             Debug.Log("best match: " + result.Key.GetName() + " difference: " + result.Value.ToString());
-            if (spellManager != null)
+
+
+            // call spell manager
+            if (result.Value > 2f)  // todo make as a parameter?
+            {
+                Debug.LogWarning("big error!");
+                drawing.SetColor(Color.black);
+            }
+            else if (spellManager != null)
             {
                 spellManager.CastSpell(result.Key.GetName());
             }
