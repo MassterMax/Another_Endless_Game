@@ -45,13 +45,12 @@ public class PlayerController : Creature
         SetupManaBar();
     }
 
-    void Update()
+    internal override void Update()
     {
-        Move();
+        base.Update();
         Dash();
         Rotate();
         RegenMana();
-        HandleAnimation();
     }
 
     void SetupManaBar()
@@ -75,7 +74,7 @@ public class PlayerController : Creature
     }
 
 
-    void Move()
+    internal override void Move()
     {
         if (dashTimer == 0)
         {
@@ -126,7 +125,7 @@ public class PlayerController : Creature
         stick.transform.localPosition *= -1;  // change x position
     }
 
-    void HandleAnimation()
+    internal override void HandleAnimation()
     {
         animator.SetBool("isRun", direction.sqrMagnitude != 0);
     }

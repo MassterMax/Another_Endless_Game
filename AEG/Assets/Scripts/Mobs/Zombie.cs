@@ -16,7 +16,7 @@ public class Zombie : Creature
 
     void Start()
     {
-        SetAttributes(10, 1, false);  // todo make one class with all start values
+        SetAttributes(5, 1, false);  // todo make one class with all start values
         SetBarStyle();
         player = FindObjectOfType<PlayerController>();
         changeDirectionTimer = changeDirectonLimit;
@@ -24,13 +24,14 @@ public class Zombie : Creature
         animator = GetComponent<Animator>();
     }
 
-    void Update()
+    internal override void Update()
     {
-        Move();
-        HandleAnimation();
+        base.Update();
+        // todo...
     }
 
-    void Move()
+    // chaser move type
+    internal override void Move()
     {
         if (player == null) return;
 
@@ -57,7 +58,7 @@ public class Zombie : Creature
     }
 
     // todo maybe make all creatures to have Move() and HandleAnimation() ???
-    void HandleAnimation()
+    internal override void HandleAnimation()
     {
         animator.SetBool("isRun", direction.sqrMagnitude != 0);
     }

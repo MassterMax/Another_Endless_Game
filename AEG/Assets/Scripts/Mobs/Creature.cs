@@ -16,7 +16,7 @@ public abstract class Creature : MonoBehaviour
     public float Health { get => health; }
     public float MaxHealth { get => maxHealth; }
     public bool Friendly { get => friendly; }
-    public float Damage { get => damage; }
+    public virtual float Damage { get => damage; }
     public bool Protection { get => protection; set => protection = value; }
 
     public virtual void TakeDamage(float damage)
@@ -28,6 +28,16 @@ public abstract class Creature : MonoBehaviour
             Destroy(gameObject);  // todo maybe add getter/setter
         }
     }
+
+    internal virtual void Update()
+    {
+        Move();
+        HandleAnimation();
+    }
+
+    internal abstract void Move();
+
+    internal abstract void HandleAnimation();
 
     internal void SetAttributes(float health, float damage, bool friendly)
     {
