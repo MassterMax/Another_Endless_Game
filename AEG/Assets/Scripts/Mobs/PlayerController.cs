@@ -131,7 +131,7 @@ public class PlayerController : Creature
         animator.SetBool("isRun", direction.sqrMagnitude != 0);
     }
 
-    float VectorToAngle(Vector2 vector)
+    public static float VectorToAngle(Vector2 vector)
     {
         var angle = Vector2.Angle(Vector2.right, vector);
         if (vector.y < 0)
@@ -166,19 +166,19 @@ public class PlayerController : Creature
             {
                 Protection = false;
                 var circle = transform.GetComponentInChildren<Circle>(); // bye-bye
-                StartCoroutine(blinking(circle.gameObject.GetComponent<SpriteRenderer>(), times, dilation));
+                StartCoroutine(Blinking(circle.gameObject.GetComponent<SpriteRenderer>(), times, dilation));
                 Destroy(circle.gameObject, invincibilityDuration);
                 return;
             }
 
             base.TakeDamage(damage);
             
-            StartCoroutine(blinking(playerSpriteRenderer, times, dilation));
+            StartCoroutine(Blinking(playerSpriteRenderer, times, dilation));
         }
     }
 
 
-    public IEnumerator blinking(SpriteRenderer spriteRenderer, int times, float dilation)
+    public IEnumerator Blinking(SpriteRenderer spriteRenderer, int times, float dilation)
     {
         for (var n = 0; n < times; n++)
         {
