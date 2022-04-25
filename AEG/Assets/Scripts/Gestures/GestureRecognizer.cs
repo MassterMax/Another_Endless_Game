@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 using System.IO;
 
-
+// Author: https://github.com/Oponn-1/Unity-Gesture-Recognizer/blob/master/GestureRecognizer.cs
 public class GestureRecognizer : MonoBehaviour
 {
 

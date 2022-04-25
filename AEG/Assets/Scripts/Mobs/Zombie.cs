@@ -40,7 +40,7 @@ public class Zombie : Creature
             direction = direction.normalized;
         } else if (changeDirectionTimer >= changeDirectonLimit)
         {
-            if (Random.Range(0, 1) < stayProbability)  // zombie stays
+            if (Random.value < stayProbability)  // zombie stays
             {
                 direction = Vector2.zero;
             }
