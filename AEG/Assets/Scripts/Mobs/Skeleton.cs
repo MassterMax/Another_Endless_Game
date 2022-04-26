@@ -17,10 +17,12 @@ public class Skeleton : Monster
 
     GameObject spear;
     bool withSpear = true;
+    bool preparing = false;
     Vector2 defaultSpearPos;
     Vector2 lastSpearTarget;
 
-    public override float Damage { get => withSpear ? base.Damage * 3 : base.Damage; }
+    public override float Damage { get => withSpear ? base.Damage * 3 : base.Damage; }  
+    // todo spear has own collider and maybe I should separate it as entity
 
     protected override void Start()
     {
@@ -40,6 +42,7 @@ public class Skeleton : Monster
     protected override void Move()
     {
         if (Player == null) return;
+        if (preparing) return;
 
         float playerDistance = (Player.transform.position - transform.position).magnitude;
 
@@ -62,6 +65,7 @@ public class Skeleton : Monster
             else
             {
                 direction = Vector2.zero;
+                preparing = true;
             }
         }
 
@@ -106,7 +110,8 @@ public class Skeleton : Monster
 
             float spearDistance = (spear.transform.position - transform.position).magnitude;
 
-            if (spearDistance < 0.5f) // todo remove hard code
+            // obtain spear
+            if (spearDistance < 0.3f) // todo remove hard code
             {
                 spear.transform.parent = transform;
                 withSpear = true;
@@ -121,11 +126,13 @@ public class Skeleton : Monster
             var spearDirection = (Player.transform.position - spear.transform.position);
             spear.transform.eulerAngles = new Vector3(0, 0, PlayerController.VectorToAngle(spearDirection) - 90);
 
-            if (playerDistance <= throwingRadius && fightingRadius < playerDistance && (Time.time - preparedToThrowTime) > throwDilation)
+            if ((preparing || playerDistance <= throwingRadius && fightingRadius < playerDistance) 
+                && (Time.time - preparedToThrowTime) > throwDilation)
             {
                 lastSpearTarget = Player.transform.position;
                 spear.transform.parent = null;
                 withSpear = false;
+                preparing = false;
 
                 manager.LaunchObject(spear, lastSpearTarget, spearSpeed);  // todo remove hardcode
             }
