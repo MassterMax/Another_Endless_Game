@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Skeleton : Monster
 {
-    [SerializeField] float throwingRadius = 8f;
-    [SerializeField] float fightingRadius = 3f;
+    [SerializeField] float throwingRadius = 10f;
+    [SerializeField] float fightingRadius = 5f;
     [SerializeField] float hurryBoost = 1.5f;
     LaunchItemManager manager;
 
@@ -13,23 +13,28 @@ public class Skeleton : Monster
     float throwDilation = .5f;
     float preparedToThrowTime = 0f;
 
+    float spearPreferedCoef = 2f;  // if tpSpearDistance < toPlayerDistance * coef; => prefer to obtain spear
+
     GameObject spear;
     bool withSpear = true;
     Vector2 defaultSpearPos;
     Vector2 lastSpearTarget;
 
-    public override float Damage
+    public override float Damage { get => withSpear ? base.Damage * 3 : base.Damage; }
+
+    protected override void Start()
     {
-        get {
-            if (withSpear)
-            {
-                return base.Damage * 3;
-            }
-            else
-            {
-                return base.Damage;
-            }
-        }
+        base.Start();
+
+        spear = gameObject.transform.GetChild(0).gameObject;
+        manager = FindObjectOfType<LaunchItemManager>();  // todo maybe remove
+        defaultSpearPos = spear.transform.localPosition;
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        HandleSpear();
     }
 
     protected override void Move()
@@ -40,9 +45,8 @@ public class Skeleton : Monster
 
         if (!withSpear)
         {
-            float spearDistance = (spear.transform.position - transform.position).magnitude;
             // go for player only if spear is far away
-            if (spearDistance <= 2 * playerDistance) direction = (spear.transform.position - transform.position).normalized;
+            if (toSpearDistance() <= spearPreferedCoef * playerDistance) direction = (spear.transform.position - transform.position).normalized;
             else direction = (Player.transform.position - transform.position).normalized;
 
             direction *= hurryBoost;
@@ -64,27 +68,33 @@ public class Skeleton : Monster
         transform.Translate(direction * Time.deltaTime * speed);
     }
 
-    // Start is called before the first frame update
-    protected override void Start()
+    protected override void HandleAnimation()
     {
-        base.Start();
+        if (animator == null) return;
 
-        spear = gameObject.transform.GetChild(0).gameObject;
-        manager = FindObjectOfType<LaunchItemManager>();  // todo maybe remove
-        defaultSpearPos = spear.transform.localPosition;
+        base.HandleAnimation();
+        animator.SetBool("withSpear", withSpear);
     }
 
-    // Update is called once per frame
-    protected override void Update()
+    protected override void Rotate()
     {
-        base.Update();
-        HandleSpear();
+        if (!withSpear && toSpearDistance() <= spearPreferedCoef * toPlayerDistance())
+        {
+            if (spriteRenderer.flipX != Mathf.Sign(toSpearVector().x) < 0)
+            {
+                spriteRenderer.flipX = !spriteRenderer.flipX;
+            }
+        }
+        else
+        {
+            base.Rotate();
+        }
     }
 
     internal void HandleSpear()  // todo add dilation between throwings
     {
         // Debug.Log("Inside ThrowSpear, withSpear: " + withSpear + " time: " + Time.time);
-        float playerDistance = (Player.transform.position - transform.position).magnitude;
+        float playerDistance = toPlayerDistance();
 
         if (!withSpear)
         {
@@ -104,23 +114,31 @@ public class Skeleton : Monster
                 preparedToThrowTime = Time.time;
             }
         }
-        else 
+        else
         {
             float spearSpeed = 11f;
 
             var spearDirection = (Player.transform.position - spear.transform.position);
             spear.transform.eulerAngles = new Vector3(0, 0, PlayerController.VectorToAngle(spearDirection) - 90);
 
-            //float launchAngle = manager.GetLaunchAngle(playerDistance, spearSpeed);
-            //spear.transform.eulerAngles = new Vector3(0, 0, launchAngle * Mathf.Rad2Deg - 90);
             if (playerDistance <= throwingRadius && fightingRadius < playerDistance && (Time.time - preparedToThrowTime) > throwDilation)
             {
                 lastSpearTarget = Player.transform.position;
                 spear.transform.parent = null;
                 withSpear = false;
-                
+
                 manager.LaunchObject(spear, lastSpearTarget, spearSpeed);  // todo remove hardcode
             }
         }
+    }
+
+    protected float toSpearDistance()
+    {
+        return toSpearVector().magnitude;
+    }
+
+    protected Vector2 toSpearVector()
+    {
+        return spear.transform.position - transform.position;
     }
 }

@@ -19,18 +19,16 @@ public class Zombie : Monster
     protected override void Update()
     {
         base.Update();
-        // todo...
     }
 
-    // chaser move type
+    // todo maybe make all creatures to have Move()
     protected override void Move()
     {
         if (Player == null) return;
 
-        if ((Player.transform.position - transform.position).magnitude < visibleField)  // if zombie see the player
+        if (toPlayerDistance() < visibleField)  // if zombie see the player
         {
-            direction = (Player.transform.position - transform.position);
-            direction = direction.normalized;
+            direction = toPlayerVector().normalized;
         } else if (changeDirectionTimer >= changeDirectonLimit)
         {
             if (Random.value < stayProbability)  // zombie stays
@@ -48,6 +46,4 @@ public class Zombie : Monster
         changeDirectionTimer = Mathf.Min(changeDirectionTimer + Time.deltaTime, changeDirectonLimit);
         transform.Translate(direction * Time.deltaTime * speed);
     }
-
-    // todo maybe make all creatures to have Move()
 }

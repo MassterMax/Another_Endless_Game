@@ -5,6 +5,7 @@ using UnityEngine;
 public abstract class Monster : Creature
 {
     protected Animator animator;
+    protected SpriteRenderer spriteRenderer;
 
     protected float speed;
 
@@ -14,9 +15,17 @@ public abstract class Monster : Creature
 
     protected Vector2 direction;  // todo rename to moveDirection
 
-    protected override void Move()
+    protected virtual void Start()
     {
-        throw new System.NotImplementedException();
+        SetBarStyle();
+        animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        Rotate();
     }
 
     public void SetAttributes(float health, float maxHealth, float damage, float speed)
@@ -25,27 +34,35 @@ public abstract class Monster : Creature
         this.speed = speed;
     }
 
-    // Start is called before the first frame update
-    protected virtual void Start()
+    // todo maybe implement
+    protected override void Move()
     {
-        SetBarStyle();
-        animator = GetComponent<Animator>();
-    }
-
-    // Update is called once per frame
-    protected override void Update()
-    {
-        base.Update();
-    }
-
-    internal void ChasePlayer()
-    {
-
+        throw new System.NotImplementedException();
     }
 
     protected override void HandleAnimation()
     {
         if (animator == null) return;
         animator.SetBool("isRun", direction.sqrMagnitude != 0);
+    }
+
+    protected virtual void Rotate()
+    {
+        Vector2 dir = toPlayerVector();
+
+        if (spriteRenderer.flipX != Mathf.Sign(dir.x) < 0)
+        {
+            spriteRenderer.flipX = !spriteRenderer.flipX;
+        }
+    }
+
+    protected float toPlayerDistance()
+    {
+        return toPlayerVector().magnitude;
+    }
+
+    protected Vector2 toPlayerVector()
+    {
+        return player.transform.position - transform.position;
     }
 }
