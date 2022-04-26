@@ -29,24 +29,24 @@ public abstract class Creature : MonoBehaviour
         }
     }
 
-    internal virtual void Update()
+    protected virtual void Update()
     {
         Move();
         HandleAnimation();
     }
 
-    internal abstract void Move();
+    protected abstract void Move();
 
-    internal abstract void HandleAnimation();
+    protected abstract void HandleAnimation();
 
-    internal void SetAttributes(float health, float damage, bool friendly)
+    protected virtual void SetAttributes(float health, float maxHealth, float damage, bool friendly)
     {
         if (set)
             throw new System.Exception("creature already set");
         set = true;
 
         this.health = health;
-        this.maxHealth = health;
+        this.maxHealth = maxHealth;
         this.damage = damage;
         this.friendly = friendly;
 
@@ -56,7 +56,7 @@ public abstract class Creature : MonoBehaviour
         healthBar.Setup(health, maxHealth);
     }
 
-    internal void SetBarStyle(string colorName = "red", int sorterOrder = 0)
+    protected void SetBarStyle(string colorName = "red", int sorterOrder = 0)
     {
         healthBar.SetStyle(colorName, sorterOrder);
     }

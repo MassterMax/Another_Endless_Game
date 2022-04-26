@@ -2,42 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Zombie : Creature
+public class Zombie : Monster
 {
-    [SerializeField] float speed;
     [SerializeField] float visibleField = 5;
     [SerializeField] float changeDirectonLimit = 2;
     float changeDirectionTimer = 0;
     float stayProbability = 0.7f;
 
-    Animator animator;
-    PlayerController player;
-    Vector2 direction;
-
-    void Start()
+    protected override void Start()
     {
-        SetAttributes(5, 1, false);  // todo make one class with all start values
-        SetBarStyle();
-        player = FindObjectOfType<PlayerController>();
-        changeDirectionTimer = changeDirectonLimit;
+        base.Start();
 
-        animator = GetComponent<Animator>();
+        changeDirectionTimer = changeDirectonLimit;
     }
 
-    internal override void Update()
+    protected override void Update()
     {
         base.Update();
         // todo...
     }
 
     // chaser move type
-    internal override void Move()
+    protected override void Move()
     {
-        if (player == null) return;
+        if (Player == null) return;
 
-        if ((player.transform.position - transform.position).magnitude < visibleField)  // if zombie see the player
+        if ((Player.transform.position - transform.position).magnitude < visibleField)  // if zombie see the player
         {
-            direction = (player.transform.position - transform.position);
+            direction = (Player.transform.position - transform.position);
             direction = direction.normalized;
         } else if (changeDirectionTimer >= changeDirectonLimit)
         {
@@ -57,9 +49,5 @@ public class Zombie : Creature
         transform.Translate(direction * Time.deltaTime * speed);
     }
 
-    // todo maybe make all creatures to have Move() and HandleAnimation() ???
-    internal override void HandleAnimation()
-    {
-        animator.SetBool("isRun", direction.sqrMagnitude != 0);
-    }
+    // todo maybe make all creatures to have Move()
 }

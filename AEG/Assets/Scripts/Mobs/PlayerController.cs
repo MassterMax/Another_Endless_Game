@@ -40,12 +40,12 @@ public class PlayerController : Creature
         stick = transform.GetChild(0).gameObject;
         stickSpriteRenderer = stick.GetComponent<SpriteRenderer>();
 
-        SetAttributes(playerHealth, playerDamage, true);
+        SetAttributes(playerHealth, playerHealth, playerDamage, true);
         SetBarStyle("green", 1);
         SetupManaBar();
     }
 
-    internal override void Update()
+    protected override void Update()
     {
         base.Update();
         Dash();
@@ -74,7 +74,7 @@ public class PlayerController : Creature
     }
 
 
-    internal override void Move()
+    protected override void Move()
     {
         if (dashTimer == 0)
         {
@@ -125,7 +125,7 @@ public class PlayerController : Creature
         stick.transform.localPosition *= -1;  // change x position
     }
 
-    internal override void HandleAnimation()
+    protected override void HandleAnimation()
     {
         animator.SetBool("isRun", direction.sqrMagnitude != 0);
     }

@@ -6,30 +6,32 @@ public class LaunchItemManager : MonoBehaviour
 {
     const float g = 9.81f;
 
+    private float GetLaunchAngle(float length, float velocity)
+    {
+        float sinValue = length * g / (velocity * velocity);
+
+        if (sinValue > 1)
+        {
+            Debug.LogError("Launch failed: l * g should be lesser than V0^2! l: " + length + " V0: " + velocity);
+            return 0;
+        }
+
+        float alpha = Mathf.Asin(length * g / (velocity * velocity));
+        if (alpha > Mathf.PI / 2)
+        {
+            alpha = Mathf.PI - alpha;
+        }
+        return alpha / 2;  // l = V0^2 * sin2a / g  -->  a = asin(lg/V0^2) / 2
+    }
+
     public void LaunchObject(GameObject gameObject, Vector2 destination, float velocity)
     {
         Vector2 startPos = gameObject.transform.position;
         float l = (startPos - destination).magnitude;
 
         print("lg/V^2: " + l * g / (velocity * velocity));
-        float sinValue = l * g / (velocity * velocity);
-        if (sinValue > 1)
-        {
-            Debug.LogError("Launch failed: l * g should be lesser than V0^2! l: " + l + " V0: " + velocity);
-            return;
-        }
 
-        float alpha = Mathf.Asin(l * g / (velocity * velocity));
-        if (alpha > Mathf.PI / 2)
-        {
-            alpha = Mathf.PI - alpha;
-        }
-        //if (alpha < Mathf.PI / 2)
-        //{
-        //    alpha = Mathf.PI / 2 - alpha;
-        //}
-
-        alpha = alpha / 2;  // l = V0^2 * sin2a / g  -->  a = asin(lg/V0^2) / 2
+        float alpha = GetLaunchAngle(l, velocity);
 
         StartCoroutine(Launch(gameObject, destination, velocity, l, alpha));
     }
