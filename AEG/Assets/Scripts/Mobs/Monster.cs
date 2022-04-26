@@ -63,6 +63,7 @@ public abstract class Monster : Creature
 
     protected Vector2 toPlayerVector()
     {
+        if (player == null) return Vector2.zero;
         return player.transform.position - transform.position;
     }
 }

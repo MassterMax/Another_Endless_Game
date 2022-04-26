@@ -98,6 +98,8 @@ public class Skeleton : Monster
     internal void HandleSpear()  // todo add dilation between throwings
     {
         // Debug.Log("Inside ThrowSpear, withSpear: " + withSpear + " time: " + Time.time);
+        if (Player == null) return;
+
         float playerDistance = toPlayerDistance();
 
         if (!withSpear)
@@ -147,5 +149,11 @@ public class Skeleton : Monster
     protected Vector2 toSpearVector()
     {
         return spear.transform.position - transform.position;
+    }
+
+    // todo better create spear script with handling this case (and other possible cases)
+    private void OnDestroy()
+    {
+        Destroy(spear.gameObject);
     }
 }

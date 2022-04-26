@@ -189,11 +189,11 @@ public class PlayerController : Creature
         spriteRenderer.enabled = true;
     }
 
-    private void OnCollisionStay2D(Collision2D collision)  // todo Am I using correct Rigidboy settings???
+    private void OnTriggerStay2D(Collider2D collision)
     {
-        var creature = collision.gameObject.GetComponent<Creature>();
-        if (!creature || creature.Friendly) return;
+        var damaging = collision.gameObject.GetComponent<IDamaging>();
+        if (damaging == null || damaging.GetDamage() == 0) return;
 
-        TakeDamage(creature.Damage);
+        TakeDamage(damaging.GetDamage());
     }
 }

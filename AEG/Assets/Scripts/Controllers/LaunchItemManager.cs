@@ -80,6 +80,7 @@ public class LaunchItemManager : MonoBehaviour
                 skipStep = true;
             }
 
+            // maybe make end of frame?
             yield return new WaitForFixedUpdate();
         }
 

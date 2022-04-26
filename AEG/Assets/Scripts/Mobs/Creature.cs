@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Creature : MonoBehaviour
+public abstract class Creature : MonoBehaviour, IDamaging
 {
     Bar healthBar;
 
@@ -16,8 +16,9 @@ public abstract class Creature : MonoBehaviour
     public float Health { get => health; }
     public float MaxHealth { get => maxHealth; }
     public bool Friendly { get => friendly; }
-    public virtual float Damage { get => damage; }
     public bool Protection { get => protection; set => protection = value; }
+
+    public virtual float Damage { get => damage; }
 
     public virtual void TakeDamage(float damage)
     {
@@ -61,14 +62,13 @@ public abstract class Creature : MonoBehaviour
         healthBar.SetStyle(colorName, sorterOrder);
     }
 
-    /*
-    void OnTriggerEnter2D(Collider2D col)
+    public float GetDamage()
     {
-        Debug.Log(col.gameObject.name + " triggered " + gameObject.name + ": " + Time.time);
-    }
+        if (friendly)
+        {
+            return 0;
+        }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        Debug.Log(collision.gameObject.name + " collided " + gameObject.name + ": " + Time.time);
-    }*/
+        return Damage;
+    }
 }
