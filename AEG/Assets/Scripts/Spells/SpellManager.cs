@@ -10,14 +10,17 @@ public class SpellManager : MonoBehaviour
     private PlayerController player;
 
     // mapping from name of spell in gesture recogniser to spell prefab in resources
-    private Dictionary<string, string> spellPrefixToSpell = new Dictionary<string, string>() {
+    private Dictionary<string, string> spellPrefixToSpellPrefab = new Dictionary<string, string>() {
         { "lightning", "lightning_1" },
-        { "circle", "bubble1"} };
+        { "circle", "bubble1"},
+        { "puddle", "puddle"},
+    };
 
     // maybe use this approach with manacost or create a script with constants?
     private Dictionary<Type, Color> spellToColor = new Dictionary<Type, Color>() {
         { typeof(Lightning), Color.white},
-        { typeof(Circle), new Color(0.4f, 0.6f, 1) }
+        { typeof(Circle), new Color(0.4f, 0.6f, 1) },
+        { typeof(Puddle), new Color(132f/255f, 229f/255f, 223f/255f) }
     };
 
     private void Awake()
@@ -29,11 +32,11 @@ public class SpellManager : MonoBehaviour
 
     public void CastSpell(string name) // todo do not cast if error is high
     {
-        foreach (var el in spellPrefixToSpell)
+        foreach (var el in spellPrefixToSpellPrefab)
         {
             if (name.StartsWith(el.Key))
             {
-                var spellPrefab = Resources.Load($"Prefabs/{el.Value}");
+                var spellPrefab = Resources.Load($"Prefabs/Spells/{el.Value}");
                 float cost = (((GameObject)spellPrefab).GetComponent<Spell>().GetManaCost());
                 if (!player.SpendMana(cost))
                 {

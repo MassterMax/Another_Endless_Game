@@ -28,7 +28,7 @@ public class Skeleton : Monster
     {
         base.Start();
 
-        spear = gameObject.transform.GetChild(0).gameObject;
+        spear = GetComponentInChildren<Spear>().gameObject;
         manager = FindObjectOfType<LaunchItemManager>();  // todo maybe remove
         defaultSpearPos = spear.transform.localPosition;
     }
@@ -44,13 +44,13 @@ public class Skeleton : Monster
         if (Player == null) return;
         if (preparing) return;
 
-        float playerDistance = (Player.transform.position - transform.position).magnitude;
+        float playerDistance = toPlayerDistance();
 
         if (!withSpear)
         {
             // go for player only if spear is far away
-            if (toSpearDistance() <= spearPreferedCoef * playerDistance) direction = (spear.transform.position - transform.position).normalized;
-            else direction = (Player.transform.position - transform.position).normalized;
+            if (toSpearDistance() <= spearPreferedCoef * playerDistance) direction = toSpearVector().normalized;
+            else direction = toPlayerVector().normalized;
 
             direction *= hurryBoost;
         }
@@ -59,7 +59,7 @@ public class Skeleton : Monster
             // move only if out of throwing range or too late to throw... >;-(
             if (playerDistance <= fightingRadius || playerDistance > throwingRadius)
             {
-                direction = (Player.transform.position - transform.position).normalized;
+                direction = toPlayerVector().normalized;
                 preparedToThrowTime = Time.time;
             }
             else
