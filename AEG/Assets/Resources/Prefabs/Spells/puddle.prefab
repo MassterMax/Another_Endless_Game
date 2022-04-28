@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6544437306235901044
 Transform:
   m_ObjectHideFlags: 0
@@ -117,6 +117,8 @@ GameObject:
   - component: {fileID: 7278089925930059083}
   - component: {fileID: 7278089925930059082}
   - component: {fileID: 7278089925930059085}
+  - component: {fileID: 3989589736004412026}
+  - component: {fileID: 8903044386525777804}
   m_Layer: 0
   m_Name: puddle
   m_TagString: Untagged
@@ -224,3 +226,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4d9e777f095bd8488e44fa4097009aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!70 &3989589736004412026
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7278089925930059081}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.0025235417, y: 0.00083610456}
+  m_Size: {x: 1.4457735, y: 0.47196323}
+  m_Direction: 1
+--- !u!50 &8903044386525777804
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7278089925930059081}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 0
+  m_CollisionDetection: 0
+  m_Constraints: 0

@@ -49,6 +49,8 @@ public class SpellManager : MonoBehaviour
 
                 GameObject spellObject = Instantiate(spellPrefab, drawingManager.GetLastPoint(), Quaternion.identity) as GameObject;
                 Spell spell = spellObject.GetComponent<Spell>();
+
+                // we should set some requiremets befare casting
                 SetSpellRequirements(spell);
                 SetColorOfSpell(spell);
 
@@ -98,6 +100,8 @@ public class SpellManager : MonoBehaviour
         drawingManager.SetColor(spellToColor[spellType]);
     }
 
+
+    // todo maybe make lazy realiztaion of this list
     public List<Spell> GetSpellsInArea(Vector2 center, float radius)
     {
         int i = 0;
@@ -122,5 +126,31 @@ public class SpellManager : MonoBehaviour
         }
 
         return spellsInArea;
+    }
+
+    public List<Spell> GetSpellsByType<T>()
+    {
+        int i = 0;
+        var foundSpells = new List<Spell>();
+
+        while (i != spellsGameObjects.Count)
+        {
+            var spellGameObject = spellsGameObjects[i];
+            if (spellGameObject == null)  // lazy delete
+            {
+                spellsGameObjects.RemoveAt(i);
+                spells.RemoveAt(i);
+            }
+            else
+            {
+                if (spells[i] is T)
+                {
+                    foundSpells.Add(spells[i]);
+                }
+                i += 1;
+            }
+        }
+
+        return foundSpells;
     }
 }

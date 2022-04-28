@@ -23,7 +23,7 @@ public class PlayerController : Creature
     Bar manaBar;
     float mana = 100;  // todo change
     float maxMana = 100;
-    float manaRegen = 3f;
+    float manaRegen = 5f;
 
     Dictionary<KeyCode, Vector2> keyToVector = new Dictionary<KeyCode, Vector2>() {
         { KeyCode.W, Vector2.up},
