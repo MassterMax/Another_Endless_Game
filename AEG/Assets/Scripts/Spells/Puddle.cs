@@ -2,8 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Puddle : SpellKnowMonsters
+public class Puddle : Spell, IKnowSpellManager
 {
+    public SpellManager SpellManager { get; set; }
+
+    bool charged = false;
+
+    GameObject lightningChild;
+
     public override float GetManaCost()
     {
         return 15;
@@ -20,9 +26,20 @@ public class Puddle : SpellKnowMonsters
         transform.position = center;
     }
 
+    public void ChargeByLightning()
+    {
+        if (charged) return;
+        charged = true;
+        Debug.Log(gameObject.name + " is charged!!!");
+        lightningChild.SetActive(true);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        lightningChild = gameObject.transform.GetChild(0).gameObject;
+        // lightningChild.transform.localPosition = Vector3.zero;
+        lightningChild.SetActive(false);
         Destroy(gameObject, 5);
     }
 

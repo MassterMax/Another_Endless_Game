@@ -9,6 +9,9 @@ public class SpellManager : MonoBehaviour
     private MonsterController monsterController;
     private PlayerController player;
 
+    List<GameObject> spellsGameObjects = new List<GameObject>();
+    List<Spell> spells = new List<Spell>();
+
     // mapping from name of spell in gesture recogniser to spell prefab in resources
     private Dictionary<string, string> spellPrefixToSpellPrefab = new Dictionary<string, string>() {
         { "lightning", "lightning_1" },
@@ -49,6 +52,9 @@ public class SpellManager : MonoBehaviour
                 SetSpellRequirements(spell);
                 SetColorOfSpell(spell);
 
+                spells.Add(spell);
+                spellsGameObjects.Add(spellObject);
+
                 spell.CastSpell(drawingManager.GetFirstPoint(), drawingManager.GetLastPoint(), drawingManager.GetMeanPoint());
                 return;
             }
@@ -58,13 +64,25 @@ public class SpellManager : MonoBehaviour
 
     private void SetSpellRequirements(Spell spell)
     {
-        if (spell is SpellKnowMonsters)
+        //if (spell is SpellKnowMonsters)
+        //{
+        //    ((SpellKnowMonsters)spell).SetMonsterController(monsterController);
+        //}
+        //if (spell is SpellKnowPlayer)
+        //{
+        //    ((SpellKnowPlayer)spell).SetPlayer(player);
+        //}
+        if (spell is IKnowMonsterController)
         {
-            ((SpellKnowMonsters)spell).SetMonsterController(monsterController);
+            ((IKnowMonsterController)spell).SetMonsterController(monsterController);
         }
-        if (spell is SpellKnowPlayer)
+        if (spell is IKnowPlayerController)
         {
-            ((SpellKnowPlayer)spell).SetPlayer(player);
+            ((IKnowPlayerController)spell).SetPlayerController(player);
+        }
+        if (spell is IKnowSpellManager)
+        {
+            ((IKnowSpellManager)spell).SetSpellManager(this);
         }
     }
 
@@ -78,5 +96,31 @@ public class SpellManager : MonoBehaviour
         }
 
         drawingManager.SetColor(spellToColor[spellType]);
+    }
+
+    public List<Spell> GetSpellsInArea(Vector2 center, float radius)
+    {
+        int i = 0;
+        var spellsInArea = new List<Spell>();
+
+        while (i != spellsGameObjects.Count)
+        {
+            var spellGameObject = spellsGameObjects[i];
+            if (spellGameObject == null)  // lazy delete monster
+            {
+                spellsGameObjects.RemoveAt(i);
+                spells.RemoveAt(i);
+            }
+            else
+            {
+                if (((Vector2)spellGameObject.transform.position - center).magnitude <= radius)
+                {
+                    spellsInArea.Add(spells[i]);
+                }
+                i += 1;
+            }
+        }
+
+        return spellsInArea;
     }
 }

@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// [REMOVE]
+// [REMOVE]
+// [REMOVE]
 public abstract class SpellKnowPlayer : Spell
 {
     internal Creature player;

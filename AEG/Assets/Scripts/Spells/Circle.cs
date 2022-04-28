@@ -2,20 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Circle : SpellKnowPlayer
+public class Circle : Spell, IKnowPlayerController
 {
     private float radius = 1f;
 
+    public PlayerController PlayerController { get; set; }
+
     public override void CastSpell(Vector2 start, Vector2 end, Vector2 center)
     {
-        base.CastSpell(start, end, center); // idiot check
+        //base.CastSpell(start, end, center); // idiot check
 
-        Vector2 playerPos = player.gameObject.transform.position;
+        Vector2 playerPos = PlayerController.gameObject.transform.position;
 
-        if ((playerPos - center).magnitude <= radius && !player.Protection)
+        if ((playerPos - center).magnitude <= radius && !PlayerController.Protection)
         {
-            player.Protection = true;
-            transform.parent = player.transform;
+            PlayerController.Protection = true;
+            transform.parent = PlayerController.transform;
             transform.localPosition = Vector3.zero;
         } else
         {

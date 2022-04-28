@@ -1,19 +1,13 @@
 fileFormatVersion: 2
-guid: 1579e59eb657d5f43bab2d92e474a2de
+guid: b12288219162a274fbad23d335892ec0
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6516494973350753097
-    second: skeleton_run_without_spear_0
+      213: 8829262158366621370
+    second: puddle_anim_2_0
   - first:
-      213: -1095990622507250437
-    second: skeleton_run_without_spear_1
-  - first:
-      213: -3855093559351407692
-    second: skeleton_run_without_spear_2
-  - first:
-      213: -9028492782069409312
-    second: skeleton_run_without_spear_3
+      213: 5886056763939635778
+    second: puddle_anim_2_1
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -104,12 +98,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: skeleton_run_without_spear_0
+      name: puddle_anim_2_0
       rect:
         serializedVersion: 2
         x: 0
         y: 32
-        width: 32
+        width: 64
         height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -118,40 +112,19 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7bc4fccf852c095a0800000000000000
-      internalID: -6516494973350753097
+      spriteID: abebd325727d78a70800000000000000
+      internalID: 8829262158366621370
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: skeleton_run_without_spear_1
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 32
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: bfccb4ce5524ac0f0800000000000000
-      internalID: -1095990622507250437
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: skeleton_run_without_spear_2
+      name: puddle_anim_2_1
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
+        width: 64
         height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -160,29 +133,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4bb86fa35d4ff7ac0800000000000000
-      internalID: -3855093559351407692
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: skeleton_run_without_spear_3
-      rect:
-        serializedVersion: 2
-        x: 32
-        y: 0
-        width: 32
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0e9139356a954b280800000000000000
-      internalID: -9028492782069409312
+      spriteID: 242486ee0797fa150800000000000000
+      internalID: 5886056763939635778
       vertices: []
       indices: 
       edges: []
@@ -198,10 +150,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      skeleton_run_without_spear_2: -3855093559351407692
-      skeleton_run_without_spear_1: -1095990622507250437
-      skeleton_run_without_spear_3: -9028492782069409312
-      skeleton_run_without_spear_0: -6516494973350753097
+      puddle_anim_2_1: 5886056763939635778
+      puddle_anim_2_0: 8829262158366621370
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

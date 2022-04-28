@@ -15,7 +15,7 @@ public class Bar : MonoBehaviour
         slider.value = currentValue;
     }
 
-    public void SetStyle(string colorName = "red", int sorterOrder = 0)
+    public void SetStyle(string colorName = "red", int sorterOrder = 11)
     {
         slider.fillRect.gameObject.GetComponent<Image>().color = GetColorByName(colorName);
         slider.GetComponentInParent<Canvas>().sortingOrder = sorterOrder;
