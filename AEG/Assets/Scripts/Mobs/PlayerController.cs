@@ -41,7 +41,7 @@ public class PlayerController : Creature
         stickSpriteRenderer = stick.GetComponent<SpriteRenderer>();
 
         SetAttributes(playerHealth, playerHealth, playerDamage, true);
-        SetBarStyle("green", 101);
+        SetBarStyle("green", 110);
         SetupManaBar();
     }
 

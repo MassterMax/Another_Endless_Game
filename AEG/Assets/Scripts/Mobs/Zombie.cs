@@ -7,7 +7,7 @@ public class Zombie : Monster
     [SerializeField] float visibleField = 5;
     [SerializeField] float changeDirectonLimit = 2;
     float changeDirectionTimer = 0;
-    float stayProbability = 0.7f;
+    float stayProbability = 0.2f;
 
     protected override void Start()
     {
@@ -37,7 +37,11 @@ public class Zombie : Monster
             }
             else
             {
-                direction = Random.insideUnitCircle.normalized;
+                // with 50% prob random direction or player
+                if (Random.value < 0.5)
+                    direction = Random.insideUnitCircle.normalized;
+                else
+                    direction = toPlayerVector().normalized;
             }
 
             changeDirectionTimer = 0;
