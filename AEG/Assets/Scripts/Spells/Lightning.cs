@@ -14,7 +14,7 @@ public class Lightning : Spell, IKnowMonsterController, IKnowSpellManager
 
         // I should make delay((
 
-        StartCoroutine(DelayedCast(end, 0.2f));
+        StartCoroutine(DelayedCast(end, 0.1f));
 
         //foreach(var monster in MonsterController.GetMostersInArea(end, damageRadius))
         //{
