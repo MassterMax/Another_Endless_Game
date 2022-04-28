@@ -176,7 +176,6 @@ public class PlayerController : Creature
         }
     }
 
-
     public IEnumerator Blinking(SpriteRenderer spriteRenderer, int times, float dilation)
     {
         for (var n = 0; n < times; n++)

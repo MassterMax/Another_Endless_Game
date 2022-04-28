@@ -9,8 +9,9 @@ public class SpellManager : MonoBehaviour
     private MonsterController monsterController;
     private PlayerController player;
 
-    List<GameObject> spellsGameObjects = new List<GameObject>();
-    List<Spell> spells = new List<Spell>();
+    // List<GameObject> spellsGameObjects = new List<GameObject>();
+    // List<Spell> spells = new List<Spell>();
+    LazyCollection<Spell> spells = new LazyCollection<Spell>(); // it ruined my day =(
 
     // mapping from name of spell in gesture recogniser to spell prefab in resources
     private Dictionary<string, string> spellPrefixToSpellPrefab = new Dictionary<string, string>() {
@@ -50,12 +51,15 @@ public class SpellManager : MonoBehaviour
                 GameObject spellObject = Instantiate(spellPrefab, drawingManager.GetLastPoint(), Quaternion.identity) as GameObject;
                 Spell spell = spellObject.GetComponent<Spell>();
 
+                Debug.Log("casting: " + spell.name);
+
                 // we should set some requiremets befare casting
                 SetSpellRequirements(spell);
                 SetColorOfSpell(spell);
 
                 spells.Add(spell);
-                spellsGameObjects.Add(spellObject);
+                // spellsGameObjects.Add(spellObject);
+                // spells.Add(new KeyValuePair<GameObject, Spell>(spellObject, spell));
 
                 spell.CastSpell(drawingManager.GetFirstPoint(), drawingManager.GetLastPoint(), drawingManager.GetMeanPoint());
                 return;
@@ -66,14 +70,6 @@ public class SpellManager : MonoBehaviour
 
     private void SetSpellRequirements(Spell spell)
     {
-        //if (spell is SpellKnowMonsters)
-        //{
-        //    ((SpellKnowMonsters)spell).SetMonsterController(monsterController);
-        //}
-        //if (spell is SpellKnowPlayer)
-        //{
-        //    ((SpellKnowPlayer)spell).SetPlayer(player);
-        //}
         if (spell is IKnowMonsterController)
         {
             ((IKnowMonsterController)spell).SetMonsterController(monsterController);
@@ -100,56 +96,78 @@ public class SpellManager : MonoBehaviour
         drawingManager.SetColor(spellToColor[spellType]);
     }
 
-
     // todo maybe make lazy realiztaion of this list
     public List<Spell> GetSpellsInArea(Vector2 center, float radius)
     {
-        int i = 0;
+        // int i = 0;
+        Debug.Log("finding all spells...");
         var spellsInArea = new List<Spell>();
 
-        while (i != spellsGameObjects.Count)
+        for (int i = 0; i < spells.Count(); ++i)
         {
-            var spellGameObject = spellsGameObjects[i];
-            if (spellGameObject == null)  // lazy delete monster
+            Debug.Log(spells.Count());
+            var spell = spells.At(i);
+            Debug.Log(spell);
+            if (((Vector2)spell.gameObject.transform.position - center).magnitude <= radius)
             {
-                spellsGameObjects.RemoveAt(i);
-                spells.RemoveAt(i);
-            }
-            else
-            {
-                if (((Vector2)spellGameObject.transform.position - center).magnitude <= radius)
-                {
-                    spellsInArea.Add(spells[i]);
-                }
-                i += 1;
+                Debug.Log("found in area: " + spell);
+                spellsInArea.Add(spell);
             }
         }
+
+        //while (i != spellsGameObjects.Count)
+        //{
+        //    var spellGameObject = spellsGameObjects[i];
+        //    if (spellGameObject == null)  // lazy delete monster
+        //    {
+        //        spellsGameObjects.RemoveAt(i);
+        //        spells.RemoveAt(i);
+        //    }
+        //    else
+        //    {
+        //        if (((Vector2)spellGameObject.transform.position - center).magnitude <= radius)
+        //        {
+        //            spellsInArea.Add(spells[i]);
+        //        }
+        //        i += 1;
+        //    }
+        //}
 
         return spellsInArea;
     }
 
     public List<Spell> GetSpellsByType<T>()
     {
-        int i = 0;
+        //int i = 0;
         var foundSpells = new List<Spell>();
 
-        while (i != spellsGameObjects.Count)
+        for (int i = 0; i < spells.Count(); ++i)
         {
-            var spellGameObject = spellsGameObjects[i];
-            if (spellGameObject == null)  // lazy delete
+            var spell = spells.At(i);
+            if (spell is T)
             {
-                spellsGameObjects.RemoveAt(i);
-                spells.RemoveAt(i);
-            }
-            else
-            {
-                if (spells[i] is T)
-                {
-                    foundSpells.Add(spells[i]);
-                }
-                i += 1;
+                foundSpells.Add(spell);
             }
         }
+
+
+        //while (i != spellsGameObjects.Count)
+        //{
+        //    var spellGameObject = spellsGameObjects[i];
+        //    if (spellGameObject == null)  // lazy delete
+        //    {
+        //        spellsGameObjects.RemoveAt(i);
+        //        spells.RemoveAt(i);
+        //    }
+        //    else
+        //    {
+        //        if (spells[i] is T)
+        //        {
+        //            foundSpells.Add(spells[i]);
+        //        }
+        //        i += 1;
+        //    }
+        //}
 
         return foundSpells;
     }
