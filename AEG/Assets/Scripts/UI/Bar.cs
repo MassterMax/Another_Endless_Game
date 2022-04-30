@@ -17,6 +17,8 @@ public class Bar : MonoBehaviour
 
     public void SetStyle(string colorName = "red", int sorterOrder = 11)
     {
+        // todo remove:
+        sorterOrder = 1001;
         slider.fillRect.gameObject.GetComponent<Image>().color = GetColorByName(colorName);
         slider.GetComponentInParent<Canvas>().sortingOrder = sorterOrder;
     }

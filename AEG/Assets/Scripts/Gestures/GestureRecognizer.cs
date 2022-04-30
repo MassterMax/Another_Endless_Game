@@ -242,14 +242,9 @@ public class GestureRecognizer : MonoBehaviour
 
 
             // call spell manager
-            if (result.Value > 2f)  // todo make as a parameter?
+            if (spellManager != null)
             {
-                Debug.LogWarning("big error!");
-                drawing.SetColor(Color.black);
-            }
-            else if (spellManager != null)
-            {
-                spellManager.CastSpell(result.Key.GetName());
+                spellManager.CastSpell(result.Key.GetName(), result.Value);
             }
         }
         varReset();

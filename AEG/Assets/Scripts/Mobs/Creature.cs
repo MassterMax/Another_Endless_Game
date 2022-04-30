@@ -57,7 +57,7 @@ public abstract class Creature : MonoBehaviour, IDamaging
         healthBar.Setup(health, maxHealth);
     }
 
-    protected void SetBarStyle(string colorName = "red", int sorterOrder = 0)
+    protected void SetBarStyle(string colorName = "red", int sorterOrder = 11)
     {
         healthBar.SetStyle(colorName, sorterOrder);
     }

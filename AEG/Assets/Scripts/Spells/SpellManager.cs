@@ -34,8 +34,15 @@ public class SpellManager : MonoBehaviour
         player = FindObjectOfType<PlayerController>();
     }
 
-    public void CastSpell(string name) // todo do not cast if error is high
+    public void CastSpell(string name, float error) // todo do not cast if error is high
     {
+        // todo make custom error for any spells
+        if (error > 2f)
+        {
+            drawingManager.SetColor(Color.black);
+            return;
+        }
+
         foreach (var el in spellPrefixToSpellPrefab)
         {
             if (name.StartsWith(el.Key))
@@ -100,17 +107,17 @@ public class SpellManager : MonoBehaviour
     public List<Spell> GetSpellsInArea(Vector2 center, float radius)
     {
         // int i = 0;
-        Debug.Log("finding all spells...");
+        //Debug.Log("finding all spells...");
         var spellsInArea = new List<Spell>();
 
         for (int i = 0; i < spells.Count(); ++i)
         {
-            Debug.Log(spells.Count());
+            //Debug.Log(spells.Count());
             var spell = spells.At(i);
-            Debug.Log(spell);
+            //Debug.Log(spell);
             if (((Vector2)spell.gameObject.transform.position - center).magnitude <= radius)
             {
-                Debug.Log("found in area: " + spell);
+                //Debug.Log("found in area: " + spell);
                 spellsInArea.Add(spell);
             }
         }

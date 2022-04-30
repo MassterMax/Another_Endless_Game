@@ -19,14 +19,14 @@ public class LazyCollection<T>
     public T At(int index)
     {
         // var value = values[index];
-        Debug.Log("trying to get element on place: " + index);
+        // Debug.Log("trying to get element on place: " + index);
 
         while (index < values.Count && values[index].Equals(null))
         {
             RemoveAt(index);
         }
 
-        Debug.Log(values.Count);
+        // Debug.Log(values.Count);
 
         return values[index];
     }
