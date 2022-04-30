@@ -12,14 +12,14 @@ public class Reflectable : MonoBehaviour
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        reflection = Instantiate(Resources.Load("Prefabs/Reflectable"), transform) as GameObject;
+        reflection = Instantiate(Resources.Load("Prefabs/Reflections/Reflectable"), transform) as GameObject;
         reflection.transform.localPosition = Vector3.up * yOffset;
 
         reflectionSpriteRenderer = reflection.GetComponent<SpriteRenderer>();
         reflectionSpriteRenderer.flipY = true;
         reflectionSpriteRenderer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
         
-        reflectionSpriteRenderer.sortingOrder = 0; // todo
+        reflectionSpriteRenderer.sortingOrder = 1; // todo
     }
 
     // Update is called once per frame
