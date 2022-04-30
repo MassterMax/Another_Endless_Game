@@ -119,7 +119,6 @@ GameObject:
   - component: {fileID: 7278089925930059085}
   - component: {fileID: 3989589736004412026}
   - component: {fileID: 8903044386525777804}
-  - component: {fileID: 937296387113124086}
   m_Layer: 0
   m_Name: puddle
   m_TagString: Untagged
@@ -264,15 +263,3 @@ Rigidbody2D:
   m_SleepingMode: 0
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &937296387113124086
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7278089925930059081}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f5990abdf5f9be4eb3434694f758538, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

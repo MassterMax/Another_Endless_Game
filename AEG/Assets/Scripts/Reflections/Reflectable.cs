@@ -7,7 +7,7 @@ public class Reflectable : MonoBehaviour
     SpriteRenderer spriteRenderer;
     SpriteRenderer reflectionSpriteRenderer;
     GameObject reflection;
-    public float yOffset = -0.5f;
+    [SerializeField] float yOffset = 0.5f;
 
     void Start()
     {
@@ -16,7 +16,8 @@ public class Reflectable : MonoBehaviour
         reflection.transform.localPosition = Vector3.up * yOffset;
 
         reflectionSpriteRenderer = reflection.GetComponent<SpriteRenderer>();
-        reflectionSpriteRenderer.flipY = true;
+        reflectionSpriteRenderer.flipX = true;
+        reflectionSpriteRenderer.flipY = false;
         reflectionSpriteRenderer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
         
         reflectionSpriteRenderer.sortingOrder = 1; // todo
@@ -30,9 +31,15 @@ public class Reflectable : MonoBehaviour
             reflectionSpriteRenderer.sprite = spriteRenderer.sprite;
         }
 
-        if (reflectionSpriteRenderer.flipX != spriteRenderer.flipX)
+        if (reflectionSpriteRenderer.flipX == spriteRenderer.flipX)
         {
-            reflectionSpriteRenderer.flipX = spriteRenderer.flipX;
+            reflectionSpriteRenderer.flipX = !spriteRenderer.flipX;
         }
+
+        // Set correct rotation
+        reflection.transform.localEulerAngles = Vector3.forward * (-180 - 2 * gameObject.transform.eulerAngles.z);
+
+        // Set correct vertical position
+        reflection.transform.position = gameObject.transform.position + Vector3.down * yOffset; // * Mathf.Cos(gameObject.transform.rotation.z);
     }
 }
