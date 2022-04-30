@@ -67,6 +67,11 @@ public class MonsterController : MonoBehaviour
         Debug.LogError("no such monster: " + monsterType);
     }
 
+    //public void CreatePlayer()
+    //{
+    //    Instantiate(Resources.Load("Prefabs/Player/Player"), UnityEngine.Random.insideUnitCircle.normalized, Quaternion.identity);
+    //}
+
     public void CreateMonster(string monsterName, Vector2 pos)
     {
         var monsterObject = Instantiate(Resources.Load($"Prefabs/Monsters/{monsterName}"), pos, Quaternion.identity) as GameObject;
