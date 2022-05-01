@@ -36,7 +36,7 @@ public class Skeleton : Monster
 
         // for reflections
         distanceBetweenSpearAndSkeleton = (spear.transform.position - transform.position).y;
-        Debug.Log("distanceBetweeeeeeeeeeeeen: " + distanceBetweenSpearAndSkeleton);
+        // Debug.Log("distanceBetweeeeeeeeeeeeen: " + distanceBetweenSpearAndSkeleton);
         spear.OnPickup(distanceBetweenSpearAndSkeleton);
     }
 
@@ -76,7 +76,7 @@ public class Skeleton : Monster
             }
         }
 
-        transform.Translate(direction * Time.deltaTime * speed);
+        transform.Translate(direction * Time.deltaTime * Speed);
     }
 
     protected override void HandleAnimation()

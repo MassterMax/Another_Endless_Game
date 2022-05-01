@@ -7,8 +7,6 @@ public abstract class Monster : Creature
     protected Animator animator;
     protected SpriteRenderer spriteRenderer;
 
-    protected float speed;
-
     private PlayerController player;
 
     public PlayerController Player { get => player; set => player = value; }
@@ -30,8 +28,7 @@ public abstract class Monster : Creature
 
     public void SetAttributes(float health, float maxHealth, float damage, float speed)
     {
-        base.SetAttributes(health, maxHealth, damage, false);
-        this.speed = speed;
+        base.SetAttributes(health, maxHealth, damage, speed, false);
     }
 
     // todo maybe implement

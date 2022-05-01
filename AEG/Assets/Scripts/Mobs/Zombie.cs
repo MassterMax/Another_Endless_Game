@@ -48,6 +48,6 @@ public class Zombie : Monster
         }
 
         changeDirectionTimer = Mathf.Min(changeDirectionTimer + Time.deltaTime, changeDirectonLimit);
-        transform.Translate(direction * Time.deltaTime * speed);
+        transform.Translate(direction * Time.deltaTime * Speed);
     }
 }

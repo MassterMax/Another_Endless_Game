@@ -603,7 +603,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &589703176
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1333,6 +1333,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 394579163, guid: 806b2e223d2c6c449bcc19350a5142d3, type: 3}
+      propertyPath: m_Size.y
+      value: 0.15269315
+      objectReference: {fileID: 0}
+    - target: {fileID: 394579163, guid: 806b2e223d2c6c449bcc19350a5142d3, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.17256856
+      objectReference: {fileID: 0}
     - target: {fileID: 3328252554847043080, guid: 806b2e223d2c6c449bcc19350a5142d3, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -1393,6 +1401,14 @@ PrefabInstance:
     - target: {fileID: 4072277259657465794, guid: 66d71b8e5fba1f44a9722dc4e7112ac7, type: 3}
       propertyPath: m_Name
       value: Skeleton
+      objectReference: {fileID: 0}
+    - target: {fileID: 4072277259657465801, guid: 66d71b8e5fba1f44a9722dc4e7112ac7, type: 3}
+      propertyPath: m_Size.y
+      value: 0.1838646
+      objectReference: {fileID: 0}
+    - target: {fileID: 4072277259657465801, guid: 66d71b8e5fba1f44a9722dc4e7112ac7, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.15684652
       objectReference: {fileID: 0}
     - target: {fileID: 4072277259657465804, guid: 66d71b8e5fba1f44a9722dc4e7112ac7, type: 3}
       propertyPath: m_RootOrder
@@ -1673,6 +1689,14 @@ PrefabInstance:
     - target: {fileID: 8961797055538518412, guid: 0b17faf073567b942bd156d6d680931f, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 8961797055538518422, guid: 0b17faf073567b942bd156d6d680931f, type: 3}
+      propertyPath: m_Size.y
+      value: 0.33830935
+      objectReference: {fileID: 0}
+    - target: {fileID: 8961797055538518422, guid: 0b17faf073567b942bd156d6d680931f, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.12750623
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0b17faf073567b942bd156d6d680931f, type: 3}

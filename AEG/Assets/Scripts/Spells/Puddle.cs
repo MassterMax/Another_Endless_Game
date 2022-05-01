@@ -54,11 +54,25 @@ public class Puddle : Spell, IKnowSpellManager
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (charged) return;
-
+        //if (charged) return;
         var puddle = collision.gameObject.GetComponent<Puddle>();
-        if (!puddle) return;
+        if (puddle)
+        {
+            if (puddle.charged) ChargeByLightning();
+            return;
+        }
+    }
 
-        if (puddle.charged) ChargeByLightning();
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        // Debug.Log("trying to find creature.....");
+        var creature = collision.gameObject.GetComponent<Creature>();
+        // make player check
+        if (creature && !creature.Friendly)
+        {
+            // Debug.Log("apply Buff.....");
+            creature.ApplyBuff(typeof(PuddleSlowBuff));
+            return;
+        }
     }
 }

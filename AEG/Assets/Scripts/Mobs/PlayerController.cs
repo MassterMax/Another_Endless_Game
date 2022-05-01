@@ -40,7 +40,7 @@ public class PlayerController : Creature, IBlinkable
         stick = transform.GetChild(0).gameObject;
         stickSpriteRenderer = stick.GetComponent<SpriteRenderer>();
 
-        SetAttributes(playerHealth, playerHealth, playerDamage, true);
+        SetAttributes(playerHealth, playerHealth, playerDamage, playerSpeed, true);
         SetBarStyle("green", 110);
         SetupManaBar();
     }
@@ -94,7 +94,7 @@ public class PlayerController : Creature, IBlinkable
 
         float dashMultiplyer = dashTimer > 0 ? 3f : 1f;
 
-        transform.Translate(direction * Time.deltaTime * playerSpeed * dashMultiplyer);
+        transform.Translate(direction * Time.deltaTime * Speed * dashMultiplyer);
     }
 
     void Dash()
