@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-guid: ce6aedf34e8889c40ada2258a877f3e6
+guid: 8f9f6c530a2d995439b379355505d316
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -7998115202346792270
-    second: zombie_run_0
+      213: 3881224293632299071
+    second: mage_run_0
   - first:
-      213: -5378839445101456571
-    second: zombie_run_1
+      213: -7707626079200274401
+    second: mage_run_1
   - first:
-      213: 7475807114176368336
-    second: zombie_run_2
+      213: 1227937538947560636
+    second: mage_run_2
   - first:
-      213: 3295967583312040449
-    second: zombie_run_3
+      213: -4554447787453416335
+    second: mage_run_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -104,13 +104,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: zombie_run_0
+      name: mage_run_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 32
-        width: 32
-        height: 32
+        y: 21
+        width: 19
+        height: 21
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -118,20 +118,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2bac77b699cf00190800000000000000
-      internalID: -7998115202346792270
+      spriteID: f30d1937ee0ecd530800000000000000
+      internalID: 3881224293632299071
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: zombie_run_1
+      name: mage_run_1
       rect:
         serializedVersion: 2
-        x: 32
-        y: 32
-        width: 32
-        height: 32
+        x: 19
+        y: 21
+        width: 19
+        height: 21
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -139,20 +139,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5435ed2e5068a55b0800000000000000
-      internalID: -5378839445101456571
+      spriteID: f181bbfeae2090590800000000000000
+      internalID: -7707626079200274401
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: zombie_run_2
+      name: mage_run_2
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 32
+        width: 19
+        height: 21
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -160,20 +160,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0de02d936f66fb760800000000000000
-      internalID: 7475807114176368336
+      spriteID: cb4365f8fa28a0110800000000000000
+      internalID: 1227937538947560636
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: zombie_run_3
+      name: mage_run_3
       rect:
         serializedVersion: 2
-        x: 32
+        x: 19
         y: 0
-        width: 32
-        height: 32
+        width: 19
+        height: 21
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -181,8 +181,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1025482ed01adbd20800000000000000
-      internalID: 3295967583312040449
+      spriteID: 17c76c82ed95bc0c0800000000000000
+      internalID: -4554447787453416335
       vertices: []
       indices: 
       edges: []
@@ -198,10 +198,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      zombie_run_2: 7475807114176368336
-      zombie_run_3: 3295967583312040449
-      zombie_run_0: -7998115202346792270
-      zombie_run_1: -5378839445101456571
+      mage_run_1: -7707626079200274401
+      mage_run_3: -4554447787453416335
+      mage_run_0: 3881224293632299071
+      mage_run_2: 1227937538947560636
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

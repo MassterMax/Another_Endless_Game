@@ -1,13 +1,19 @@
 fileFormatVersion: 2
-guid: 3680f357998820348b968e324c5f27ea
+guid: 197e981abcde0f54d92983c7346af09b
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3480414246045975950
-    second: skeleton_idle_with_spear_0
+      213: 3792359239506850904
+    second: skeleton_run_with_spear_0
   - first:
-      213: -3400100284320795169
-    second: skeleton_idle_with_spear_1
+      213: 570148593843099139
+    second: skeleton_run_with_spear_1
+  - first:
+      213: 268243764481537587
+    second: skeleton_run_with_spear_2
+  - first:
+      213: 7463143864006339397
+    second: skeleton_run_with_spear_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -98,13 +104,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: skeleton_idle_with_spear_0
+      name: skeleton_run_with_spear_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 32
-        height: 32
+        y: 18
+        width: 12
+        height: 18
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -112,20 +118,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 27a7839eea513bfc0800000000000000
-      internalID: -3480414246045975950
+      spriteID: 854f973b2aa21a430800000000000000
+      internalID: 3792359239506850904
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: skeleton_idle_with_spear_1
+      name: skeleton_run_with_spear_1
       rect:
         serializedVersion: 2
-        x: 32
-        y: 0
-        width: 32
-        height: 32
+        x: 12
+        y: 18
+        width: 12
+        height: 18
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -133,8 +139,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fd5ba505eca60d0d0800000000000000
-      internalID: -3400100284320795169
+      spriteID: 306d435102399e700800000000000000
+      internalID: 570148593843099139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: skeleton_run_with_spear_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 12
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 336b227584ef8b300800000000000000
+      internalID: 268243764481537587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: skeleton_run_with_spear_3
+      rect:
+        serializedVersion: 2
+        x: 12
+        y: 0
+        width: 12
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 54bebb98dc9629760800000000000000
+      internalID: 7463143864006339397
       vertices: []
       indices: 
       edges: []
@@ -150,8 +198,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      skeleton_idle_with_spear_1: -3400100284320795169
-      skeleton_idle_with_spear_0: -3480414246045975950
+      skeleton_run_with_spear_2: 268243764481537587
+      skeleton_run_with_spear_1: 570148593843099139
+      skeleton_run_with_spear_3: 7463143864006339397
+      skeleton_run_with_spear_0: 3792359239506850904
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

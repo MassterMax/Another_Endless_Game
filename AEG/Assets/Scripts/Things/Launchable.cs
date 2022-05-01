@@ -2,9 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LaunchItemManager : MonoBehaviour
+public abstract class Launchable : DamagingThing
 {
     const float g = 9.81f;
+
+    protected bool inFlight = false;
+    protected Vector2 direction;
+    protected float currentX;
+    protected float currentY;
 
     private float GetLaunchAngle(float length, float velocity)
     {
@@ -24,21 +29,23 @@ public class LaunchItemManager : MonoBehaviour
         return alpha / 2;  // l = V0^2 * sin2a / g  -->  a = asin(lg/V0^2) / 2
     }
 
-    public void LaunchObject(GameObject gameObject, Vector2 destination, float velocity)
+    public virtual void LaunchObject(Vector2 destination, float velocity)
     {
         Vector2 startPos = gameObject.transform.position;
+        direction = destination - startPos;
         float l = (startPos - destination).magnitude;
 
         print("lg/V^2: " + l * g / (velocity * velocity));
 
         float alpha = GetLaunchAngle(l, velocity);
 
-        StartCoroutine(Launch(gameObject, destination, velocity, l, alpha));
+        StartCoroutine(Launch(destination, velocity, l, alpha));
     }
 
-    IEnumerator Launch(GameObject gameObject, Vector2 destination, float velocity, float length, float alpha)
+    IEnumerator Launch(Vector2 destination, float velocity, float length, float alpha)
     {
         Debug.LogWarning("launched!");
+        inFlight = true;
 
         float eps = 0.02f * velocity;  // todo maybe change
         float startTime = Time.time;
@@ -57,15 +64,17 @@ public class LaunchItemManager : MonoBehaviour
         {
             //Debug.Log("step!");
             float time = Time.time - startTime;
-           
-            float newX = velocityX * time;
-            float newY = velocityY * time - g * time * time / 2;
+
+            currentX = velocityX * time;
+            currentY = velocityY * time - g * time * time / 2;
 
             float delta = velocityX * time / length;  // from 0 to 1
+
+            // this is a linear transformation
             float extraX = (1 - delta) * x1 + delta * (x2 - length);
             float extraY = (1 - delta) * y1 + delta * y2;
 
-            var newPos = new Vector2(newX + extraX, newY + extraY);
+            var newPos = new Vector2(currentX + extraX, currentY + extraY);
             gameObject.transform.position = newPos;
 
             if (skipStep)
@@ -85,6 +94,13 @@ public class LaunchItemManager : MonoBehaviour
         }
 
         gameObject.transform.position = destination;
+        inFlight = false;
         Debug.LogWarning("in place!");
+        OnLanding();
+    }
+
+    protected virtual void OnLanding()
+    {
+
     }
 }

@@ -1,19 +1,19 @@
 fileFormatVersion: 2
-guid: 197e981abcde0f54d92983c7346af09b
+guid: 1579e59eb657d5f43bab2d92e474a2de
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3792359239506850904
-    second: skeleton_run_with_spear_0
+      213: -6516494973350753097
+    second: skeleton_run_without_spear_0
   - first:
-      213: 570148593843099139
-    second: skeleton_run_with_spear_1
+      213: -1095990622507250437
+    second: skeleton_run_without_spear_1
   - first:
-      213: 268243764481537587
-    second: skeleton_run_with_spear_2
+      213: -3855093559351407692
+    second: skeleton_run_without_spear_2
   - first:
-      213: 7463143864006339397
-    second: skeleton_run_with_spear_3
+      213: -9028492782069409312
+    second: skeleton_run_without_spear_3
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -104,13 +104,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: skeleton_run_with_spear_0
+      name: skeleton_run_without_spear_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 32
-        width: 32
-        height: 32
+        y: 18
+        width: 12
+        height: 18
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -118,20 +118,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 854f973b2aa21a430800000000000000
-      internalID: 3792359239506850904
+      spriteID: 7bc4fccf852c095a0800000000000000
+      internalID: -6516494973350753097
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: skeleton_run_with_spear_1
+      name: skeleton_run_without_spear_1
       rect:
         serializedVersion: 2
-        x: 32
-        y: 32
-        width: 32
-        height: 32
+        x: 12
+        y: 18
+        width: 12
+        height: 18
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -139,20 +139,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 306d435102399e700800000000000000
-      internalID: 570148593843099139
+      spriteID: bfccb4ce5524ac0f0800000000000000
+      internalID: -1095990622507250437
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: skeleton_run_with_spear_2
+      name: skeleton_run_without_spear_2
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 32
+        width: 12
+        height: 18
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -160,20 +160,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 336b227584ef8b300800000000000000
-      internalID: 268243764481537587
+      spriteID: 4bb86fa35d4ff7ac0800000000000000
+      internalID: -3855093559351407692
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: skeleton_run_with_spear_3
+      name: skeleton_run_without_spear_3
       rect:
         serializedVersion: 2
-        x: 32
+        x: 12
         y: 0
-        width: 32
-        height: 32
+        width: 12
+        height: 18
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -181,8 +181,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 54bebb98dc9629760800000000000000
-      internalID: 7463143864006339397
+      spriteID: 0e9139356a954b280800000000000000
+      internalID: -9028492782069409312
       vertices: []
       indices: 
       edges: []
@@ -198,10 +198,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      skeleton_run_with_spear_2: 268243764481537587
-      skeleton_run_with_spear_1: 570148593843099139
-      skeleton_run_with_spear_3: 7463143864006339397
-      skeleton_run_with_spear_0: 3792359239506850904
+      skeleton_run_without_spear_2: -3855093559351407692
+      skeleton_run_without_spear_1: -1095990622507250437
+      skeleton_run_without_spear_3: -9028492782069409312
+      skeleton_run_without_spear_0: -6516494973350753097
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

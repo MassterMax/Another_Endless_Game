@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DamagingThing : MonoBehaviour, IDamaging
+public abstract class DamagingThing : MonoBehaviour, IDamaging
 {
     private float damage;
 

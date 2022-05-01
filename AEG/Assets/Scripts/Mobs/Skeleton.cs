@@ -7,7 +7,7 @@ public class Skeleton : Monster
     [SerializeField] float throwingRadius = 10f;
     [SerializeField] float fightingRadius = 5f;
     [SerializeField] float hurryBoost = 1.5f;
-    LaunchItemManager manager;
+    // LaunchItemManager manager;  DEPRECATED
 
     // todo make timer because I zadolbalsya
     float throwDilation = .5f;
@@ -15,11 +15,13 @@ public class Skeleton : Monster
 
     float spearPreferedCoef = 2f;  // if tpSpearDistance < toPlayerDistance * coef; => prefer to obtain spear
 
-    GameObject spear;
+    Spear spear;
     bool withSpear = true;
     bool preparing = false;
     Vector2 defaultSpearPos;
     Vector2 lastSpearTarget;
+
+    float distanceBetweenSpearAndSkeleton;
 
     public override float Damage { get => withSpear ? base.Damage * 3 : base.Damage; }  
     // todo spear has own collider and maybe I should separate it as entity
@@ -28,9 +30,14 @@ public class Skeleton : Monster
     {
         base.Start();
 
-        spear = GetComponentInChildren<Spear>().gameObject;
-        manager = FindObjectOfType<LaunchItemManager>();  // todo maybe remove
+        spear = GetComponentInChildren<Spear>();
+        // manager = FindObjectOfType<LaunchItemManager>();  // todo maybe remove
         defaultSpearPos = spear.transform.localPosition;
+
+        // for reflections
+        distanceBetweenSpearAndSkeleton = (spear.transform.position - transform.position).y;
+        Debug.Log("distanceBetweeeeeeeeeeeeen: " + distanceBetweenSpearAndSkeleton);
+        spear.OnPickup(distanceBetweenSpearAndSkeleton);
     }
 
     protected override void Update()
@@ -119,6 +126,7 @@ public class Skeleton : Monster
                 withSpear = true;
                 spear.transform.localPosition = defaultSpearPos;
                 preparedToThrowTime = Time.time;
+                spear.OnPickup(distanceBetweenSpearAndSkeleton);
             }
         }
         else
@@ -126,7 +134,7 @@ public class Skeleton : Monster
             float spearSpeed = 11f;
 
             var spearDirection = (Player.transform.position - spear.transform.position);
-            spear.transform.eulerAngles = new Vector3(0, 0, PlayerController.VectorToAngle(spearDirection) - 90);
+            spear.transform.eulerAngles = new Vector3(0, 0, Utils.VectorToAngle(spearDirection) - 90);
 
             if ((preparing || playerDistance <= throwingRadius && fightingRadius < playerDistance) 
                 && (Time.time - preparedToThrowTime) > throwDilation)
@@ -136,7 +144,7 @@ public class Skeleton : Monster
                 withSpear = false;
                 preparing = false;
 
-                manager.LaunchObject(spear, lastSpearTarget, spearSpeed);  // todo remove hardcode
+                spear.LaunchObject(lastSpearTarget, spearSpeed);  // todo remove hardcode
             }
         }
     }
@@ -154,6 +162,7 @@ public class Skeleton : Monster
     // todo better create spear script with handling this case (and other possible cases)
     private void OnDestroy()
     {
-        Destroy(spear.gameObject);
+        if (spear != null)
+            Destroy(spear.gameObject);
     }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : Creature
+public class PlayerController : Creature, IBlinkable
 {
     [SerializeField] float playerSpeed;
     [SerializeField] float playerHealth;
@@ -115,7 +115,7 @@ public class PlayerController : Creature
             FlipStick();
         }
 
-        var angle = VectorToAngle(dir);
+        var angle = Utils.VectorToAngle(dir);
         stick.transform.eulerAngles = new Vector3(0, 0, angle / 2 - 45);
     }
 
@@ -128,17 +128,6 @@ public class PlayerController : Creature
     protected override void HandleAnimation()
     {
         animator.SetBool("isRun", direction.sqrMagnitude != 0);
-    }
-
-    public static float VectorToAngle(Vector2 vector)
-    {
-        var angle = Vector2.Angle(Vector2.right, vector);
-        if (vector.y < 0)
-        {
-            angle = -angle;
-            if (vector.x < 0) angle = 360 + angle;
-        }
-        return angle;
     }
 
     public bool SpendMana(float value)
@@ -165,28 +154,39 @@ public class PlayerController : Creature
             {
                 Protection = false;
                 var circle = transform.GetComponentInChildren<Circle>(); // bye-bye
-                StartCoroutine(Blinking(circle.gameObject.GetComponent<SpriteRenderer>(), times, dilation));
+                StartCoroutine(((IBlinkable)this).Blinking(circle.gameObject.GetComponent<SpriteRenderer>(), times, dilation));
+
+                // HANDLE REFLECTIONS
+                circle.reflection.BlinkReflection(times, dilation);
+
                 Destroy(circle.gameObject, invincibilityDuration);
                 return;
             }
 
             base.TakeDamage(damage);
-            
-            StartCoroutine(Blinking(playerSpriteRenderer, times, dilation));
+
+            StartCoroutine(((IBlinkable)this).Blinking(playerSpriteRenderer, times, dilation));
+            StartCoroutine(((IBlinkable)this).Blinking(stickSpriteRenderer, times, dilation));
+
+            // HANDLE REFLECTIONS
+            var reflection = GetComponent<Reflectable>();
+            if (reflection != null) reflection.BlinkReflection(times, dilation);
+            var stickReflection = stick.GetComponent<Reflectable>();
+            if (stickReflection != null) stickReflection.BlinkReflection(times, dilation);
         }
     }
 
-    public IEnumerator Blinking(SpriteRenderer spriteRenderer, int times, float dilation)
-    {
-        for (var n = 0; n < times; n++)
-        {
-            spriteRenderer.enabled = true;
-            yield return new WaitForSeconds(dilation);
-            spriteRenderer.enabled = false;
-            yield return new WaitForSeconds(dilation);
-        }
-        spriteRenderer.enabled = true;
-    }
+    //public IEnumerator Blinking(SpriteRenderer spriteRenderer, int times, float dilation)
+    //{
+    //    for (var n = 0; n < times; n++)
+    //    {
+    //        spriteRenderer.enabled = true;
+    //        yield return new WaitForSeconds(dilation);
+    //        spriteRenderer.enabled = false;
+    //        yield return new WaitForSeconds(dilation);
+    //    }
+    //    spriteRenderer.enabled = true;
+    //}
 
     private void OnTriggerStay2D(Collider2D collision)
     {
@@ -194,5 +194,10 @@ public class PlayerController : Creature
         if (damaging == null || damaging.GetDamage() == 0) return;
 
         TakeDamage(damaging.GetDamage());
+    }
+
+    public float GetHeight()
+    {
+        return playerSpriteRenderer.bounds.size.y;
     }
 }

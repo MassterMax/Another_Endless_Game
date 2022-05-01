@@ -9,6 +9,8 @@ public class Reflecting : MonoBehaviour
     GameObject trancparentChild;
     float transparency = 0.5f;
 
+    public const int REFLECTION_LOWER_BOUND = -999;
+
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -19,8 +21,12 @@ public class Reflecting : MonoBehaviour
         transparentSpriteRenderer = trancparentChild.GetComponent<SpriteRenderer>();
         transparentSpriteRenderer.color = new Color(1, 1, 1, transparency);
 
-        spriteRenderer.sortingOrder = 0;
-        transparentSpriteRenderer.sortingOrder = 2;
+
+        // I AM NOT SURE
+        // I AM NOT SURE
+        // I AM NOT SURE
+        spriteRenderer.sortingOrder = REFLECTION_LOWER_BOUND;
+        transparentSpriteRenderer.sortingOrder = 0;
     }
 
     // Update is called once per frame

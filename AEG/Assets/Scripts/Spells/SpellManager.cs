@@ -11,7 +11,7 @@ public class SpellManager : MonoBehaviour
 
     // List<GameObject> spellsGameObjects = new List<GameObject>();
     // List<Spell> spells = new List<Spell>();
-    LazyCollection<Spell> spells = new LazyCollection<Spell>(); // it ruined my day =(
+    Utils.LazyCollection<Spell> spells = new Utils.LazyCollection<Spell>(); // it ruined my day =(
 
     // mapping from name of spell in gesture recogniser to spell prefab in resources
     private Dictionary<string, string> spellPrefixToSpellPrefab = new Dictionary<string, string>() {
