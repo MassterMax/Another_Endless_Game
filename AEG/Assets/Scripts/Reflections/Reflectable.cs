@@ -11,8 +11,9 @@ public class Reflectable : MonoBehaviour, IBlinkable
 
     float pseudoYOffset = 0f;
     [SerializeField] Vector2 reflectAxis;
+    bool isWorking = true;
 
-    void Start()
+    void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         reflection = Instantiate(Resources.Load("Prefabs/Reflections/Reflectable"), transform) as GameObject;
@@ -43,6 +44,8 @@ public class Reflectable : MonoBehaviour, IBlinkable
 
         // PROPER OFFSET: (not just height of sprite)
         yOffset = spriteRenderer.sprite.pivot.y / spriteRenderer.sprite.pixelsPerUnit * 2;
+
+        Turn(MenuController.ReflectionsTurnedOn);
     }
 
     public void BlinkReflection(int times, float dilation)
@@ -53,6 +56,8 @@ public class Reflectable : MonoBehaviour, IBlinkable
     // Update is called once per frame
     void Update()
     {
+        if (!isWorking) return;
+
         if (reflectionSpriteRenderer.sprite != spriteRenderer.sprite)
         {
             reflectionSpriteRenderer.sprite = spriteRenderer.sprite;
@@ -70,6 +75,12 @@ public class Reflectable : MonoBehaviour, IBlinkable
         //Debug.Log(gameObject.name + " : " + pseudoYOffset + " " + yOffset);
         reflection.transform.position = (Vector2)gameObject.transform.position +
             downVector() * (2 * pseudoYOffset + yOffset * Mathf.Cos(gameObject.transform.rotation.z));
+    }
+
+    public void Turn(bool on)
+    {
+        isWorking = on;
+        reflection.SetActive(on);
     }
 
     private Vector2 downVector()

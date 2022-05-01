@@ -7,11 +7,12 @@ public class Reflecting : MonoBehaviour
     SpriteRenderer spriteRenderer;
     SpriteRenderer transparentSpriteRenderer;
     GameObject trancparentChild;
-    float transparency = 0.5f;
+    float transparency = 0.7f;
+    bool isWorking = true;
 
     public const int REFLECTION_LOWER_BOUND = -999;
 
-    void Start()
+    void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         var spriteMask = gameObject.AddComponent<SpriteMask>();
@@ -27,14 +28,23 @@ public class Reflecting : MonoBehaviour
         // I AM NOT SURE
         spriteRenderer.sortingOrder = REFLECTION_LOWER_BOUND;
         transparentSpriteRenderer.sortingOrder = 0;
+
+        Turn(MenuController.ReflectionsTurnedOn);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!isWorking) return;
         if (transparentSpriteRenderer.sprite != spriteRenderer.sprite)
         {
             transparentSpriteRenderer.sprite = spriteRenderer.sprite;
         }
+    }
+
+    public void Turn(bool on)
+    {
+        isWorking = on;
+        trancparentChild.SetActive(on);
     }
 }
