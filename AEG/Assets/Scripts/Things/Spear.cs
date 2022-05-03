@@ -43,9 +43,27 @@ public class Spear : Launchable
         reflectable.SetPseudoYOffset(-y/2);
     }
 
+    public override void LandInTarget(Transform target)
+    {
+        base.LandInTarget(target);
+        OnPickup(transform.localPosition.y);
+
+        StartCoroutine(FadingDestroy());
+    }
+
     //protected override void OnLanding()
     //{
     //    // reflectable.ResetReflectAxis();
     //    reflectable.SetPseudoYOffset(0);
     //}
+
+    public override float GetDamage()
+    {
+        if (inFlight)
+        {
+            return base.GetDamage();
+        }
+        // landed spear deal 0 damage
+        return 0;
+    }
 }

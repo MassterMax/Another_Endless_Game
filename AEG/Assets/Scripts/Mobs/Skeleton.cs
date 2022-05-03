@@ -56,7 +56,7 @@ public class Skeleton : Monster
         if (!withSpear)
         {
             // go for player only if spear is far away
-            if (toSpearDistance() <= spearPreferedCoef * playerDistance) direction = toSpearVector().normalized;
+            if (spear != null && !spear.InTarget && toSpearDistance() <= spearPreferedCoef * playerDistance) direction = toSpearVector().normalized;
             else direction = toPlayerVector().normalized;
 
             direction *= hurryBoost;
@@ -89,7 +89,7 @@ public class Skeleton : Monster
 
     protected override void Rotate()
     {
-        if (!withSpear && toSpearDistance() <= spearPreferedCoef * toPlayerDistance())
+        if (spear != null && !withSpear && toSpearDistance() <= spearPreferedCoef * toPlayerDistance())
         {
             if (spriteRenderer.flipX != Mathf.Sign(toSpearVector().x) < 0)
             {
@@ -106,6 +106,10 @@ public class Skeleton : Monster
     {
         // Debug.Log("Inside ThrowSpear, withSpear: " + withSpear + " time: " + Time.time);
         if (Player == null) return;
+        if (spear == null) return;
+        // if spear in player
+        if (spear.InTarget) return;
+      
 
         float playerDistance = toPlayerDistance();
 

@@ -194,6 +194,11 @@ public class PlayerController : Creature, IBlinkable
         if (damaging == null || damaging.GetDamage() == 0) return;
 
         TakeDamage(damaging.GetDamage());
+
+        if (damaging is Launchable)
+        {
+            ((Launchable)damaging).LandInTarget(transform);
+        }
     }
 
     public float GetHeight()

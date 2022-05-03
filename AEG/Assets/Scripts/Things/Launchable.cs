@@ -10,6 +10,10 @@ public abstract class Launchable : DamagingThing
     protected Vector2 direction;
     protected float currentX;
     protected float currentY;
+    protected bool inTarget = false;
+
+    public bool InFlight { get => inFlight; }
+    public bool InTarget { get => inTarget; }
 
     private float GetLaunchAngle(float length, float velocity)
     {
@@ -60,7 +64,7 @@ public abstract class Launchable : DamagingThing
         Vector2 prev2Pos = gameObject.transform.position;
         bool skipStep = true;
 
-        while (((Vector2)gameObject.transform.position - destination).magnitude > eps)
+        while (!inTarget && ((Vector2)gameObject.transform.position - destination).magnitude > eps)
         {
             //Debug.Log("step!");
             float time = Time.time - startTime;
@@ -93,14 +97,21 @@ public abstract class Launchable : DamagingThing
             yield return new WaitForFixedUpdate();
         }
 
-        gameObject.transform.position = destination;
+        if (!inTarget) gameObject.transform.position = destination;
         inFlight = false;
-        Debug.LogWarning("in place!");
+
         OnLanding();
     }
 
     protected virtual void OnLanding()
     {
 
+    }
+
+    public virtual void LandInTarget(Transform target)
+    {
+        this.transform.parent = target;
+        inTarget = true;
+        // todo remove after some duration
     }
 }

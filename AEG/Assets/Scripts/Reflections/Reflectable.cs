@@ -29,20 +29,7 @@ public class Reflectable : MonoBehaviour, IBlinkable
         yOffset = spriteRenderer.bounds.size.y;
 
         ResetReflectAxis();
-        //SetPseudoYOffset(transform.localPosition.y);
-        //Debug.Log(gameObject.name + " : " + pseudoYOffset + " " + spriteRenderer.bounds);
-        //Debug.Log(spriteRenderer.bounds.center + " " + spriteRenderer.bounds.extents + " " + spriteRenderer.bounds.size);
-        //Debug.Log(Camera.main.ScreenToWorldPoint(spriteRenderer.sprite.pivot) + " " + spriteRenderer.sprite.pivot);
-        //float pixel2units = spriteRenderer.sprite.rect.width / spriteRenderer.sprite.bounds.size.x;
 
-
-        //Debug.Log(spriteRenderer.sprite.pixelsPerUnit);
-        //Debug.Log(transform.position);
-        //Debug.Log(spriteRenderer.sprite.pivot.y);
-        //Debug.Log(spriteRenderer.sprite.pivot.y / spriteRenderer.sprite.pixelsPerUnit * 2);
-        //Debug.Log(yOffset);
-
-        // PROPER OFFSET: (not just height of sprite)
         yOffset = spriteRenderer.sprite.pivot.y / spriteRenderer.sprite.pixelsPerUnit * 2;
 
         Turn(MenuController.ReflectionsTurnedOn);
@@ -116,4 +103,9 @@ public class Reflectable : MonoBehaviour, IBlinkable
 
         return 180 - 2 * currentAngle + 2 * relativeAngle;
     }
+
+    //private void Destroy()
+    //{
+    //    Destroy(reflection);
+    //}
 }
