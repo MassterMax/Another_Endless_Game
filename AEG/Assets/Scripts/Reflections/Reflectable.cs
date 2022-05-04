@@ -55,6 +55,11 @@ public class Reflectable : MonoBehaviour, IBlinkable
             reflectionSpriteRenderer.flipX = !spriteRenderer.flipX;
         }
 
+        if (reflectionSpriteRenderer.color != spriteRenderer.color)
+        {
+            reflectionSpriteRenderer.color = spriteRenderer.color;
+        }
+
         // Set correct rotation
         reflection.transform.localEulerAngles = Vector3.forward * ReflectionAngle();
 
@@ -104,8 +109,8 @@ public class Reflectable : MonoBehaviour, IBlinkable
         return 180 - 2 * currentAngle + 2 * relativeAngle;
     }
 
-    //private void Destroy()
-    //{
-    //    Destroy(reflection);
-    //}
+    private void Destroy()
+    {
+        Destroy(reflection);
+    }
 }

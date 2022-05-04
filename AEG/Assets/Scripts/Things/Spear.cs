@@ -39,7 +39,7 @@ public class Spear : Launchable
 
     public void OnPickup(float y)
     {
-        reflectable.ResetReflectAxis();
+        //reflectable.ResetReflectAxis();
         reflectable.SetPseudoYOffset(-y/2);
     }
 
