@@ -18,7 +18,7 @@ public class SpellManager : MonoBehaviour
         { "lightning", "lightning_1" },
         { "circle", "bubble1"},
         { "puddle", "puddle"},
-        { "square", "Meadow" },
+        { "meadow", "Meadow" },
     };
 
     // maybe use this approach with manacost or create a script with constants?
@@ -39,7 +39,14 @@ public class SpellManager : MonoBehaviour
 
     public void CastSpell(string name, float error) // todo do not cast if error is high
     {
-        // todo make custom error for any spells
+        // todo make custom error for any spells!!!!!!!!!!!!!!!
+        // todo make custom error for any spells!!!!!!!!!!!!!!!
+        // todo make custom error for any spells!!!!!!!!!!!!!!!
+        // todo make custom error for any spells!!!!!!!!!!!!!!!
+        // todo make custom error for any spells!!!!!!!!!!!!!!!
+        // todo make custom error for any spells!!!!!!!!!!!!!!!
+        // todo make custom error for any spells!!!!!!!!!!!!!!!
+        // todo make custom error for any spells!!!!!!!!!!!!!!!
         if (error > 2f)
         {
             drawingManager.SetColor(Color.black);

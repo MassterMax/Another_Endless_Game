@@ -14,12 +14,12 @@ public class Drawing : MonoBehaviour
 
     public Vector2 GetFirstPoint()
     {
-        return coords[0];
+        return coords[0] + (Vector2)cam.transform.position;
     }
 
     public Vector2 GetLastPoint()
     {
-        return coords[coords.Count - 1];
+        return coords[coords.Count - 1] + (Vector2)cam.transform.position;
     }
 
     public Vector2 GetMeanPoint()
@@ -32,7 +32,7 @@ public class Drawing : MonoBehaviour
             y += point.y;
         }
 
-        return new Vector2(x / coords.Count, y / coords.Count);
+        return new Vector2(x / coords.Count + cam.transform.position.x, y / coords.Count + cam.transform.position.y);
     }
 
     private void Start()
@@ -46,7 +46,7 @@ public class Drawing : MonoBehaviour
         if (Input.GetKey(KeyCode.Mouse0))
         {
             Vector2 newPos = Input.mousePosition;
-            newPos = cam.ScreenToWorldPoint(newPos);
+            newPos = cam.ScreenToWorldPoint(newPos) - cam.transform.position;
 
             if (Input.GetKeyDown(KeyCode.Mouse0)) // reset line
             {

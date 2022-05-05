@@ -42,6 +42,6 @@ public class PuddleSlowBuff : Buff
 
     public override float GetValue(Creature creature)
     {
-        return 0.7f;
+        return 0.6f;
     }
 }
