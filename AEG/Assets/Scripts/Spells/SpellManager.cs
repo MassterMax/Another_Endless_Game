@@ -18,13 +18,16 @@ public class SpellManager : MonoBehaviour
         { "lightning", "lightning_1" },
         { "circle", "bubble1"},
         { "puddle", "puddle"},
+        { "square", "Meadow" },
     };
 
     // maybe use this approach with manacost or create a script with constants?
     private Dictionary<Type, Color> spellToColor = new Dictionary<Type, Color>() {
         { typeof(Lightning), Color.white},
         { typeof(Circle), new Color(0.4f, 0.6f, 1) },
-        { typeof(Puddle), new Color(132f/255f, 229f/255f, 223f/255f) }
+        { typeof(Puddle), new Color(132f/255f, 229f/255f, 223f/255f) },
+        { typeof(Meadow), new Color(153f/255f, 229f/255f, 80f/255f) },
+
     };
 
     private void Awake()

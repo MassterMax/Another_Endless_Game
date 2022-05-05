@@ -7,7 +7,7 @@ public class Reflecting : MonoBehaviour
     SpriteRenderer spriteRenderer;
     SpriteRenderer transparentSpriteRenderer;
     GameObject trancparentChild;
-    float transparency = 0.7f;
+    float transparency = 0.8f;
     bool isWorking = true;
 
     public const int REFLECTION_LOWER_BOUND = -999;
@@ -26,6 +26,7 @@ public class Reflecting : MonoBehaviour
         // I AM NOT SURE
         // I AM NOT SURE
         // I AM NOT SURE
+        // borders should have order = -1000
         spriteRenderer.sortingOrder = REFLECTION_LOWER_BOUND;
         transparentSpriteRenderer.sortingOrder = 0;
 
