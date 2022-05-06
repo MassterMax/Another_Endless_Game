@@ -38,8 +38,9 @@ public class Puddle : Spell, IKnowSpellManager
         }
     }
 
-    void Awake()
+    void Start()
     {
+        Debug.Log("puddle start!");
         objectCollider = GetComponent<Collider2D>();
         lightningChild = gameObject.transform.GetChild(0).gameObject;
         lightningChild.SetActive(false);

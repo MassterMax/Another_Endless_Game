@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class Reflecting : MonoBehaviour
 {
+    public const int REFLECTION_LOWER_BOUND = -999;
+
+    [SerializeField] float transparency = 0.6f;
+    [SerializeField] int reflectionLowerBound = REFLECTION_LOWER_BOUND;
+    [SerializeField] int transparentSortingOrder;
+
     SpriteRenderer spriteRenderer;
     SpriteRenderer transparentSpriteRenderer;
     GameObject trancparentChild;
-    float transparency = 0.8f;
     bool isWorking = true;
-
-    public const int REFLECTION_LOWER_BOUND = -999;
 
     void Awake()
     {
@@ -27,8 +30,8 @@ public class Reflecting : MonoBehaviour
         // I AM NOT SURE
         // I AM NOT SURE
         // borders should have order = -1000
-        spriteRenderer.sortingOrder = REFLECTION_LOWER_BOUND;
-        transparentSpriteRenderer.sortingOrder = 0;
+        spriteRenderer.sortingOrder = reflectionLowerBound;
+        transparentSpriteRenderer.sortingOrder = transparentSortingOrder;
 
         Turn(MenuController.ReflectionsTurnedOn);
     }
