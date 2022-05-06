@@ -2,17 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Meadow : Spell
+public abstract class CombinedSpell : Spell
 {
-    public override void CastSpell(Vector2 start, Vector2 end, Vector2 center)
-    {
-        transform.position = center;
-
-    }
-
     public override float GetManaCost()
     {
-        return 5f;
+        return 0;
     }
 
     // Start is called before the first frame update

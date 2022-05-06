@@ -18,6 +18,16 @@ public class Puddle : Spell, IKnowSpellManager
     public override void CastSpell(Vector2 start, Vector2 end, Vector2 center)
     {
         transform.position = center;
+
+        foreach (var spell in SpellManager.GetSpellsInArea(center, 1f))  // todo remove hard code
+        {
+            if (spell is Meadow)
+            {
+                // turn meadow into dirt
+                SpellManager.CombineTwoSpells(this, spell);
+                break;
+            }
+        }
     }
 
     public void ChargeByLightning()

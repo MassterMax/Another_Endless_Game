@@ -21,6 +21,11 @@ public class SpellManager : MonoBehaviour
         { "meadow", "Meadow" },
     };
 
+    private Dictionary<List<Type>, string> combinationsList = new()
+    {
+        {new(){typeof(Puddle), typeof(Meadow) }, "Dirt" },
+    };
+
     // maybe use this approach with manacost or create a script with constants?
     private Dictionary<Type, Color> spellToColor = new Dictionary<Type, Color>() {
         { typeof(Lightning), Color.white},
@@ -47,7 +52,7 @@ public class SpellManager : MonoBehaviour
         // todo make custom error for any spells!!!!!!!!!!!!!!!
         // todo make custom error for any spells!!!!!!!!!!!!!!!
         // todo make custom error for any spells!!!!!!!!!!!!!!!
-        if (error > 2f)
+        if (error > 3f)
         {
             drawingManager.SetColor(Color.black);
             return;
@@ -101,6 +106,42 @@ public class SpellManager : MonoBehaviour
         }
     }
 
+    private bool FindSpells(List<Type> types, Type type1, Type type2)
+    {
+        return type1.Equals(types[0]) && type2.Equals(types[1]) || type1.Equals(types[1]) && type2.Equals(types[0]);
+    }
+
+    public void CombineTwoSpells(Spell spell1, Spell spell2)
+    {
+        foreach(var spells in combinationsList)
+        {
+            if (FindSpells(spells.Key, spell1.GetType(), spell2.GetType())) {
+                Vector2 newPos = (spell1.transform.position + spell2.transform.position) / 2;
+                var spellPrefab = Resources.Load($"Prefabs/Spells/{spells.Value}");
+                GameObject spellObject = Instantiate(spellPrefab, newPos, Quaternion.identity) as GameObject;
+                CombinedSpell combinedSpell = spellObject.GetComponent<CombinedSpell>();
+
+                Debug.Log("combination: " + combinedSpell.name);
+
+                // we should set some requiremets befare casting TODO TODO TODO
+                //SetSpellRequirements(spell);
+
+                this.spells.Add(combinedSpell);
+                // spellsGameObjects.Add(spellObject);
+                // spells.Add(new KeyValuePair<GameObject, Spell>(spellObject, spell));
+
+                combinedSpell.CastSpell(spell1.transform.position, spell2.transform.position, newPos);
+
+                Destroy(spell1.gameObject);
+                Destroy(spell2.gameObject);
+
+                return;
+            }
+        }
+
+        Debug.LogError("no such combination: " + spell1 + " and " + spell2);
+    }
+
     private void SetColorOfSpell(Spell spell)
     {
         Type spellType = spell.GetType();
@@ -132,23 +173,8 @@ public class SpellManager : MonoBehaviour
             }
         }
 
-        //while (i != spellsGameObjects.Count)
-        //{
-        //    var spellGameObject = spellsGameObjects[i];
-        //    if (spellGameObject == null)  // lazy delete monster
-        //    {
-        //        spellsGameObjects.RemoveAt(i);
-        //        spells.RemoveAt(i);
-        //    }
-        //    else
-        //    {
-        //        if (((Vector2)spellGameObject.transform.position - center).magnitude <= radius)
-        //        {
-        //            spellsInArea.Add(spells[i]);
-        //        }
-        //        i += 1;
-        //    }
-        //}
+        Debug.Log("spells in area: ");
+        Debug.Log(string.Join(" ", spellsInArea));
 
         return spellsInArea;
     }
@@ -166,25 +192,6 @@ public class SpellManager : MonoBehaviour
                 foundSpells.Add(spell);
             }
         }
-
-
-        //while (i != spellsGameObjects.Count)
-        //{
-        //    var spellGameObject = spellsGameObjects[i];
-        //    if (spellGameObject == null)  // lazy delete
-        //    {
-        //        spellsGameObjects.RemoveAt(i);
-        //        spells.RemoveAt(i);
-        //    }
-        //    else
-        //    {
-        //        if (spells[i] is T)
-        //        {
-        //            foundSpells.Add(spells[i]);
-        //        }
-        //        i += 1;
-        //    }
-        //}
 
         return foundSpells;
     }
