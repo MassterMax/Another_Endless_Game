@@ -42,6 +42,22 @@ public class PuddleSlowBuff : Buff
 
     public override float GetValue(Creature creature)
     {
+        return 0.9f;
+    }
+}
+
+public class DirtSlowBuff : Buff
+{
+    public override bool IsMultiplier => true;
+
+    public override bool IsDebuff => true;
+
+    public override BuffTargetField TargetField => BuffTargetField.Speed;
+
+    public override float Duration => 2f;
+
+    public override float GetValue(Creature creature)
+    {
         return 0.6f;
     }
 }

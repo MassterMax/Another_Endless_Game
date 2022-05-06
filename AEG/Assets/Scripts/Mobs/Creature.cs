@@ -22,8 +22,8 @@ public abstract class Creature : MonoBehaviour, IDamaging
 
     // under buffs:
     public float Speed { get => CalculateField(speed, BuffTargetField.Speed); }
-    public float MaxHealth { get => maxHealth; }
-    public virtual float Damage { get => damage; }
+    public float MaxHealth { get => maxHealth; } // todo
+    public virtual float Damage { get => damage; }  // todo
 
     List<Buff> buffs = new List<Buff>();
 
