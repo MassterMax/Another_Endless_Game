@@ -31,11 +31,6 @@ public class Circle : Spell, IKnowPlayerController
         }
     }
 
-    public override float GetManaCost()
-    {
-        return 35;
-    }
-
     private void SetReflectionPosition()
     {
         reflection = GetComponent<Reflectable>();

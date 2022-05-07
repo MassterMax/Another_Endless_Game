@@ -95,7 +95,9 @@ public interface IBlinkable
 
 public interface IFadestroyable
 {
-    public IEnumerator FadingDestroy(SpriteRenderer spriteRenderer, float dilation = 0f, float time = 1f, bool withResize = false)
+    // resize = true is equal to just resizing, false equal to fading
+
+    public IEnumerator FadingDestroy(SpriteRenderer spriteRenderer, float dilation = 0f, float time = 1f, bool resize = false)
     {
         if (spriteRenderer == null) yield break;
 
@@ -116,13 +118,16 @@ public interface IFadestroyable
         //var colorStep = new Color(0, 0, 0, spriteRenderer.color.a);
         while (Time.time - start < time)
         {
-            // childSpriteRenderers.Count
-            for (int i = 0; i < 1; ++i)
+            if (resize)
+                spriteRenderer.transform.localScale -= startScale * Time.fixedDeltaTime;
+            else
             {
-                childSpriteRenderers[i].color -= childColorStep[i] * Time.fixedDeltaTime;
+                for (int i = 0; i < childSpriteRenderers.Count; ++i)
+                {
+                    childSpriteRenderers[i].color -= childColorStep[i] * Time.fixedDeltaTime;
+                }
             }
-            //spriteRenderer.color -= colorStep * Time.fixedDeltaTime;
-            spriteRenderer.transform.localScale -= startScale * Time.fixedDeltaTime;
+
             yield return new WaitForFixedUpdate();
         }
 

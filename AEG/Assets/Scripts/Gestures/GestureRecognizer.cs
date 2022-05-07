@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.IO;
+using UnityEngine.EventSystems;
 
 // Author: https://github.com/Oponn-1/Unity-Gesture-Recognizer/blob/master/GestureRecognizer.cs
 public class GestureRecognizer : MonoBehaviour
@@ -85,12 +86,21 @@ public class GestureRecognizer : MonoBehaviour
     void Update()
     {
         tempTime += Time.deltaTime;
+
         if (Input.GetMouseButton(0))
         {
             if (inputReady)
             {
                 if (!gestureStarted)
                 {
+                    // verify pointer is not on top of GUI; if it is, return
+                    // https://forum.unity.com/threads/prevent-mouse-clicking-through-ui.1027765/
+                    if (EventSystem.current.IsPointerOverGameObject())
+                    {
+                        Debug.LogWarning("Do not start gesture!");
+                        return;
+                    }
+
                     gestureStarted = true;
                     StartGesture();
                 }
@@ -114,7 +124,7 @@ public class GestureRecognizer : MonoBehaviour
             inputReady = true;
         }
 
-        if (Input.GetKeyDown(KeyCode.J))
+        if (recording && Input.GetKeyDown(KeyCode.J))
         {
             SaveTemplates();
             Debug.LogWarning("saved!");

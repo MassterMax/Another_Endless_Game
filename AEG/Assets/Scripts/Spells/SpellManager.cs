@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// should be Singleton
 public class SpellManager : MonoBehaviour
 {
     private Drawing drawingManager;
@@ -21,9 +22,10 @@ public class SpellManager : MonoBehaviour
         { "meadow", "Meadow" },
     };
 
+    // mapping from two types to prefab name
     private Dictionary<List<Type>, string> combinationsList = new()
     {
-        {new(){typeof(Puddle), typeof(Meadow) }, "Dirt" },
+        { new() { typeof(Puddle), typeof(Meadow) }, "Dirt" },
     };
 
     // maybe use this approach with manacost or create a script with constants?
@@ -33,6 +35,15 @@ public class SpellManager : MonoBehaviour
         { typeof(Puddle), new Color(132f/255f, 229f/255f, 223f/255f) },
         { typeof(Meadow), new Color(153f/255f, 229f/255f, 80f/255f) },
 
+    };
+
+    // mapping from spell type to manacost
+    private Dictionary<Type, float> manacostMapping = new Dictionary<Type, float>
+    {
+        { typeof(Circle), 5f },
+        { typeof(Puddle), 10f },
+        { typeof(Lightning), 15f },
+        { typeof(Meadow), 20f },
     };
 
     private void Awake()
@@ -62,15 +73,16 @@ public class SpellManager : MonoBehaviour
         {
             if (name.StartsWith(el.Key))
             {
-                var spellPrefab = Resources.Load($"Prefabs/Spells/{el.Value}");
-                float cost = (((GameObject)spellPrefab).GetComponent<Spell>().GetManaCost());
+                var spellPrefab = Resources.Load($"Prefabs/Spells/{el.Value}") as GameObject;
+                float cost = manacostMapping[spellPrefab.GetComponent<Spell>().GetType()];
+
                 if (!player.SpendMana(cost))
                 {
                     Debug.Log("not enough mana!");
                     return;
                 }
 
-                GameObject spellObject = Instantiate(spellPrefab, drawingManager.GetLastPoint(), Quaternion.identity) as GameObject;
+                GameObject spellObject = Instantiate(spellPrefab, drawingManager.GetLastPoint(), Quaternion.identity);
                 Spell spell = spellObject.GetComponent<Spell>();
 
                 Debug.Log("casting: " + spell.name);
@@ -113,9 +125,10 @@ public class SpellManager : MonoBehaviour
 
     public void CombineTwoSpells(Spell spell1, Spell spell2)
     {
-        foreach(var spells in combinationsList)
+        foreach (var spells in combinationsList)
         {
-            if (FindSpells(spells.Key, spell1.GetType(), spell2.GetType())) {
+            if (FindSpells(spells.Key, spell1.GetType(), spell2.GetType()))
+            {
                 Vector2 newPos = (spell1.transform.position + spell2.transform.position) / 2;
                 var spellPrefab = Resources.Load($"Prefabs/Spells/{spells.Value}");
                 GameObject spellObject = Instantiate(spellPrefab, newPos, Quaternion.identity) as GameObject;

@@ -10,15 +10,10 @@ public class Meadow : Spell
 
     }
 
-    public override float GetManaCost()
-    {
-        return 5f;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
-        
+        DelayedDestroy(9, 1);
     }
 
     // Update is called once per frame

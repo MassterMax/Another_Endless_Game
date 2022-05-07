@@ -4,11 +4,6 @@ using UnityEngine;
 
 public abstract class CombinedSpell : Spell
 {
-    public override float GetManaCost()
-    {
-        return 0;
-    }
-
     // Start is called before the first frame update
     void Start()
     {

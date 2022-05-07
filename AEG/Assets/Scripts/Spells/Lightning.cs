@@ -52,12 +52,6 @@ public class Lightning : Spell, IKnowMonsterController, IKnowSpellManager
         // Destroy(gameObject);
     }
 
-    // todo get in spell manager
-    public override float GetManaCost()
-    {
-        return 10;
-    }
-
     void Start()
     {
         // float delay = this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + 0.01f;

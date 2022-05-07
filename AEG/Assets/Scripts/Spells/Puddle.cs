@@ -10,11 +10,6 @@ public class Puddle : Spell, IKnowSpellManager
     GameObject lightningChild;
     private Collider2D objectCollider;
 
-    public override float GetManaCost()
-    {
-        return 15;
-    }
-
     public override void CastSpell(Vector2 start, Vector2 end, Vector2 center)
     {
         transform.position = center;
