@@ -25,7 +25,6 @@ public class Reflecting : MonoBehaviour
         transparentSpriteRenderer = trancparentChild.GetComponent<SpriteRenderer>();
         transparentSpriteRenderer.color = new Color(1, 1, 1, transparency);
 
-
         // I AM NOT SURE
         // I AM NOT SURE
         // I AM NOT SURE
@@ -44,6 +43,11 @@ public class Reflecting : MonoBehaviour
         {
             transparentSpriteRenderer.sprite = spriteRenderer.sprite;
         }
+
+        //if (spriteRenderer.color.a != 1)
+        //{
+        //    transparentSpriteRenderer.color = new Color(1, 1, 1, transparency * spriteRenderer.color.a);
+        //}
     }
 
     public void Turn(bool on)

@@ -55,7 +55,7 @@ public class Puddle : Spell, IKnowSpellManager
         lightningChild = gameObject.transform.GetChild(0).gameObject;
         lightningChild.SetActive(false);
 
-        Destroy(gameObject, 10);
+        DelayedDestroy(9, 1);
     }
 
     void Update()

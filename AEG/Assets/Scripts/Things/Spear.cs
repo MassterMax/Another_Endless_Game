@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spear : Launchable
+public class Spear : Launchable, IFadestroyable
 {
     Reflectable reflectable;
 
@@ -48,7 +48,8 @@ public class Spear : Launchable
         base.LandInTarget(target);
         OnPickup(transform.localPosition.y);
 
-        StartCoroutine(FadingDestroy());
+        var coroutine = ((IFadestroyable)this).FadingDestroy(GetComponent<SpriteRenderer>());
+        StartCoroutine(coroutine);
     }
 
     //protected override void OnLanding()

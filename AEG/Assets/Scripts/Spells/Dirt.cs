@@ -13,7 +13,7 @@ public class Dirt : CombinedSpell
     // Start is called before the first frame update
     void Start()
     {
-        
+        DelayedDestroy(14, 1);
     }
 
     // Update is called once per frame
@@ -24,12 +24,9 @@ public class Dirt : CombinedSpell
 
     private void OnTriggerStay2D(Collider2D collision)
     {
-        // Debug.Log("trying to find creature.....");
         var creature = collision.gameObject.GetComponent<Creature>();
-        // make player check
         if (creature && !creature.Friendly)
         {
-            // Debug.Log("apply Buff.....");
             creature.ApplyBuff(typeof(DirtSlowBuff));
             return;
         }

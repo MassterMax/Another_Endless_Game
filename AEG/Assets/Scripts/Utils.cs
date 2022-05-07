@@ -92,3 +92,40 @@ public interface IBlinkable
         spriteRenderer.enabled = true;
     }
 }
+
+public interface IFadestroyable
+{
+    public IEnumerator FadingDestroy(SpriteRenderer spriteRenderer, float dilation = 0f, float time = 1f, bool withResize = false)
+    {
+        if (spriteRenderer == null) yield break;
+
+        yield return new WaitForSeconds(dilation);
+
+        List<SpriteRenderer> childSpriteRenderers = new List<SpriteRenderer>() { spriteRenderer };
+        List<Color> childColorStep = new List<Color> { new Color(0, 0, 0, spriteRenderer.color.a) };
+
+        foreach (var el in spriteRenderer.GetComponentsInChildren<SpriteRenderer>())
+        {
+            childSpriteRenderers.Add(el);
+            childColorStep.Add(Color.black * el.color.a);
+        }
+
+        float start = Time.time;
+        Vector3 startScale = spriteRenderer.transform.localScale;
+
+        //var colorStep = new Color(0, 0, 0, spriteRenderer.color.a);
+        while (Time.time - start < time)
+        {
+            // childSpriteRenderers.Count
+            for (int i = 0; i < 1; ++i)
+            {
+                childSpriteRenderers[i].color -= childColorStep[i] * Time.fixedDeltaTime;
+            }
+            //spriteRenderer.color -= colorStep * Time.fixedDeltaTime;
+            spriteRenderer.transform.localScale -= startScale * Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+
+        GameObject.Destroy(spriteRenderer.gameObject);
+    }
+}
