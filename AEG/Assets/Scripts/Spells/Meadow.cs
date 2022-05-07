@@ -13,12 +13,24 @@ public class Meadow : Spell
     // Start is called before the first frame update
     void Start()
     {
-        DelayedDestroy(9, 1);
+        DelayedDestroy(4, 1);
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        var creature = collision.gameObject.GetComponent<Creature>();
+        // make player check
+        if (creature != null && creature.Friendly)
+        {
+            //Debug.Log("apply meadow buff on " + collision.name);
+            creature.ApplyBuff(typeof(MeadowHealBuff));
+            return;
+        }
     }
 }

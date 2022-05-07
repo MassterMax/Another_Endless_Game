@@ -31,10 +31,16 @@ public abstract class Creature : MonoBehaviour, IDamaging
     {
         if ((typeof(Buff).IsAssignableFrom(buffType)))
         {
-            foreach(var buff in buffs)
+            int i = 0;
+            while (i < buffs.Count)
             {
-                // first we try to extend buff
-                if (buff.GetType().Equals(buffType))
+                var buff = buffs[i];
+                // expired buff should be removed
+                if (Time.time > buff.applyTime + buff.Duration)
+                {
+                    buffs.RemoveAt(i);
+                }
+                else if (buff.GetType().Equals(buffType))
                 {
                     //Debug.Log("extend");
                     buff.Extend();
@@ -42,8 +48,12 @@ public abstract class Creature : MonoBehaviour, IDamaging
                 }
             }
 
-            // Debug.Log("add to buffs");
-            buffs.Add((Buff)Activator.CreateInstance(buffType));
+            var appliedBuff = (Buff)Activator.CreateInstance(buffType);
+            buffs.Add(appliedBuff);
+            if (appliedBuff is CoroutineBuff)
+            {
+                StartCoroutine(((CoroutineBuff)appliedBuff).StartBuff(this));
+            }
         } else
         {
             Debug.LogError("unknown buff type: " + buffType);
@@ -84,6 +94,14 @@ public abstract class Creature : MonoBehaviour, IDamaging
         return (originalValue + additive) * multiplier;
     }
 
+
+    public virtual void Heal(float value)
+    {
+        value = Mathf.Min(value, maxHealth - health);
+        Debug.Log("Heal: " + value);
+        health += value;
+        healthBar.SetValue(health);
+    }
 
     public virtual void TakeDamage(float damage)
     {

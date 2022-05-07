@@ -30,6 +30,36 @@ public abstract class Buff
     }
 }
 
+public abstract class CoroutineBuff: Buff
+{
+    public abstract IEnumerator StartBuff(Creature creature);
+}
+
+public class MeadowHealBuff : CoroutineBuff
+{
+    public override BuffTargetField TargetField => BuffTargetField.Health;
+
+    public override bool IsDebuff => false;
+
+    public override bool IsMultiplier => false;
+
+    public override float Duration => 3;
+
+    public override float GetValue(Creature creature)
+    {
+        return 1;
+    }
+
+    public override IEnumerator StartBuff(Creature creature)
+    {
+        while(Time.time < applyTime + Duration)
+        {
+            yield return new WaitForSeconds(1);
+            creature.Heal(GetValue(creature));
+        }
+    }
+}
+
 public class PuddleSlowBuff : Buff
 {
     public override bool IsMultiplier => true;
