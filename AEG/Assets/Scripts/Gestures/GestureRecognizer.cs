@@ -226,6 +226,9 @@ public class GestureRecognizer : MonoBehaviour
         if (inputReady) inputReady = false;
         gestureStarted = false;
         gestureComplete = true;
+
+        // Debug.Log(currentGesture.GetPoints().Length + " before scaling " + currentPointList.Count);
+
         Rescale(currentGesture);
         MapPoints(currentGesture);
         if (recording)
@@ -246,9 +249,10 @@ public class GestureRecognizer : MonoBehaviour
         }
         else
         {
+            // Debug.Log(currentGesture.GetPoints().Length + " after rescaling " + currentPointList.Count);
             //DrawnGesture m = FindMatch(currentGesture, templates);
             var result = FindMatchAndDifference(currentGesture, templates);
-            Debug.Log("best match: " + result.Key.GetName() + " difference: " + result.Value.ToString());
+            // Debug.Log("best match: " + result.Key.GetName() + " difference: " + result.Value.ToString());
 
 
             // call spell manager
@@ -510,7 +514,7 @@ public class GestureRecognizer : MonoBehaviour
         {
             totalDistance += PointDistance(currentPointList[i], currentPointList[i + 1]);
         }
-        Debug.Log("total distance: " + totalDistance);
+        // Debug.Log("total distance: " + totalDistance);
         return totalDistance;
     }
 

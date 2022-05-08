@@ -24,13 +24,15 @@ public class Meadow : Spell
 
     private void OnTriggerStay2D(Collider2D collision)
     {
+        //Debug.LogWarning(gameObject.name + " collided with " + collision.name + " at: " + Time.time);
         var creature = collision.gameObject.GetComponent<Creature>();
         // make player check
         if (creature != null && creature.Friendly)
         {
             //Debug.Log("apply meadow buff on " + collision.name);
             creature.ApplyBuff(typeof(MeadowHealBuff));
-            return;
+            //return;
         }
+        //Debug.LogWarning(gameObject.name + " stop colliding with " + collision.name + " at: " + Time.time);
     }
 }

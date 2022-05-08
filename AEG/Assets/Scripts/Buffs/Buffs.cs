@@ -54,9 +54,11 @@ public class MeadowHealBuff : CoroutineBuff
     {
         while(Time.time < applyTime + Duration)
         {
-            yield return new WaitForSeconds(1);
             creature.Heal(GetValue(creature));
+            yield return new WaitForSeconds(1);
         }
+
+        creature.RemoveBuff(this.GetType());
     }
 }
 

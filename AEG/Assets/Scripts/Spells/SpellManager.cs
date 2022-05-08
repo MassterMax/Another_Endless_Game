@@ -46,6 +46,16 @@ public class SpellManager : MonoBehaviour
         { typeof(Meadow), 20f },
     };
 
+    private float defaultError = 1.5f;
+    // mapping from spell name to max error user can make
+    private Dictionary<string, float> errorMapping = new Dictionary<string, float>
+    {
+        { "circle", 2f },
+        { "puddle", 1.2f },
+        { "lightning", 1.4f },
+        { "meadow", 3f },
+    };
+
     private void Awake()
     {
         drawingManager = FindObjectOfType<Drawing>();
@@ -63,7 +73,8 @@ public class SpellManager : MonoBehaviour
         // todo make custom error for any spells!!!!!!!!!!!!!!!
         // todo make custom error for any spells!!!!!!!!!!!!!!!
         // todo make custom error for any spells!!!!!!!!!!!!!!!
-        if (error > 3f)
+        Debug.LogWarning(name + " spell error is " + error);
+        if (error > errorMapping.GetValueOrDefault(name, defaultError))
         {
             drawingManager.SetColor(Color.black);
             return;
@@ -186,8 +197,8 @@ public class SpellManager : MonoBehaviour
             }
         }
 
-        Debug.Log("spells in area: ");
-        Debug.Log(string.Join(" ", spellsInArea));
+        // Debug.Log("spells in area: ");
+        // Debug.Log(string.Join(" ", spellsInArea));
 
         return spellsInArea;
     }

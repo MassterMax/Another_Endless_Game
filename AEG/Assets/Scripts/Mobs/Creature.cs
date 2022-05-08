@@ -25,31 +25,49 @@ public abstract class Creature : MonoBehaviour, IDamaging
     public float MaxHealth { get => maxHealth; } // todo
     public virtual float Damage { get => damage; }  // todo
 
-    List<Buff> buffs = new List<Buff>();
+    Dictionary<Type, Buff> buffs = new();
+
+    public void RemoveBuff(Type buffType)
+    {
+        if ((typeof(Buff).IsAssignableFrom(buffType)))
+        {
+            if (buffs.ContainsKey(buffType))
+            {
+                buffs[buffType].applyTime = float.MinValue;
+                buffs.Remove(buffType);
+            }
+        }
+    }
 
     public void ApplyBuff(Type buffType)
     {
         if ((typeof(Buff).IsAssignableFrom(buffType)))
         {
-            int i = 0;
-            while (i < buffs.Count)
+            if (buffs.ContainsKey(buffType))
             {
-                var buff = buffs[i];
-                // expired buff should be removed
-                if (Time.time > buff.applyTime + buff.Duration)
-                {
-                    buffs.RemoveAt(i);
-                }
-                else if (buff.GetType().Equals(buffType))
-                {
-                    //Debug.Log("extend");
-                    buff.Extend();
-                    return;
-                }
+                buffs[buffType].Extend();
+                return;
             }
 
+            //int i = 0;
+            //while (i < buffs.Count)
+            //{
+            //    var buff = buffs[i];
+            //    // expired buff should be removed
+            //    if (Time.time > buff.applyTime + buff.Duration)
+            //    {
+            //        buffs.RemoveAt(i);
+            //    }
+            //    else if (buff.GetType().Equals(buffType))
+            //    {
+            //        //Debug.Log("extend");
+            //        buff.Extend();
+            //        return;
+            //    }
+            //}
+
             var appliedBuff = (Buff)Activator.CreateInstance(buffType);
-            buffs.Add(appliedBuff);
+            buffs[buffType] = appliedBuff;
             if (appliedBuff is CoroutineBuff)
             {
                 StartCoroutine(((CoroutineBuff)appliedBuff).StartBuff(this));
@@ -65,13 +83,14 @@ public abstract class Creature : MonoBehaviour, IDamaging
         float multiplier = 1f;
         float additive = 0f;
 
-        int i = 0;
-        while (i < buffs.Count)
+        List<Type> removeBuffs = new();
+
+        foreach(var el in buffs)
         {
-            var buff = buffs[i];
+            var buff = el.Value;
             if (Time.time > buff.applyTime + buff.Duration)
             {
-                buffs.RemoveAt(i);
+                removeBuffs.Add(el.Key);
             }
             else
             {
@@ -87,13 +106,39 @@ public abstract class Creature : MonoBehaviour, IDamaging
                         additive += value;
                     }
                 }
-                i += 1;
             }
+
         }
+
+        foreach (var key in removeBuffs)
+            buffs.Remove(key);
+        //while (i < buffs.Count)
+        //{
+        //    var buff = buffs[i];
+        //    if (Time.time > buff.applyTime + buff.Duration)
+        //    {
+        //        buffs.RemoveAt(i);
+        //    }
+        //    else
+        //    {
+        //        if (buff.TargetField == targetField)
+        //        {
+        //            float value = buff.GetValue(this);
+        //            if (buff.IsMultiplier)
+        //            {
+        //                multiplier *= value;
+        //            }
+        //            else
+        //            {
+        //                additive += value;
+        //            }
+        //        }
+        //        i += 1;
+        //    }
+        //}
 
         return (originalValue + additive) * multiplier;
     }
-
 
     public virtual void Heal(float value)
     {
