@@ -18,7 +18,7 @@ public abstract class Buff
     public abstract bool IsMultiplier { get; }
     public abstract float GetValue(Creature creature);
     public abstract float Duration { get; }
-   
+
     public void Extend()
     {
         applyTime = Time.time;
@@ -28,6 +28,16 @@ public abstract class Buff
     {
         Extend();
     }
+}
+
+public interface ISpecialApplicable
+{
+    public void SpecialApply(Creature creature);
+}
+
+public interface ISpecialConditionable
+{
+    public bool CanApply(Creature creature);
 }
 
 public abstract class CoroutineBuff: Buff
@@ -62,7 +72,52 @@ public class MeadowHealBuff : CoroutineBuff
     }
 }
 
-public class PuddleSlowBuff : Buff
+public class FireMeadowBuff : CoroutineBuff, ISpecialConditionable
+{
+    public override BuffTargetField TargetField => BuffTargetField.Health;
+
+    public override bool IsDebuff => true;
+
+    public override bool IsMultiplier => false;
+
+    public override float Duration => 2;
+
+    public bool CanApply(Creature creature)
+    {
+        return !creature.HasBuff(typeof(PuddleSlowBuff));
+    }
+
+    public override float GetValue(Creature creature)
+    {
+        return 1;
+    }
+
+    public void SpecialApply(Creature creature)
+    {
+        if (creature.HasBuff(typeof(PuddleSlowBuff)))
+        {
+            creature.RemoveBuff(this.GetType());
+        }
+    }
+
+    public override IEnumerator StartBuff(Creature creature)
+    {
+        //Debug.LogWarning("Fire Meadow Starts");
+        //Debug.Log("Start time: " + Time.time);
+        //Debug.Log("Apply time: " + applyTime);
+        while (Time.time < applyTime + Duration)
+        {
+            //Debug.Log("Take damage at: " + Time.time);
+            //Debug.Log("Apply time: " + applyTime);
+            creature.TakeDamage(GetValue(creature));
+            yield return new WaitForSeconds(1);
+        }
+
+        creature.RemoveBuff(this.GetType());
+    }
+}
+
+public class PuddleSlowBuff : Buff, ISpecialApplicable
 {
     public override bool IsMultiplier => true;
 
@@ -76,9 +131,21 @@ public class PuddleSlowBuff : Buff
     {
         return 0.9f;
     }
+
+    public void SpecialApply(Creature creature)
+    {
+        if (creature.HasBuff(typeof(DirtSlowBuff)))
+        {
+            creature.RemoveBuff(typeof(DirtSlowBuff));
+        }
+        if (creature.HasBuff(typeof(FireMeadowBuff)))
+        {
+            creature.RemoveBuff(typeof(FireMeadowBuff));
+        }
+    }
 }
 
-public class DirtSlowBuff : Buff
+public class DirtSlowBuff : Buff, ISpecialConditionable
 {
     public override bool IsMultiplier => true;
 
@@ -91,5 +158,10 @@ public class DirtSlowBuff : Buff
     public override float GetValue(Creature creature)
     {
         return 0.6f;
+    }
+
+    public bool CanApply(Creature creature)
+    {
+        return !creature.HasBuff(typeof(PuddleSlowBuff));
     }
 }

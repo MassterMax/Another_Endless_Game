@@ -26,6 +26,7 @@ public class SpellManager : MonoBehaviour
     private Dictionary<List<Type>, string> combinationsList = new()
     {
         { new() { typeof(Puddle), typeof(Meadow) }, "Dirt" },
+        { new() { typeof(Lightning), typeof(Meadow) }, "FireMeadow" },
     };
 
     // maybe use this approach with manacost or create a script with constants?

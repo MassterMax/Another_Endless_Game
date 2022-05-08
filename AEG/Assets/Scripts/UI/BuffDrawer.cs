@@ -9,6 +9,7 @@ public class BuffDrawer : MonoBehaviour
     {
         { typeof(DirtSlowBuff), 0},
         { typeof(PuddleSlowBuff), 1 },
+        { typeof(FireMeadowBuff), 2 },
         { typeof(MeadowHealBuff), 3 },
     };
 

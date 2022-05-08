@@ -29,6 +29,11 @@ public abstract class Creature : MonoBehaviour, IDamaging
 
     Dictionary<Type, Buff> buffs = new();
 
+    public bool HasBuff(Type buffType)
+    {
+        return buffs.ContainsKey(buffType);
+    }
+
     public void RemoveBuff(Type buffType)
     {
         if ((typeof(Buff).IsAssignableFrom(buffType)))
@@ -48,29 +53,27 @@ public abstract class Creature : MonoBehaviour, IDamaging
         {
             if (buffs.ContainsKey(buffType))
             {
+                // Debug.Log("extending " + buffType + " at " + Time.time);
                 buffs[buffType].Extend();
                 return;
             }
 
-            //int i = 0;
-            //while (i < buffs.Count)
-            //{
-            //    var buff = buffs[i];
-            //    // expired buff should be removed
-            //    if (Time.time > buff.applyTime + buff.Duration)
-            //    {
-            //        buffs.RemoveAt(i);
-            //    }
-            //    else if (buff.GetType().Equals(buffType))
-            //    {
-            //        //Debug.Log("extend");
-            //        buff.Extend();
-            //        return;
-            //    }
-            //}
-
             var appliedBuff = (Buff)Activator.CreateInstance(buffType);
+
+            // Check buff preconditions
+            if (appliedBuff is ISpecialConditionable && !((ISpecialConditionable)appliedBuff).CanApply(this))
+            {
+                return;
+            }
+
+            // Else remember buff and check special apllication
             buffs[buffType] = appliedBuff;
+            if (appliedBuff is ISpecialApplicable)
+            {
+                ((ISpecialApplicable)appliedBuff).SpecialApply(this);
+            }
+
+            // Check if buff calls Coroutine
             if (appliedBuff is CoroutineBuff)
             {
                 StartCoroutine(((CoroutineBuff)appliedBuff).StartBuff(this));

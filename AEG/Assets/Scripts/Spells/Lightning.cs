@@ -46,6 +46,9 @@ public class Lightning : Spell, IKnowMonsterController, IKnowSpellManager
             {
                 // make puddle electric!!!
                 ((Puddle)spell).ChargeByLightning();
+            } else if (spell is Meadow)
+            {
+                SpellManager.CombineTwoSpells(this, spell);
             }
         }
 
