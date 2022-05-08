@@ -19,11 +19,6 @@ public class Zombie : Monster
     protected override void Update()
     {
         base.Update();
-
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            ApplyBuff(typeof(FireMeadowBuff));
-        }
     }
 
     // todo maybe make all creatures to have Move()

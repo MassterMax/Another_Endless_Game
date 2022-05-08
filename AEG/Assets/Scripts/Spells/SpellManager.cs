@@ -54,7 +54,7 @@ public class SpellManager : MonoBehaviour
         { "circle", 2f },
         { "puddle", 1.2f },
         { "lightning", 1.4f },
-        { "meadow", 3f },
+        { "meadow", 3.5f },
     };
 
     private void Awake()
@@ -64,16 +64,9 @@ public class SpellManager : MonoBehaviour
         player = FindObjectOfType<PlayerController>();
     }
 
-    public void CastSpell(string name, float error) // todo do not cast if error is high
+    public void CastSpell(string name, float error)
     {
-        // todo make custom error for any spells!!!!!!!!!!!!!!!
-        // todo make custom error for any spells!!!!!!!!!!!!!!!
-        // todo make custom error for any spells!!!!!!!!!!!!!!!
-        // todo make custom error for any spells!!!!!!!!!!!!!!!
-        // todo make custom error for any spells!!!!!!!!!!!!!!!
-        // todo make custom error for any spells!!!!!!!!!!!!!!!
-        // todo make custom error for any spells!!!!!!!!!!!!!!!
-        // todo make custom error for any spells!!!!!!!!!!!!!!!
+        // todo make custom error for any spell
         Debug.LogWarning(name + " spell error is " + error);
         if (error > errorMapping.GetValueOrDefault(name, defaultError))
         {
@@ -99,13 +92,10 @@ public class SpellManager : MonoBehaviour
 
                 Debug.Log("casting: " + spell.name);
 
-                // we should set some requiremets befare casting
                 SetSpellRequirements(spell);
                 SetColorOfSpell(spell);
 
                 spells.Add(spell);
-                // spellsGameObjects.Add(spellObject);
-                // spells.Add(new KeyValuePair<GameObject, Spell>(spellObject, spell));
 
                 spell.CastSpell(drawingManager.GetFirstPoint(), drawingManager.GetLastPoint(), drawingManager.GetMeanPoint());
                 return;
@@ -152,8 +142,6 @@ public class SpellManager : MonoBehaviour
                 //SetSpellRequirements(spell);
 
                 this.spells.Add(combinedSpell);
-                // spellsGameObjects.Add(spellObject);
-                // spells.Add(new KeyValuePair<GameObject, Spell>(spellObject, spell));
 
                 combinedSpell.CastSpell(spell1.transform.position, spell2.transform.position, newPos);
 
@@ -179,34 +167,24 @@ public class SpellManager : MonoBehaviour
         drawingManager.SetColor(spellToColor[spellType]);
     }
 
-    // todo maybe make lazy realiztaion of this list
     public List<Spell> GetSpellsInArea(Vector2 center, float radius)
     {
-        // int i = 0;
-        //Debug.Log("finding all spells...");
         var spellsInArea = new List<Spell>();
 
         for (int i = 0; i < spells.Count(); ++i)
         {
-            //Debug.Log(spells.Count());
             var spell = spells.At(i);
-            //Debug.Log(spell);
             if (((Vector2)spell.gameObject.transform.position - center).magnitude <= radius)
             {
-                //Debug.Log("found in area: " + spell);
                 spellsInArea.Add(spell);
             }
         }
-
-        // Debug.Log("spells in area: ");
-        // Debug.Log(string.Join(" ", spellsInArea));
 
         return spellsInArea;
     }
 
     public List<Spell> GetSpellsByType<T>()
     {
-        //int i = 0;
         var foundSpells = new List<Spell>();
 
         for (int i = 0; i < spells.Count(); ++i)
