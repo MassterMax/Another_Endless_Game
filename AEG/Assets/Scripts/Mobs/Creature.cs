@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public abstract class Creature : MonoBehaviour, IDamaging
 {
     Bar healthBar;
+    BuffDrawer buffDrawer;
 
     private float speed;
     private float maxHealth; // todo
@@ -35,6 +37,7 @@ public abstract class Creature : MonoBehaviour, IDamaging
             {
                 buffs[buffType].applyTime = float.MinValue;
                 buffs.Remove(buffType);
+                RedrawBuffs();
             }
         }
     }
@@ -72,6 +75,8 @@ public abstract class Creature : MonoBehaviour, IDamaging
             {
                 StartCoroutine(((CoroutineBuff)appliedBuff).StartBuff(this));
             }
+
+            RedrawBuffs();
         } else
         {
             Debug.LogError("unknown buff type: " + buffType);
@@ -112,6 +117,9 @@ public abstract class Creature : MonoBehaviour, IDamaging
 
         foreach (var key in removeBuffs)
             buffs.Remove(key);
+
+        if (removeBuffs.Count > 0)
+            RedrawBuffs();
         //while (i < buffs.Count)
         //{
         //    var buff = buffs[i];
@@ -180,10 +188,19 @@ public abstract class Creature : MonoBehaviour, IDamaging
         this.friendly = friendly;
         this.speed = speed;
 
-        GameObject healthBarObject = Instantiate(Resources.Load("Prefabs/HealthCanvas"), transform.position, Quaternion.identity) as GameObject;
+        GameObject healthBarObject = Instantiate(Resources.Load("Prefabs/UI/HealthCanvas"), transform.position, Quaternion.identity) as GameObject;
         healthBarObject.transform.parent = transform;
         healthBar = healthBarObject.GetComponentInChildren<Bar>();
         healthBar.Setup(health, maxHealth);
+
+        GameObject statusBarObject = Instantiate(Resources.Load("Prefabs/UI/StatusBarCanvas"), transform.position, Quaternion.identity) as GameObject;
+        statusBarObject.transform.parent = transform;
+        buffDrawer = statusBarObject.GetComponentInChildren<BuffDrawer>();
+    }
+
+    public void RedrawBuffs()
+    {
+        buffDrawer.DrawBuffs(buffs.Values.ToList());
     }
 
     protected void SetBarStyle(string colorName = "red", int sorterOrder = 11)
