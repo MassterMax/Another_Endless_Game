@@ -11,24 +11,7 @@ public class Lightning : Spell, IKnowMonsterController, IKnowSpellManager
 
     public override void CastSpell(Vector2 start, Vector2 end, Vector2 center)
     {
-
-        // I should make delay((
-
         StartCoroutine(DelayedCast(end, 0.1f));
-
-        //foreach(var monster in MonsterController.GetMostersInArea(end, damageRadius))
-        //{
-        //    monster.TakeDamage(1);
-        //}
-
-        //foreach(var spell in SpellManager.GetSpellsInArea(end, damageRadius))
-        //{
-        //    if (spell is Puddle)
-        //    {
-        //        // make puddle electric!!!
-        //        ((Puddle)spell).ChargeByLightning();
-        //    }
-        //}
     }
 
     private IEnumerator DelayedCast(Vector2 end, float delay)
@@ -46,7 +29,8 @@ public class Lightning : Spell, IKnowMonsterController, IKnowSpellManager
             {
                 // make puddle electric!!!
                 ((Puddle)spell).ChargeByLightning();
-            } else if (spell is Meadow)
+            }
+            else if (spell is Meadow)
             {
                 SpellManager.CombineTwoSpells(this, spell);
             }

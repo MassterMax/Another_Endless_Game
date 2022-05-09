@@ -51,10 +51,10 @@ public class SpellManager : MonoBehaviour
     // mapping from spell name to max error user can make
     private Dictionary<string, float> errorMapping = new Dictionary<string, float>
     {
-        { "circle", 2f },
-        { "puddle", 1.2f },
-        { "lightning", 1.4f },
-        { "meadow", 3.5f },
+        { "circle", 2.2f },
+        { "puddle", 1.5f },
+        { "lightning", 1.8f },
+        { "meadow", 3.6f },
     };
 
     private void Awake()
