@@ -9,6 +9,7 @@ public abstract class Creature : MonoBehaviour, IDamaging
     Bar healthBar;
     BuffDrawer buffDrawer;
 
+    protected bool isDead = false;
     private float speed;
     private float maxHealth; // todo
     private float health;
@@ -123,36 +124,14 @@ public abstract class Creature : MonoBehaviour, IDamaging
 
         if (removeBuffs.Count > 0)
             RedrawBuffs();
-        //while (i < buffs.Count)
-        //{
-        //    var buff = buffs[i];
-        //    if (Time.time > buff.applyTime + buff.Duration)
-        //    {
-        //        buffs.RemoveAt(i);
-        //    }
-        //    else
-        //    {
-        //        if (buff.TargetField == targetField)
-        //        {
-        //            float value = buff.GetValue(this);
-        //            if (buff.IsMultiplier)
-        //            {
-        //                multiplier *= value;
-        //            }
-        //            else
-        //            {
-        //                additive += value;
-        //            }
-        //        }
-        //        i += 1;
-        //    }
-        //}
 
         return (originalValue + additive) * multiplier;
     }
 
     public virtual void Heal(float value)
     {
+        if (isDead) return;
+
         value = Mathf.Min(value, maxHealth - health);
         Debug.Log("Heal: " + value);
         health += value;
@@ -161,18 +140,36 @@ public abstract class Creature : MonoBehaviour, IDamaging
 
     public virtual void TakeDamage(float damage)
     {
+        if (isDead) return;
+
         health -= damage;
         healthBar.SetValue(health);
         if (health <= 0)
         {
-            Destroy(gameObject);  // todo maybe add getter/setter
+            OnDeath();
         }
+    }
+
+    protected void UIOff()
+    {
+        healthBar.gameObject.SetActive(false);
+        buffDrawer.gameObject.SetActive(false);
+    }
+
+    protected virtual void OnDeath()
+    {
+        isDead = true;
+        UIOff();
+        Destroy(gameObject);  // todo maybe add getter/setter
     }
 
     protected virtual void Update()
     {
-        Move();
-        HandleAnimation();
+        if (!isDead)
+        {
+            Move();
+            HandleAnimation();
+        }
     }
 
     protected abstract void Move();
@@ -213,11 +210,11 @@ public abstract class Creature : MonoBehaviour, IDamaging
 
     public float GetDamage()
     {
-        if (friendly)
+        if (friendly || isDead)
         {
             return 0;
         }
 
-        return Damage;
+        return Damage;  // todo return damage after buffs
     }
 }

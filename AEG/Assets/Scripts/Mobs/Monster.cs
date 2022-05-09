@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public abstract class Monster : Creature
+public abstract class Monster : Creature, IFadestroyable
 {
     protected Animator animator;
     protected SpriteRenderer spriteRenderer;
@@ -23,7 +24,8 @@ public abstract class Monster : Creature
     protected override void Update()
     {
         base.Update();
-        Rotate();
+        if (!isDead)
+            Rotate();
     }
 
     public void SetAttributes(float health, float maxHealth, float damage, float speed)
@@ -41,6 +43,36 @@ public abstract class Monster : Creature
     {
         if (animator == null) return;
         animator.SetBool("isRun", direction.sqrMagnitude != 0);
+    }
+
+    protected override void OnDeath()
+    {
+        //base.OnDeath();
+
+        if (animator != null)
+        {
+            isDead = true;
+            UIOff();
+            animator.SetBool("isDead", true);
+
+            //Debug.Log("next: " + animator.GetNextAnimatorStateInfo(0).length);
+            //Debug.Log("current: " + animator.GetCurrentAnimatorStateInfo(0).length);
+
+            AnimationClip clip = animator.runtimeAnimatorController.animationClips.Where(clip=>clip.name.Equals("death")).FirstOrDefault();
+            float length = 1f;
+            if (clip != null)
+            {
+                length = clip.length;
+            }
+            Debug.Log("LENGTH IS " + length);
+            DelayedDestroy(length);
+            //animator.Sta
+            //animator.Get
+            Debug.LogWarning("death with animation");
+        } else
+        {
+            base.OnDeath();
+        }
     }
 
     protected virtual void Rotate()
@@ -62,5 +94,12 @@ public abstract class Monster : Creature
     {
         if (player == null) return Vector2.zero;
         return player.transform.position - transform.position;
+    }
+
+    protected void DelayedDestroy(float duration)
+    {
+        Debug.LogWarning(duration + " duration of death");
+        var coroutine = ((IFadestroyable)this).FadingDestroy(GetComponent<SpriteRenderer>(), 0, duration, false);
+        StartCoroutine(coroutine);
     }
 }

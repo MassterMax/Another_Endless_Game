@@ -104,30 +104,35 @@ public interface IFadestroyable
         yield return new WaitForSeconds(dilation);
 
         List<SpriteRenderer> childSpriteRenderers = new List<SpriteRenderer>() { spriteRenderer };
-        List<Color> childColorStep = new List<Color> { new Color(0, 0, 0, spriteRenderer.color.a) };
+        List<Color> childColorStep = new List<Color> { new Color(0, 0, 0, spriteRenderer.color.a / time) };
 
-        foreach (var el in spriteRenderer.GetComponentsInChildren<SpriteRenderer>())
-        {
-            childSpriteRenderers.Add(el);
-            childColorStep.Add(Color.black * el.color.a);
-        }
+        //foreach (var el in spriteRenderer.GetComponentsInChildren<SpriteRenderer>())
+        //{
+        //    childSpriteRenderers.Add(el);
+        //    childColorStep.Add(Color.black * el.color.a / time);
+        //}
 
         float start = Time.time;
         Vector3 startScale = spriteRenderer.transform.localScale;
 
         //var colorStep = new Color(0, 0, 0, spriteRenderer.color.a);
+        //Debug.Log(time + " time of fading");
+        //Debug.LogWarning(childColorStep.Count + " count of child");
+
         while (Time.time - start < time)
         {
             if (resize)
                 spriteRenderer.transform.localScale -= startScale * Time.fixedDeltaTime;
             else
             {
-                for (int i = 0; i < childSpriteRenderers.Count; ++i)
+                for (int i = 0; i < 1; ++i) // childSpriteRenderers.Count
                 {
                     childSpriteRenderers[i].color -= childColorStep[i] * Time.fixedDeltaTime;
                 }
             }
 
+            //Debug.Log(spriteRenderer.name + " is sleeping at " + Time.time + " alpha is " + spriteRenderer.color.a);
+            //Debug.Log("step is " + childColorStep[0] * Time.fixedDeltaTime);
             yield return new WaitForFixedUpdate();
         }
 

@@ -43,7 +43,8 @@ public class Skeleton : Monster
     protected override void Update()
     {
         base.Update();
-        HandleSpear();
+        if (!isDead)
+            HandleSpear();
     }
 
     protected override void Move()
