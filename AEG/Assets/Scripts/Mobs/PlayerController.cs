@@ -176,17 +176,25 @@ public class PlayerController : Creature, IBlinkable
         }
     }
 
+    // for monsters
     private void OnTriggerStay2D(Collider2D collision)
     {
         var damaging = collision.gameObject.GetComponent<IDamaging>();
+        if (!(damaging is Monster)) return;
         if (damaging == null || damaging.GetDamage() == 0) return;
 
         TakeDamage(damaging.GetDamage());
+    }
 
-        if (damaging is Launchable)
-        {
-            ((Launchable)damaging).LandInTarget(transform, GetHeight());
-        }
+    // for launchable things
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        var damaging = collision.gameObject.GetComponent<IDamaging>();
+        if (!(damaging is Launchable)) return;
+        if (damaging == null || damaging.GetDamage() == 0) return;
+
+        TakeDamage(damaging.GetDamage());
+        ((Launchable)damaging).LandInTarget(transform);
     }
 
     public float GetHeight()

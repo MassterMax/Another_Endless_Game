@@ -18,7 +18,7 @@ public class Spear : Launchable, IFadestroyable
 
     }
 
-    void Update()
+    void FixedUpdate()
     {
         SetPseudoY();
     }
@@ -48,7 +48,7 @@ public class Spear : Launchable, IFadestroyable
         inSkeletonHands = true;
     }
 
-    public override bool LandInTarget(Transform target, float targetHeight = 0)
+    public override bool LandInTarget(Transform target)
     {
         if (!base.LandInTarget(target))
         {
@@ -56,11 +56,13 @@ public class Spear : Launchable, IFadestroyable
         }
 
         //float distance = transform.localPosition.magnitude; // + targetHeight;
+        float distance = transform.localPosition.y + transform.parent.GetComponent<SpriteRenderer>().bounds.size.y / 2;
         //reflectable.ResetReflectAxis();
-        //reflectable.SetPseudoYOffset(-distance / 2);
+        reflectable.SetPseudoYOffset(distance);
         // TODO RETURN THIS AFTER DEBUG
         //var coroutine = ((IFadestroyable)this).FadingDestroy(GetComponent<SpriteRenderer>());
         //StartCoroutine(coroutine);
+
         return true;
     }
 

@@ -57,6 +57,7 @@ public abstract class Launchable : DamagingThing
     {
         Debug.LogWarning("launched!");
         inFlight = true;
+        inTarget = false;
         readyToDamage = false;
 
         float eps = 0.02f * velocity;  // todo maybe change
@@ -90,7 +91,7 @@ public abstract class Launchable : DamagingThing
             float delta = velocityX * time / length;  // from 0 to 1
 
             // todo find optimal delta
-            if (delta > 0.85)
+            if (delta > 0.9)
             {
                 readyToDamage = true;
             }
@@ -129,10 +130,10 @@ public abstract class Launchable : DamagingThing
 
     }
 
-    public virtual bool LandInTarget(Transform target, float targetHeight = 0)
+    public virtual bool LandInTarget(Transform target)
     {
         // skip this step if actually thing lies on the ground
-        if (!inFlight || !readyToDamage)
+        if (!inFlight || !readyToDamage || inTarget)
         {
             return false;
         }

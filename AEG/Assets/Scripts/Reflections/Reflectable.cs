@@ -14,6 +14,9 @@ public class Reflectable : MonoBehaviour, IBlinkable
     bool isWorking = true;
 
     Vector3 prevPos;
+    int currentStep = 0;
+    float skipedTime = 1;
+    // bool skipStep = true;
 
     void Awake()
     {
@@ -30,7 +33,7 @@ public class Reflectable : MonoBehaviour, IBlinkable
 
         //yOffset = spriteRenderer.bounds.size.y;
 
-        prevPos = reflection.transform.localPosition;
+        prevPos = reflection.transform.position;
         ResetReflectAxis();
 
         yOffset = spriteRenderer.sprite.pivot.y / spriteRenderer.sprite.pixelsPerUnit * 2;
@@ -77,7 +80,10 @@ public class Reflectable : MonoBehaviour, IBlinkable
             reflection.transform.position = (Vector2)gameObject.transform.position + downVector() * yOffset * Mathf.Cos(gameObject.transform.rotation.z);
         // Debug.Log("psudo offset is " + 2 * pseudoYOffset + " while cosine offset is " + yOffset * Mathf.Cos(gameObject.transform.rotation.z));
         //Debug.Log("reflection pos is " + reflection.transform.position);
+    }
 
+    void FixedUpdate()
+    {
         SetReflectionAngle();
     }
 
@@ -134,10 +140,58 @@ public class Reflectable : MonoBehaviour, IBlinkable
             reflection.transform.localEulerAngles = Vector3.forward * (180 - 2 * gameObject.transform.eulerAngles.z);
             return;
         }
-        Vector3 newPos = reflection.transform.localPosition;
-        float angle = Utils.VectorToAngle(newPos - prevPos) - 90;
-        prevPos = newPos;
-        reflection.transform.eulerAngles = Vector3.forward * angle;
+
+        // float relativeAngle = Utils.VectorToAngle(reflectAxis);
+        // float currentAngle = gameObject.transform.eulerAngles.z;
+        // float a = currentAngle * Mathf.Deg2Rad;
+        // float b = relativeAngle * Mathf.Deg2Rad;
+
+        // float angle1 = Mathf.Atan(Mathf.Abs(Mathf.Tan(a) - 2 * Mathf.Tan(b))) * Mathf.Rad2Deg;
+        // // if (Mathf.Atan(a) < 0)
+        // // {
+        // //     angle1 = 180 - angle1;
+        // // }
+        // reflection.transform.eulerAngles = Vector3.forward * (angle1 + 180);
+        // //reflection.transform.localEulerAngles = Vector3.forward * (Mathf.Atan(Mathf.Abs(Mathf.Tan(a) - 2 * Mathf.Tan(b))) * Mathf.Rad2Deg + 180 + currentAngle + relativeAngle);
+        // return;
+
+        if (skipedTime == 0)
+        {
+            skipedTime = 1;
+        }
+        else
+        {
+            Vector3 newPos = reflection.transform.position;
+
+            // skip
+            if (newPos.x == prevPos.x || newPos.y == prevPos.y)
+            {
+                return;
+            }
+
+            Debug.LogWarning("newPos " + newPos);
+            float angle = Utils.VectorToAngle(newPos - prevPos) - 90;
+            reflection.transform.eulerAngles = Vector3.forward * angle;
+            prevPos = newPos;
+            skipedTime = 0;
+        }
+        return;
+
+        // this is for spear
+        if (currentStep < 12)
+        {
+            // Debug.Log("skip step: " + Time.time);
+            currentStep += 1;
+        }
+        else
+        {
+            Vector3 newPos = reflection.transform.position;
+            Debug.LogWarning("vector is " + (newPos - prevPos));
+            float angle = Utils.VectorToAngle(newPos - prevPos) - 90;
+            reflection.transform.eulerAngles = Vector3.forward * angle;
+            prevPos = newPos;
+            currentStep = 0;
+        }
     }
 
     private void Destroy()
