@@ -7,10 +7,13 @@ public class Spear : Launchable, IFadestroyable
     Reflectable reflectable;
     private bool inSkeletonHands = true;
 
+    private float height;
+
     void Start()
     {
         Damage = 3f;  // todo remake
         reflectable = GetComponent<Reflectable>();
+        height = GetComponent<SpriteRenderer>().bounds.size.y / 2;
     }
 
     public void Remove()
@@ -28,7 +31,7 @@ public class Spear : Launchable, IFadestroyable
         if (inFlight && reflectable != null)
         {
             //Debug.Log("set pseudo y on flight");
-            reflectable.SetPseudoYOffset(currentY);
+            reflectable.SetPseudoYOffset(currentY + height);
         }
     }
 
@@ -46,6 +49,7 @@ public class Spear : Launchable, IFadestroyable
         reflectable.ResetReflectAxis();
         reflectable.SetPseudoYOffset(y);
         inSkeletonHands = true;
+        reflectable.shouldHandleReflectionAngle = true;
     }
 
     public override bool LandInTarget(Transform target)
@@ -60,17 +64,18 @@ public class Spear : Launchable, IFadestroyable
         //reflectable.ResetReflectAxis();
         reflectable.SetPseudoYOffset(distance);
         // TODO RETURN THIS AFTER DEBUG
-        //var coroutine = ((IFadestroyable)this).FadingDestroy(GetComponent<SpriteRenderer>());
-        //StartCoroutine(coroutine);
+        var coroutine = ((IFadestroyable)this).FadingDestroy(GetComponent<SpriteRenderer>());
+        StartCoroutine(coroutine);
+        reflectable.shouldHandleReflectionAngle = false;
 
         return true;
     }
 
-    //protected override void OnLanding()
-    //{
-    //    // reflectable.ResetReflectAxis();
-    //    reflectable.SetPseudoYOffset(0);
-    //}
+    protected override void OnLanding()
+    {
+        reflectable.shouldHandleReflectionAngle = false;
+        //reflectable.SetPseudoYOffset(0);
+    }
 
     public override float GetDamage()
     {

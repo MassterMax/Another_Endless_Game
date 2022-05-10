@@ -13,10 +13,13 @@ public class Reflectable : MonoBehaviour, IBlinkable
     [SerializeField] Vector2 reflectAxis;
     bool isWorking = true;
 
+    public bool shouldHandleReflectionAngle = true;
+
     Vector3 prevPos;
     int currentStep = 0;
     float skipedTime = 1;
     // bool skipStep = true;
+    float rotationAngle;
 
     void Awake()
     {
@@ -66,24 +69,18 @@ public class Reflectable : MonoBehaviour, IBlinkable
             reflectionSpriteRenderer.color = spriteRenderer.color;
         }
 
-        // Set correct rotation
-        //reflection.transform.localEulerAngles = Vector3.forward * ReflectionAngle();
-        //reflection.transform.eulerAngles = Vector3.forward * ReflectionAngle();
-
-        // Set correct vertical position
-        //Debug.Log(gameObject.name + " : " + pseudoYOffset + " " + yOffset);
-        //Debug.Log("original pos is " + gameObject.transform.position);
+        // reflection.transform.position = (Vector2)gameObject.transform.position + downVector() * yOffset * Mathf.Cos(gameObject.transform.rotation.z) + downVector() * 2 * pseudoYOffset;
 
         if (pseudoYOffset != 0)
             reflection.transform.position = (Vector2)gameObject.transform.position + downVector() * 2 * pseudoYOffset;
         else
-            reflection.transform.position = (Vector2)gameObject.transform.position + downVector() * yOffset * Mathf.Cos(gameObject.transform.rotation.z);
-        // Debug.Log("psudo offset is " + 2 * pseudoYOffset + " while cosine offset is " + yOffset * Mathf.Cos(gameObject.transform.rotation.z));
-        //Debug.Log("reflection pos is " + reflection.transform.position);
-    }
-
-    void FixedUpdate()
-    {
+        {
+            reflection.transform.position = (Vector2)gameObject.transform.position + downVector() * yOffset * Mathf.Cos(gameObject.transform.rotation.z * Mathf.Deg2Rad);
+            if (gameObject.name.Equals("Spear"))
+            {
+                Debug.Log("new spear pos is " + reflection.transform.position);
+            }
+        }
         SetReflectionAngle();
     }
 
@@ -118,22 +115,7 @@ public class Reflectable : MonoBehaviour, IBlinkable
 
     private void SetReflectionAngle()
     {
-        //Debug.LogWarning("reflex axis is " + reflectAxis);
-        //float relativeAngle = Utils.VectorToAngle(reflectAxis);
-        //float currentAngle = gameObject.transform.eulerAngles.z;
-        // float a = currentAngle * Mathf.Deg2Rad;
-        // float b = relativeAngle * Mathf.Deg2Rad;
-
-        // if (gameObject.name.Equals("Spear"))
-        // {
-        //     Debug.LogWarning(gameObject.name + ": ");
-        //     Debug.Log("current angle: " + currentAngle);
-        //     Debug.Log("axis angle: " + relativeAngle);
-        //     Debug.LogWarning("absolute reflection angle: " + -Mathf.Atan(Mathf.Tan(a) - 2 * Mathf.Tan(b)) * Mathf.Rad2Deg);
-        // }
-
-        // return 180 - Mathf.Atan(Mathf.Tan(a) - 2 * Mathf.Tan(b)) * Mathf.Rad2Deg;
-        //float angle = 180 - 2 * currentAngle + 2 * relativeAngle;
+        if (!shouldHandleReflectionAngle) return;
 
         if (reflectAxis == Vector2.right)
         {
@@ -141,23 +123,9 @@ public class Reflectable : MonoBehaviour, IBlinkable
             return;
         }
 
-        // float relativeAngle = Utils.VectorToAngle(reflectAxis);
-        // float currentAngle = gameObject.transform.eulerAngles.z;
-        // float a = currentAngle * Mathf.Deg2Rad;
-        // float b = relativeAngle * Mathf.Deg2Rad;
-
-        // float angle1 = Mathf.Atan(Mathf.Abs(Mathf.Tan(a) - 2 * Mathf.Tan(b))) * Mathf.Rad2Deg;
-        // // if (Mathf.Atan(a) < 0)
-        // // {
-        // //     angle1 = 180 - angle1;
-        // // }
-        // reflection.transform.eulerAngles = Vector3.forward * (angle1 + 180);
-        // //reflection.transform.localEulerAngles = Vector3.forward * (Mathf.Atan(Mathf.Abs(Mathf.Tan(a) - 2 * Mathf.Tan(b))) * Mathf.Rad2Deg + 180 + currentAngle + relativeAngle);
-        // return;
-
-        if (skipedTime == 0)
+        if (skipedTime < Time.deltaTime)
         {
-            skipedTime = 1;
+            skipedTime += Time.deltaTime;
         }
         else
         {
@@ -166,32 +134,20 @@ public class Reflectable : MonoBehaviour, IBlinkable
             // skip
             if (newPos.x == prevPos.x || newPos.y == prevPos.y)
             {
+                //Debug.Log("skip");
                 return;
             }
 
-            Debug.LogWarning("newPos " + newPos);
-            float angle = Utils.VectorToAngle(newPos - prevPos) - 90;
-            reflection.transform.eulerAngles = Vector3.forward * angle;
+            // Debug.LogWarning("newPos " + newPos);
+            // Debug.Log("vector is " + (newPos - prevPos).normalized);
+            rotationAngle = Utils.VectorToAngle(newPos - prevPos) - 90;
+            //Debug.Log("angle is " + (angle + 90));
             prevPos = newPos;
             skipedTime = 0;
         }
-        return;
 
-        // this is for spear
-        if (currentStep < 12)
-        {
-            // Debug.Log("skip step: " + Time.time);
-            currentStep += 1;
-        }
-        else
-        {
-            Vector3 newPos = reflection.transform.position;
-            Debug.LogWarning("vector is " + (newPos - prevPos));
-            float angle = Utils.VectorToAngle(newPos - prevPos) - 90;
-            reflection.transform.eulerAngles = Vector3.forward * angle;
-            prevPos = newPos;
-            currentStep = 0;
-        }
+        reflection.transform.eulerAngles = Vector3.forward * rotationAngle;
+        return;
     }
 
     private void Destroy()
