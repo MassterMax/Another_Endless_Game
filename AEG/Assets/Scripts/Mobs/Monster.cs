@@ -90,6 +90,7 @@ public abstract class Monster : Creature, IFadestroyable
 
     protected float toPlayerDistance()
     {
+        // Debug.LogWarning(gameObject.name + ": to player distnace is : " + toPlayerVector().magnitude);
         return toPlayerVector().magnitude;
     }
 

@@ -101,9 +101,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d361f957b8ba1784ab0f3655e19a4fa7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  throwingRadius: 4
-  fightingRadius: 2
-  hurryBoost: 3
 --- !u!95 &4072277259657465806
 Animator:
   serializedVersion: 4

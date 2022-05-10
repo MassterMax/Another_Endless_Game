@@ -23,7 +23,8 @@ public class Circle : Spell, IKnowPlayerController
             transform.localPosition = Vector3.zero;
 
             SetReflectionPosition();
-        } else
+        }
+        else
         {
             // just destroy =(
             transform.position = center;
@@ -33,6 +34,7 @@ public class Circle : Spell, IKnowPlayerController
 
     private void SetReflectionPosition()
     {
+        Debug.Log("set reflection for circle");
         reflection = GetComponent<Reflectable>();
         if (reflection == null) return;
 
@@ -41,6 +43,6 @@ public class Circle : Spell, IKnowPlayerController
 
         float circleHeight = spriteRenderer.bounds.size.y;
 
-        reflection.SetPseudoYOffset((PlayerController.GetHeight() - circleHeight) / 2);
+        reflection.SetPseudoYOffset(PlayerController.GetHeight() / 2);
     }
 }

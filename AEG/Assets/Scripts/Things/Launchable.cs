@@ -7,6 +7,8 @@ public abstract class Launchable : DamagingThing
     const float g = 9.81f;
 
     protected bool inFlight = false;
+    bool readyToDamage = false;
+
     protected Vector2 direction;
     protected float currentX;
     protected float currentY;
@@ -26,7 +28,12 @@ public abstract class Launchable : DamagingThing
         }
 
         float alpha = Mathf.Asin(length * g / (velocity * velocity));
-        if (alpha > Mathf.PI / 2)
+        // if (alpha > Mathf.PI / 2)
+        // {
+        //     alpha = Mathf.PI - alpha;
+        // }
+
+        if (alpha < Mathf.PI / 2)
         {
             alpha = Mathf.PI - alpha;
         }
@@ -50,6 +57,7 @@ public abstract class Launchable : DamagingThing
     {
         Debug.LogWarning("launched!");
         inFlight = true;
+        readyToDamage = false;
 
         float eps = 0.02f * velocity;  // todo maybe change
         float startTime = Time.time;
@@ -69,10 +77,23 @@ public abstract class Launchable : DamagingThing
             //Debug.Log("step!");
             float time = Time.time - startTime;
 
+            if (time > 15f)
+            {
+                // IDIOT CHECK - DELETE THIS THING
+                Debug.LogError(gameObject.name + " will never reach the target");
+                Destroy(gameObject);
+            }
+
             currentX = velocityX * time;
             currentY = velocityY * time - g * time * time / 2;
 
             float delta = velocityX * time / length;  // from 0 to 1
+
+            // todo find optimal delta
+            if (delta > 0.85)
+            {
+                readyToDamage = true;
+            }
 
             // this is a linear transformation
             float extraX = (1 - delta) * x1 + delta * (x2 - length);
@@ -111,7 +132,7 @@ public abstract class Launchable : DamagingThing
     public virtual bool LandInTarget(Transform target, float targetHeight = 0)
     {
         // skip this step if actually thing lies on the ground
-        if (!inFlight)
+        if (!inFlight || !readyToDamage)
         {
             return false;
         }

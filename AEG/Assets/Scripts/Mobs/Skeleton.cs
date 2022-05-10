@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Skeleton : Monster
 {
-    [SerializeField] float throwingRadius = 10f;
-    [SerializeField] float fightingRadius = 5f;
+    float spearSpeed;
+    float throwingRadius = 5;
+    float fightingRadius = 3f;
     float hurryBoost = 2f;
 
     // todo make timer because I zadolbalsya
@@ -20,7 +21,7 @@ public class Skeleton : Monster
     Vector2 defaultSpearPos;
     Vector2 lastSpearTarget;
 
-    float distanceBetweenSpearAndSkeleton;
+    float pseudoSpearDistance;
 
     public override float Damage { get => withSpear ? base.Damage * 3 : base.Damage; }
     // todo spear has own collider and maybe I should separate it as entity
@@ -29,13 +30,16 @@ public class Skeleton : Monster
     {
         base.Start();
 
+        spearSpeed = Mathf.Ceil(Mathf.Sqrt(throwingRadius * 9.81f));
+
         spear = GetComponentInChildren<Spear>();
         // manager = FindObjectOfType<LaunchItemManager>();  // todo maybe remove
         defaultSpearPos = spear.transform.localPosition;
 
         // for reflections
-        distanceBetweenSpearAndSkeleton = (spear.transform.position - transform.position).y;
-        spear.OnPickup(distanceBetweenSpearAndSkeleton);
+        pseudoSpearDistance = spear.transform.localPosition.y + spriteRenderer.bounds.size.y / 2;
+        // Debug.LogWarning("pseudo disnatnce is " + pseudoSpearDistance);
+        spear.OnPickup(pseudoSpearDistance);
     }
 
     protected override void Update()
@@ -55,7 +59,7 @@ public class Skeleton : Monster
         if (!withSpear)
         {
             // go for player only if spear is far away
-            if (spear != null && !spear.InTarget && toSpearDistance() <= spearPreferedCoef * playerDistance) direction = toSpearVector().normalized;
+            if (spear != null && !spear.InTarget && !spear.InFlight && toSpearDistance() <= spearPreferedCoef * playerDistance) direction = toSpearVector().normalized;
             else direction = toPlayerVector().normalized;
 
             direction *= hurryBoost;
@@ -129,13 +133,11 @@ public class Skeleton : Monster
                 withSpear = true;
                 spear.transform.localPosition = defaultSpearPos;
                 preparedToThrowTime = Time.time;
-                spear.OnPickup(distanceBetweenSpearAndSkeleton);
+                spear.OnPickup(pseudoSpearDistance);
             }
         }
         else
         {
-            float spearSpeed = 11f;
-
             var spearDirection = (Player.transform.position - spear.transform.position);
             spear.transform.eulerAngles = new Vector3(0, 0, Utils.VectorToAngle(spearDirection) - 90);
 

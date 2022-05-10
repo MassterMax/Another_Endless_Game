@@ -27,22 +27,24 @@ public class Spear : Launchable, IFadestroyable
     {
         if (inFlight && reflectable != null)
         {
+            //Debug.Log("set pseudo y on flight");
             reflectable.SetPseudoYOffset(currentY);
-
         }
     }
 
     public override void LaunchObject(Vector2 destination, float velocity)
     {
         base.LaunchObject(destination, velocity);
+        Debug.LogWarning("setting reflect asix " + direction);
         reflectable.SetReflectAxis(direction);
         inSkeletonHands = false;
     }
 
     public void OnPickup(float y)
     {
+        Debug.Log("on pickup y is " + y);
         reflectable.ResetReflectAxis();
-        reflectable.SetPseudoYOffset(-y / 2);
+        reflectable.SetPseudoYOffset(y);
         inSkeletonHands = true;
     }
 
@@ -53,11 +55,12 @@ public class Spear : Launchable, IFadestroyable
             return false;
         }
 
-        float distance = transform.localPosition.magnitude; // + targetHeight;
+        //float distance = transform.localPosition.magnitude; // + targetHeight;
         //reflectable.ResetReflectAxis();
-        reflectable.SetPseudoYOffset(-distance / 2);
-        var coroutine = ((IFadestroyable)this).FadingDestroy(GetComponent<SpriteRenderer>());
-        StartCoroutine(coroutine);
+        //reflectable.SetPseudoYOffset(-distance / 2);
+        // TODO RETURN THIS AFTER DEBUG
+        //var coroutine = ((IFadestroyable)this).FadingDestroy(GetComponent<SpriteRenderer>());
+        //StartCoroutine(coroutine);
         return true;
     }
 

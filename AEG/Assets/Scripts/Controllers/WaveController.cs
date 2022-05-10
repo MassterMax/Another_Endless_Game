@@ -9,7 +9,7 @@ public class WaveController : MonoBehaviour
     void Start()
     {
         monsterController = FindObjectOfType<MonsterController>();
-        monsterController.CreateMonster("Zombie", new Vector2(1, 1));
+        //monsterController.CreateMonster("Zombie", new Vector2(1, 1));
     }
 
     // Update is called once per frame

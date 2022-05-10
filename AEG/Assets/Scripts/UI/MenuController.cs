@@ -45,6 +45,6 @@ public class MenuController : MonoBehaviour
 
     private void Start()
     {
-        OnReflectionOnButton();
+        OnReflectionOffButton();
     }
 }

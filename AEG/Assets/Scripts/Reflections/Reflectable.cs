@@ -13,6 +13,8 @@ public class Reflectable : MonoBehaviour, IBlinkable
     [SerializeField] Vector2 reflectAxis;
     bool isWorking = true;
 
+    Vector3 prevPos;
+
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -23,11 +25,12 @@ public class Reflectable : MonoBehaviour, IBlinkable
         reflectionSpriteRenderer.flipX = true;
         reflectionSpriteRenderer.flipY = false;
         reflectionSpriteRenderer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
-        
+
         reflectionSpriteRenderer.sortingOrder = Reflecting.REFLECTION_LOWER_BOUND + spriteRenderer.sortingOrder; // hmmmmmm
 
-        yOffset = spriteRenderer.bounds.size.y;
+        //yOffset = spriteRenderer.bounds.size.y;
 
+        prevPos = reflection.transform.localPosition;
         ResetReflectAxis();
 
         yOffset = spriteRenderer.sprite.pivot.y / spriteRenderer.sprite.pixelsPerUnit * 2;
@@ -61,12 +64,21 @@ public class Reflectable : MonoBehaviour, IBlinkable
         }
 
         // Set correct rotation
-        reflection.transform.localEulerAngles = Vector3.forward * ReflectionAngle();
+        //reflection.transform.localEulerAngles = Vector3.forward * ReflectionAngle();
+        //reflection.transform.eulerAngles = Vector3.forward * ReflectionAngle();
 
         // Set correct vertical position
         //Debug.Log(gameObject.name + " : " + pseudoYOffset + " " + yOffset);
-        reflection.transform.position = (Vector2)gameObject.transform.position +
-            downVector() * (2 * pseudoYOffset + yOffset * Mathf.Cos(gameObject.transform.rotation.z));
+        //Debug.Log("original pos is " + gameObject.transform.position);
+
+        if (pseudoYOffset != 0)
+            reflection.transform.position = (Vector2)gameObject.transform.position + downVector() * 2 * pseudoYOffset;
+        else
+            reflection.transform.position = (Vector2)gameObject.transform.position + downVector() * yOffset * Mathf.Cos(gameObject.transform.rotation.z);
+        // Debug.Log("psudo offset is " + 2 * pseudoYOffset + " while cosine offset is " + yOffset * Mathf.Cos(gameObject.transform.rotation.z));
+        //Debug.Log("reflection pos is " + reflection.transform.position);
+
+        SetReflectionAngle();
     }
 
     public void Turn(bool on)
@@ -84,6 +96,7 @@ public class Reflectable : MonoBehaviour, IBlinkable
 
     public void SetPseudoYOffset(float value)
     {
+        //Debug.LogWarning("set pseudo offset: " + value);
         pseudoYOffset = value;
     }
 
@@ -97,16 +110,34 @@ public class Reflectable : MonoBehaviour, IBlinkable
         reflectAxis = newAxis;
     }
 
-    private float ReflectionAngle()
+    private void SetReflectionAngle()
     {
-        float relativeAngle = Utils.VectorToAngle(reflectAxis);
-        float currentAngle = gameObject.transform.eulerAngles.z;
+        //Debug.LogWarning("reflex axis is " + reflectAxis);
+        //float relativeAngle = Utils.VectorToAngle(reflectAxis);
+        //float currentAngle = gameObject.transform.eulerAngles.z;
+        // float a = currentAngle * Mathf.Deg2Rad;
+        // float b = relativeAngle * Mathf.Deg2Rad;
 
-        //Debug.LogWarning(gameObject.name + " current n relative angles:");
-        //Debug.Log(currentAngle);
-        //Debug.Log(relativeAngle);
+        // if (gameObject.name.Equals("Spear"))
+        // {
+        //     Debug.LogWarning(gameObject.name + ": ");
+        //     Debug.Log("current angle: " + currentAngle);
+        //     Debug.Log("axis angle: " + relativeAngle);
+        //     Debug.LogWarning("absolute reflection angle: " + -Mathf.Atan(Mathf.Tan(a) - 2 * Mathf.Tan(b)) * Mathf.Rad2Deg);
+        // }
 
-        return 180 - 2 * currentAngle + 2 * relativeAngle;
+        // return 180 - Mathf.Atan(Mathf.Tan(a) - 2 * Mathf.Tan(b)) * Mathf.Rad2Deg;
+        //float angle = 180 - 2 * currentAngle + 2 * relativeAngle;
+
+        if (reflectAxis == Vector2.right)
+        {
+            reflection.transform.localEulerAngles = Vector3.forward * (180 - 2 * gameObject.transform.eulerAngles.z);
+            return;
+        }
+        Vector3 newPos = reflection.transform.localPosition;
+        float angle = Utils.VectorToAngle(newPos - prevPos) - 90;
+        prevPos = newPos;
+        reflection.transform.eulerAngles = Vector3.forward * angle;
     }
 
     private void Destroy()
