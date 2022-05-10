@@ -5,6 +5,7 @@ using UnityEngine;
 public class Lightning : Spell, IKnowMonsterController, IKnowSpellManager
 {
     float damageRadius = 1f;  // todo set as a parameter?
+    float damage = 2f;
     float delay;
     public MonsterController MonsterController { get; set; }
     public SpellManager SpellManager { get; set; }
@@ -20,7 +21,7 @@ public class Lightning : Spell, IKnowMonsterController, IKnowSpellManager
 
         foreach (var monster in MonsterController.GetMostersInArea(end, damageRadius))
         {
-            monster.TakeDamage(1);
+            monster.TakeDamage(damage);
         }
 
         foreach (var spell in SpellManager.GetSpellsInArea(end, damageRadius))
@@ -32,23 +33,9 @@ public class Lightning : Spell, IKnowMonsterController, IKnowSpellManager
             }
             else if (spell is Meadow)
             {
+                // fire the meadow
                 SpellManager.CombineTwoSpells(this, spell);
             }
         }
-
-        // Destroy(gameObject);
     }
-
-    void Start()
-    {
-        // float delay = this.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).length + 0.01f;
-        // Destroy(gameObject, delay);
-    }
-
-    /*
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }*/
 }

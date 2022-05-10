@@ -108,10 +108,17 @@ public abstract class Launchable : DamagingThing
 
     }
 
-    public virtual void LandInTarget(Transform target)
+    public virtual bool LandInTarget(Transform target, float targetHeight = 0)
     {
+        // skip this step if actually thing lies on the ground
+        if (!inFlight)
+        {
+            return false;
+        }
+
         this.transform.parent = target;
         inTarget = true;
         // todo remove after some duration
+        return true;
     }
 }

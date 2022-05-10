@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Meadow : Spell
+public class Meadow : GroundedSpell
 {
     public override void CastSpell(Vector2 start, Vector2 end, Vector2 center)
     {
@@ -19,7 +19,7 @@ public class Meadow : Spell
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void OnTriggerStay2D(Collider2D collision)

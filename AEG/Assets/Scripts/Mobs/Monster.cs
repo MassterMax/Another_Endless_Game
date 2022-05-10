@@ -58,7 +58,7 @@ public abstract class Monster : Creature, IFadestroyable
             //Debug.Log("next: " + animator.GetNextAnimatorStateInfo(0).length);
             //Debug.Log("current: " + animator.GetCurrentAnimatorStateInfo(0).length);
 
-            AnimationClip clip = animator.runtimeAnimatorController.animationClips.Where(clip=>clip.name.Equals("death")).FirstOrDefault();
+            AnimationClip clip = animator.runtimeAnimatorController.animationClips.Where(clip => clip.name.Equals("death")).FirstOrDefault();
             float length = 1f;
             if (clip != null)
             {
@@ -69,7 +69,10 @@ public abstract class Monster : Creature, IFadestroyable
             //animator.Sta
             //animator.Get
             Debug.LogWarning("death with animation");
-        } else
+            this.enabled = false;
+            GetComponent<Collider2D>().enabled = false;
+        }
+        else
         {
             base.OnDeath();
         }

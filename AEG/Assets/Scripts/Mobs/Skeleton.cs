@@ -6,14 +6,13 @@ public class Skeleton : Monster
 {
     [SerializeField] float throwingRadius = 10f;
     [SerializeField] float fightingRadius = 5f;
-    [SerializeField] float hurryBoost = 1.5f;
-    // LaunchItemManager manager;  DEPRECATED
+    float hurryBoost = 2f;
 
     // todo make timer because I zadolbalsya
     float throwDilation = .5f;
     float preparedToThrowTime = 0f;
 
-    float spearPreferedCoef = 2f;  // if tpSpearDistance < toPlayerDistance * coef; => prefer to obtain spear
+    float spearPreferedCoef = 1.5f;  // if toSpearDistance < toPlayerDistance * coef; => prefer to obtain spear
 
     Spear spear;
     bool withSpear = true;
@@ -23,7 +22,7 @@ public class Skeleton : Monster
 
     float distanceBetweenSpearAndSkeleton;
 
-    public override float Damage { get => withSpear ? base.Damage * 3 : base.Damage; }  
+    public override float Damage { get => withSpear ? base.Damage * 3 : base.Damage; }
     // todo spear has own collider and maybe I should separate it as entity
 
     protected override void Start()
@@ -36,7 +35,6 @@ public class Skeleton : Monster
 
         // for reflections
         distanceBetweenSpearAndSkeleton = (spear.transform.position - transform.position).y;
-        // Debug.Log("distanceBetweeeeeeeeeeeeen: " + distanceBetweenSpearAndSkeleton);
         spear.OnPickup(distanceBetweenSpearAndSkeleton);
     }
 
@@ -110,7 +108,7 @@ public class Skeleton : Monster
         if (spear == null) return;
         // if spear in player
         if (spear.InTarget) return;
-      
+
 
         float playerDistance = toPlayerDistance();
 
@@ -141,7 +139,7 @@ public class Skeleton : Monster
             var spearDirection = (Player.transform.position - spear.transform.position);
             spear.transform.eulerAngles = new Vector3(0, 0, Utils.VectorToAngle(spearDirection) - 90);
 
-            if ((preparing || playerDistance <= throwingRadius && fightingRadius < playerDistance) 
+            if ((preparing || playerDistance <= throwingRadius && fightingRadius < playerDistance)
                 && (Time.time - preparedToThrowTime) > throwDilation)
             {
                 lastSpearTarget = Player.transform.position;

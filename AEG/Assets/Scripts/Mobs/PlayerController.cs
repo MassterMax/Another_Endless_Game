@@ -176,18 +176,6 @@ public class PlayerController : Creature, IBlinkable
         }
     }
 
-    //public IEnumerator Blinking(SpriteRenderer spriteRenderer, int times, float dilation)
-    //{
-    //    for (var n = 0; n < times; n++)
-    //    {
-    //        spriteRenderer.enabled = true;
-    //        yield return new WaitForSeconds(dilation);
-    //        spriteRenderer.enabled = false;
-    //        yield return new WaitForSeconds(dilation);
-    //    }
-    //    spriteRenderer.enabled = true;
-    //}
-
     private void OnTriggerStay2D(Collider2D collision)
     {
         var damaging = collision.gameObject.GetComponent<IDamaging>();
@@ -197,7 +185,7 @@ public class PlayerController : Creature, IBlinkable
 
         if (damaging is Launchable)
         {
-            ((Launchable)damaging).LandInTarget(transform);
+            ((Launchable)damaging).LandInTarget(transform, GetHeight());
         }
     }
 

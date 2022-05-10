@@ -12,16 +12,16 @@ public class MonsterController : MonoBehaviour
 
     Dictionary<Type, Dictionary<string, float>> monsterToStatsMapping = new Dictionary<Type, Dictionary<string, float>>()
     { { typeof(Zombie), new Dictionary<string, float>() {
-        { "health", 6f },
-        { "maxHealth", 6f },
-        { "damage", 1f },
-        { "speed", 0.3f }
+        { "health", 7f },
+        { "maxHealth", 7f },
+        { "damage", 1.5f },
+        { "speed", 0.4f }
        }},
       { typeof(Skeleton), new Dictionary<string, float>() {
-        { "health", 4f },
-        { "maxHealth", 4f },
+        { "health", 5f },
+        { "maxHealth", 5f },
         { "damage", 1f },
-        { "speed", 0.6f }
+        { "speed", 0.5f }
        }}
     };
 

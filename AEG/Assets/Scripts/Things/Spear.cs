@@ -5,6 +5,7 @@ using UnityEngine;
 public class Spear : Launchable, IFadestroyable
 {
     Reflectable reflectable;
+    private bool inSkeletonHands = true;
 
     void Start()
     {
@@ -27,7 +28,7 @@ public class Spear : Launchable, IFadestroyable
         if (inFlight && reflectable != null)
         {
             reflectable.SetPseudoYOffset(currentY);
-            
+
         }
     }
 
@@ -35,21 +36,29 @@ public class Spear : Launchable, IFadestroyable
     {
         base.LaunchObject(destination, velocity);
         reflectable.SetReflectAxis(direction);
+        inSkeletonHands = false;
     }
 
     public void OnPickup(float y)
     {
-        //reflectable.ResetReflectAxis();
-        reflectable.SetPseudoYOffset(-y/2);
+        reflectable.ResetReflectAxis();
+        reflectable.SetPseudoYOffset(-y / 2);
+        inSkeletonHands = true;
     }
 
-    public override void LandInTarget(Transform target)
+    public override bool LandInTarget(Transform target, float targetHeight = 0)
     {
-        base.LandInTarget(target);
-        OnPickup(transform.localPosition.y);
+        if (!base.LandInTarget(target))
+        {
+            return false;
+        }
 
+        float distance = transform.localPosition.magnitude; // + targetHeight;
+        //reflectable.ResetReflectAxis();
+        reflectable.SetPseudoYOffset(-distance / 2);
         var coroutine = ((IFadestroyable)this).FadingDestroy(GetComponent<SpriteRenderer>());
         StartCoroutine(coroutine);
+        return true;
     }
 
     //protected override void OnLanding()
@@ -60,7 +69,7 @@ public class Spear : Launchable, IFadestroyable
 
     public override float GetDamage()
     {
-        if (inFlight)
+        if (inFlight || inSkeletonHands)
         {
             return base.GetDamage();
         }
