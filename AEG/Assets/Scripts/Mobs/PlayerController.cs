@@ -41,7 +41,7 @@ public class PlayerController : Creature, IBlinkable
         stickSpriteRenderer = stick.GetComponent<SpriteRenderer>();
 
         SetAttributes(playerHealth, playerHealth, playerDamage, playerSpeed, true);
-        SetBarStyle("green", 110);
+        SetBarStyle(110);
         SetupManaBar();
     }
 
@@ -182,6 +182,7 @@ public class PlayerController : Creature, IBlinkable
         var damaging = collision.gameObject.GetComponent<IDamaging>();
         if (!(damaging is Monster)) return;
         if (damaging == null || damaging.GetDamage() == 0) return;
+        if (((Creature)damaging).Friendly) return;
 
         TakeDamage(damaging.GetDamage());
     }
@@ -193,8 +194,10 @@ public class PlayerController : Creature, IBlinkable
         if (!(damaging is Launchable)) return;
         if (damaging == null || damaging.GetDamage() == 0) return;
 
-        TakeDamage(damaging.GetDamage());
-        ((Launchable)damaging).LandInTarget(transform);
+        if (((Launchable)damaging).LandInTarget(transform))
+        {
+            TakeDamage(damaging.GetDamage());
+        }
     }
 
     public float GetHeight()

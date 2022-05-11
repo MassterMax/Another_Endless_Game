@@ -21,33 +21,33 @@ public class Zombie : Monster
         base.Update();
     }
 
-    // todo maybe make all creatures to have Move()
     protected override void Move()
     {
-        if (Player == null) return;
+        if (!HasTarget()) return;
 
-        if (toPlayerDistance() < visibleField)  // if zombie see the player
+        if (ToTargetDistance() < visibleField)  // if zombie sees the target
         {
-            direction = toPlayerVector().normalized;
-        } else if (changeDirectionTimer >= changeDirectonLimit)
+            SetMoveDirection(ToTargetVector());
+        }
+        else if (changeDirectionTimer >= changeDirectonLimit)
         {
             if (Random.value < stayProbability)  // zombie stays
             {
-                direction = Vector2.zero;
+                SetMoveDirection();  // reset
             }
             else
             {
-                // with 50% prob random direction or player
+                // with 50% prob random direction or target
                 if (Random.value < 0.5)
-                    direction = Random.insideUnitCircle.normalized;
+                    SetMoveDirection(Random.insideUnitCircle.normalized);
                 else
-                    direction = toPlayerVector().normalized;
+                    SetMoveDirection(ToTargetVector());
             }
 
             changeDirectionTimer = 0;
         }
 
         changeDirectionTimer = Mathf.Min(changeDirectionTimer + Time.deltaTime, changeDirectonLimit);
-        transform.Translate(direction * Time.deltaTime * Speed);
+        base.Move();
     }
 }

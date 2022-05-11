@@ -16,11 +16,6 @@ public class Spear : Launchable, IFadestroyable
         height = GetComponent<SpriteRenderer>().bounds.size.y / 2;
     }
 
-    public void Remove()
-    {
-
-    }
-
     void FixedUpdate()
     {
         SetPseudoY();
@@ -59,16 +54,18 @@ public class Spear : Launchable, IFadestroyable
             return false;
         }
 
-        //float distance = transform.localPosition.magnitude; // + targetHeight;
         float distance = transform.localPosition.y + transform.parent.GetComponent<SpriteRenderer>().bounds.size.y / 2;
-        //reflectable.ResetReflectAxis();
         reflectable.SetPseudoYOffset(distance);
-        // TODO RETURN THIS AFTER DEBUG
-        var coroutine = ((IFadestroyable)this).FadingDestroy(GetComponent<SpriteRenderer>());
-        StartCoroutine(coroutine);
+        StartFadingDestroy();
         reflectable.shouldHandleReflectionAngle = false;
 
         return true;
+    }
+
+    public void StartFadingDestroy()
+    {
+        var coroutine = ((IFadestroyable)this).FadingDestroy(GetComponent<SpriteRenderer>());
+        StartCoroutine(coroutine);
     }
 
     protected override void OnLanding()

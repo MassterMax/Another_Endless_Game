@@ -15,14 +15,23 @@ public class MonsterController : MonoBehaviour
         { "health", 7f },
         { "maxHealth", 7f },
         { "damage", 1.5f },
-        { "speed", 0.4f }
+        { "speed", 0.4f },
+        { "friendly", 0},
        }},
       { typeof(Skeleton), new Dictionary<string, float>() {
         { "health", 5f },
         { "maxHealth", 5f },
         { "damage", 1f },
-        { "speed", 0.5f }
-       }}
+        { "speed", 0.5f },
+        { "friendly", 0},
+       }},
+        { typeof(Golem), new Dictionary<string, float>() {
+        { "health", 3f },
+        { "maxHealth", 3f },
+        { "damage", 2f },
+        { "speed", 0.4f },
+        { "friendly", 1},
+       }},
     };
 
     private float GetMonsterParam(Monster monster, string paramName)
@@ -58,8 +67,9 @@ public class MonsterController : MonoBehaviour
                 float maxHealth = stats["maxHealth"];
                 float damage = stats["damage"];
                 float speed = stats["speed"];
+                bool friendly = stats["friendly"] > 0;
 
-                monster.SetAttributes(health, maxHealth, damage, speed);
+                monster.SetAttributes(health, maxHealth, damage, speed, friendly);
                 return;
             }
         }
@@ -67,25 +77,20 @@ public class MonsterController : MonoBehaviour
         Debug.LogError("no such monster: " + monsterType);
     }
 
-    //public void CreatePlayer()
-    //{
-    //    Instantiate(Resources.Load("Prefabs/Player/Player"), UnityEngine.Random.insideUnitCircle.normalized, Quaternion.identity);
-    //}
+    private void HandleMonster(Monster monster)
+    {
+        monster.SetMonsterTarget(playerController.transform); // todo start coroutine that calculates real target
+        SetMonsterAttributes(monster);
+
+        monstersGameObjects.Add(monster.gameObject);
+        monsters.Add(monster);
+    }
 
     public void CreateMonster(string monsterName, Vector2 pos)
     {
         var monsterObject = Instantiate(Resources.Load($"Prefabs/Monsters/{monsterName}"), pos, Quaternion.identity) as GameObject;
         var monster = monsterObject.GetComponent<Monster>();
         HandleMonster(monster);
-    }
-
-    private void HandleMonster(Monster monster)
-    {
-        monster.Player = playerController;
-        SetMonsterAttributes(monster);
-
-        monstersGameObjects.Add(monster.gameObject);
-        monsters.Add(monster);
     }
 
     public List<Creature> GetMostersInArea(Vector2 center, float radius)

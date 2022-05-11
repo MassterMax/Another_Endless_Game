@@ -81,7 +81,8 @@ public abstract class Creature : MonoBehaviour, IDamaging
             }
 
             RedrawBuffs();
-        } else
+        }
+        else
         {
             Debug.LogError("unknown buff type: " + buffType);
         }
@@ -94,7 +95,7 @@ public abstract class Creature : MonoBehaviour, IDamaging
 
         List<Type> removeBuffs = new();
 
-        foreach(var el in buffs)
+        foreach (var el in buffs)
         {
             var buff = el.Value;
             if (Time.time > buff.applyTime + buff.Duration)
@@ -176,7 +177,7 @@ public abstract class Creature : MonoBehaviour, IDamaging
 
     protected abstract void HandleAnimation();
 
-    protected virtual void SetAttributes(float health, float maxHealth, float damage, float speed, bool friendly)
+    public virtual void SetAttributes(float health, float maxHealth, float damage, float speed, bool friendly)
     {
         if (set)
             throw new System.Exception("creature already set");
@@ -196,6 +197,8 @@ public abstract class Creature : MonoBehaviour, IDamaging
         GameObject statusBarObject = Instantiate(Resources.Load("Prefabs/UI/StatusBarCanvas"), transform.position, Quaternion.identity) as GameObject;
         statusBarObject.transform.parent = transform;
         buffDrawer = statusBarObject.GetComponentInChildren<BuffDrawer>();
+
+        SetBarStyle();
     }
 
     public void RedrawBuffs()
@@ -203,14 +206,17 @@ public abstract class Creature : MonoBehaviour, IDamaging
         buffDrawer.DrawBuffs(buffs.Values.ToList());
     }
 
-    protected void SetBarStyle(string colorName = "red", int sorterOrder = 11)
+    protected void SetBarStyle(int sorterOrder = 11)
     {
-        healthBar.SetStyle(colorName, sorterOrder);
+        if (friendly)
+            healthBar.SetStyle("green", sorterOrder);
+        else
+            healthBar.SetStyle("red", sorterOrder);
     }
 
     public float GetDamage()
     {
-        if (friendly || isDead)
+        if (isDead)
         {
             return 0;
         }
