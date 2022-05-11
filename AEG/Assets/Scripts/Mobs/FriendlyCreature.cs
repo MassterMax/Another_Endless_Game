@@ -1,22 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
+using System.Linq;
 
-public abstract class Monster : Creature, IFadestroyable
+public abstract class FriendlyCreature : Creature
 {
     protected Animator animator;
     protected SpriteRenderer spriteRenderer;
-
-    private PlayerController player;
-
-    public PlayerController Player { get => player; set => player = value; }
 
     protected Vector2 direction;  // todo rename to moveDirection
 
     protected virtual void Start()
     {
-        SetBarStyle();
+        SetBarStyle("green");
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
@@ -30,13 +24,7 @@ public abstract class Monster : Creature, IFadestroyable
 
     public void SetAttributes(float health, float maxHealth, float damage, float speed)
     {
-        base.SetAttributes(health, maxHealth, damage, speed, false);
-    }
-
-    // todo maybe implement
-    protected override void Move()
-    {
-        throw new System.NotImplementedException();
+        base.SetAttributes(health, maxHealth, damage, speed, true);
     }
 
     protected override void HandleAnimation()
@@ -55,20 +43,13 @@ public abstract class Monster : Creature, IFadestroyable
             UIOff();
             animator.SetBool("isDead", true);
 
-            //Debug.Log("next: " + animator.GetNextAnimatorStateInfo(0).length);
-            //Debug.Log("current: " + animator.GetCurrentAnimatorStateInfo(0).length);
-
             AnimationClip clip = animator.runtimeAnimatorController.animationClips.Where(clip => clip.name.Equals("death")).FirstOrDefault();
             float length = 1f;
             if (clip != null)
             {
                 length = clip.length;
             }
-            Debug.Log("LENGTH IS " + length);
             DelayedDestroy(length);
-            //animator.Sta
-            //animator.Get
-            Debug.LogWarning("death with animation");
             this.enabled = false;
             GetComponent<Collider2D>().enabled = false;
         }
@@ -93,17 +74,11 @@ public abstract class Monster : Creature, IFadestroyable
         }
     }
 
-    protected float toPlayerDistance()
-    {
-        // Debug.LogWarning(gameObject.name + ": to player distnace is : " + toPlayerVector().magnitude);
-        return toPlayerVector().magnitude;
-    }
-
-    protected Vector2 toPlayerVector()
-    {
-        if (player == null) return Vector2.zero;
-        return player.transform.position - transform.position;
-    }
+    // protected Vector2 toPlayerVector()
+    // {
+    //     if (player == null) return Vector2.zero;
+    //     return player.transform.position - transform.position;
+    // }
 
     protected void DelayedDestroy(float duration)
     {

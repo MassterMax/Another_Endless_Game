@@ -81,8 +81,6 @@ public class MonsterController : MonoBehaviour
 
     private void HandleMonster(Monster monster)
     {
-        print("set player for: " + monster);
-        print(playerController);
         monster.Player = playerController;
         SetMonsterAttributes(monster);
 

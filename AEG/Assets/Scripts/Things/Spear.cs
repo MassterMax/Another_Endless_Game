@@ -38,7 +38,7 @@ public class Spear : Launchable, IFadestroyable
     public override void LaunchObject(Vector2 destination, float velocity)
     {
         base.LaunchObject(destination, velocity);
-        Debug.LogWarning("setting reflect asix " + direction);
+        // Debug.LogWarning("setting reflect asix " + direction);
         reflectable.SetReflectAxis(direction);
         inSkeletonHands = false;
     }
