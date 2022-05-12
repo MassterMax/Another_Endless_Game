@@ -7,8 +7,8 @@ using UnityEngine;
 public class MonsterController : MonoBehaviour
 {
     PlayerController playerController;
-    List<GameObject> monstersGameObjects = new List<GameObject>();
-    List<Monster> monsters = new List<Monster>();
+    Utils.LazyCollection<Monster> monsters = new();
+    Utils.LazyCollection<Monster> friendlyCreatures = new();
 
     Dictionary<Type, Dictionary<string, float>> monsterToStatsMapping = new Dictionary<Type, Dictionary<string, float>>()
     { { typeof(Zombie), new Dictionary<string, float>() {
@@ -34,25 +34,27 @@ public class MonsterController : MonoBehaviour
        }},
     };
 
-    private float GetMonsterParam(Monster monster, string paramName)
+    private void Awake()
     {
-        Type monsterType = monster.GetType();
-        foreach (var el in monsterToStatsMapping)
-        {
-            if (monsterType == el.Key)
-            {
-                foreach (var innerEl in el.Value)
-                {
-                    if (innerEl.Key.Equals(paramName))
-                    {
-                        return innerEl.Value;
-                    }
-                }
-            }
-        }
+        playerController = FindObjectOfType<PlayerController>();
 
-        Debug.LogError("no such monster or key: " + monsterType + " parameter: " + paramName);
-        return -1;
+        var monstersArray = FindObjectsOfType<Monster>();
+        foreach (var monster in monstersArray)
+        {
+            HandleMonster(monster);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        SetAttackTargets();
+    }
+
+    // TODO maybe use k-d tree instead!!!
+    private void SetAttackTargets()
+    {
+        MakeSomeActionWithCreatures(monsters, (Monster monster) => monster.SetMonsterTarget(playerController.transform));
+        MakeSomeActionWithCreatures(friendlyCreatures, (Monster monster) => monster.SetMonsterTarget(playerController.transform));
     }
 
     private void SetMonsterAttributes(Monster monster)
@@ -79,11 +81,11 @@ public class MonsterController : MonoBehaviour
 
     private void HandleMonster(Monster monster)
     {
-        monster.SetMonsterTarget(playerController.transform); // todo start coroutine that calculates real target
         SetMonsterAttributes(monster);
-
-        monstersGameObjects.Add(monster.gameObject);
-        monsters.Add(monster);
+        if (monster.Friendly)
+            friendlyCreatures.Add(monster);
+        else
+            monsters.Add(monster);
     }
 
     public void CreateMonster(string monsterName, Vector2 pos)
@@ -93,41 +95,38 @@ public class MonsterController : MonoBehaviour
         HandleMonster(monster);
     }
 
-    public List<Creature> GetMostersInArea(Vector2 center, float radius)
+    public List<Creature> GetMonstersInArea(Vector2 center, float radius, bool enemies = true, bool friendly = false)
     {
-        int i = 0;
         var monstersInArea = new List<Creature>();
 
-        while (i != monstersGameObjects.Count)
-        {
-            var monsterGameObject = monstersGameObjects[i];
-            if (monsterGameObject == null)  // lazy delete monster
-            {
-                monstersGameObjects.RemoveAt(i);
-                monsters.RemoveAt(i);
-            }
-            else
-            {
-                if (((Vector2)monsterGameObject.transform.position - center).magnitude <= radius)
-                {
-                    monstersInArea.Add(monsters[i]);
-                }
-                i += 1;
-            }
-        }
+        if (!enemies & !friendly)
+            Debug.LogWarning("asking for no monsters in monster controller!");
+        if (enemies)
+            FillWithMonstersInArea(center, radius, monsters, monstersInArea);
+        if (friendly)
+            FillWithMonstersInArea(center, radius, friendlyCreatures, monstersInArea);
 
         return monstersInArea;
     }
 
-    // todo remove?
-    private void Awake()
+    private void FillWithMonstersInArea(Vector2 center, float radius, Utils.LazyCollection<Monster> creatures, List<Creature> outCreatures)
     {
-        playerController = FindObjectOfType<PlayerController>();
-
-        var monstersArray = FindObjectsOfType<Monster>();
-        foreach (var monster in monstersArray)
+        for (int i = 0; i < creatures.Count(); ++i)
         {
-            HandleMonster(monster);
+            var creature = creatures.At(i);
+            if (((Vector2)creature.transform.position - center).sqrMagnitude <= radius * radius)
+            {
+                outCreatures.Add(creature);
+            }
+        }
+    }
+
+    private void MakeSomeActionWithCreatures(Utils.LazyCollection<Monster> creatures, Action<Monster> action)
+    {
+        for (int i = 0; i < creatures.Count(); ++i)
+        {
+            var creature = creatures.At(i);
+            action(creature);
         }
     }
 }

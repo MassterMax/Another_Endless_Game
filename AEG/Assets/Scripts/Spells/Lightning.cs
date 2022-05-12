@@ -19,7 +19,7 @@ public class Lightning : Spell, IKnowMonsterController, IKnowSpellManager
     {
         yield return new WaitForSeconds(delay);
 
-        foreach (var monster in MonsterController.GetMostersInArea(end, damageRadius))
+        foreach (var monster in MonsterController.GetMonstersInArea(end, damageRadius))
         {
             monster.TakeDamage(damage);
         }
