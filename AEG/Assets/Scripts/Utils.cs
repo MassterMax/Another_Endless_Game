@@ -77,6 +77,14 @@ public static class Utils
     }
 }
 
+public interface IDelayable
+{
+    public IEnumerator ExecuteAfterDelay(float delay, System.Action action)
+    {
+        yield return new WaitForSeconds(delay);
+        action();
+    }
+}
 
 public interface IBlinkable
 {
