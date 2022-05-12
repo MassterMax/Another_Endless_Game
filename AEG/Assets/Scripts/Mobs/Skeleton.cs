@@ -95,9 +95,17 @@ public class Skeleton : Monster
 
     protected override void Rotate()
     {
+        // rotate to spear
         if (spear != null && !withSpear && ToSpearDistance() <= spearPreferedCoef * ToTargetDistance())
         {
             if (spriteRenderer.flipX != Mathf.Sign(ToSpearVector().x) <= 0)
+            {
+                spriteRenderer.flipX = !spriteRenderer.flipX;
+            }
+        }
+        else if (preparing)
+        {
+            if (spriteRenderer.flipX != Mathf.Sign(ToTargetVector().x) < 0)
             {
                 spriteRenderer.flipX = !spriteRenderer.flipX;
             }

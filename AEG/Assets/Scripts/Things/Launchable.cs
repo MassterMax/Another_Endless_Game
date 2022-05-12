@@ -46,7 +46,7 @@ public abstract class Launchable : DamagingThing
         direction = destination - startPos;
         float l = (startPos - destination).magnitude;
 
-        print("lg/V^2: " + l * g / (velocity * velocity));
+        //print("lg/V^2: " + l * g / (velocity * velocity));
 
         float alpha = GetLaunchAngle(l, velocity);
 

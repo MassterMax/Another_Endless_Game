@@ -10,15 +10,13 @@ public class Reflectable : MonoBehaviour, IBlinkable
     float yOffset;
 
     float pseudoYOffset = 0f;
-    [SerializeField] Vector2 reflectAxis;
+    Vector2 reflectAxis;
     bool isWorking = true;
 
-    public bool shouldHandleReflectionAngle = true;
+    [HideInInspector] public bool shouldHandleReflectionAngle = true;
 
     Vector3 prevPos;
-    int currentStep = 0;
     float skipedTime = 1;
-    // bool skipStep = true;
     float rotationAngle;
 
     void Awake()

@@ -190,12 +190,14 @@ public abstract class Creature : MonoBehaviour, IDamaging
         this.speed = speed;
 
         GameObject healthBarObject = Instantiate(Resources.Load("Prefabs/UI/HealthCanvas"), transform.position, Quaternion.identity) as GameObject;
-        healthBarObject.transform.parent = transform;
+        //healthBarObject.transform.parent = transform;
+        healthBarObject.transform.SetParent(transform);
         healthBar = healthBarObject.GetComponentInChildren<Bar>();
         healthBar.Setup(health, maxHealth);
 
         GameObject statusBarObject = Instantiate(Resources.Load("Prefabs/UI/StatusBarCanvas"), transform.position, Quaternion.identity) as GameObject;
-        statusBarObject.transform.parent = transform;
+        // statusBarObject.transform.parent = transform;
+        statusBarObject.transform.SetParent(transform);
         buffDrawer = statusBarObject.GetComponentInChildren<BuffDrawer>();
 
         SetBarStyle();

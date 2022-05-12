@@ -40,7 +40,7 @@ public class Spear : Launchable, IFadestroyable
 
     public void OnPickup(float y)
     {
-        Debug.Log("on pickup y is " + y);
+        // Debug.Log("on pickup y is " + y);
         reflectable.ResetReflectAxis();
         reflectable.SetPseudoYOffset(y);
         inSkeletonHands = true;
