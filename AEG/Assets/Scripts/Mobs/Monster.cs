@@ -10,6 +10,7 @@ public abstract class Monster : Creature, IFadestroyable
     Vector2 moveDirection;
     Transform attackTarget;
     float deathDuration = 1f;
+    float chaseTargetRadius = 5f;
 
     protected virtual void Start()
     {
@@ -36,6 +37,12 @@ public abstract class Monster : Creature, IFadestroyable
     public void SetMonsterTarget(Transform target)
     {
         attackTarget = target;
+    }
+
+    public virtual bool ShouldChaseTarget()
+    {
+        if (attackTarget is null) return false;
+        return ToTargetDistance() <= chaseTargetRadius;
     }
 
     protected override void HandleAnimation()

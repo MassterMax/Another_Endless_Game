@@ -53,8 +53,15 @@ public class MonsterController : MonoBehaviour
     // TODO maybe use k-d tree instead!!!
     private void SetAttackTargets()
     {
-        MakeSomeActionWithCreatures(monsters, (Monster monster) => monster.SetMonsterTarget(playerController.transform));
-        MakeSomeActionWithCreatures(friendlyCreatures, (Monster monster) => monster.SetMonsterTarget(playerController.transform));
+        MakeSomeActionWithCreatures(monsters, (Monster monster) =>
+        {
+            if (!monster.ShouldChaseTarget()) monster.SetMonsterTarget(GetNearestMonster(monster.transform.position, true).transform);
+        });
+        MakeSomeActionWithCreatures(friendlyCreatures, (Monster monster) =>
+        {
+            if (!monster.ShouldChaseTarget()) monster.SetMonsterTarget(GetNearestMonster(monster.transform.position, false).transform);
+        }
+        );
     }
 
     private void SetMonsterAttributes(Monster monster)
@@ -107,6 +114,41 @@ public class MonsterController : MonoBehaviour
             FillWithMonstersInArea(center, radius, friendlyCreatures, monstersInArea);
 
         return monstersInArea;
+    }
+
+    private Creature GetNearestMonster(Vector2 position, bool isFriendly)
+    {
+        if (isFriendly)
+        {
+            var friendlyCreature = GetNearest(position, friendlyCreatures);
+            float toPlayerDistance = ((Vector2)playerController.transform.position - position).sqrMagnitude;
+            if (friendlyCreature is null || toPlayerDistance <= ((Vector2)friendlyCreature.transform.position - position).sqrMagnitude)
+            {
+                return playerController;
+            }
+            return friendlyCreature;
+        }
+        else
+        {
+            return GetNearest(position, monsters);
+        }
+    }
+
+    private Creature GetNearest(Vector2 position, Utils.LazyCollection<Monster> creatures)
+    {
+        float minPos = float.MaxValue;
+        Creature nearestCreature = null;
+        for (int i = 0; i < creatures.Count(); ++i)
+        {
+            var creature = creatures.At(i);
+            float newPos = ((Vector2)creature.transform.position - position).sqrMagnitude;
+            if (newPos < minPos)
+            {
+                minPos = newPos;
+                nearestCreature = creature;
+            }
+        }
+        return nearestCreature;
     }
 
     private void FillWithMonstersInArea(Vector2 center, float radius, Utils.LazyCollection<Monster> creatures, List<Creature> outCreatures)
