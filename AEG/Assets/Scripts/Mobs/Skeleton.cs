@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Skeleton : Monster
 {
+    [SerializeField] GameObject boxOfSpears;
+    SpriteRenderer boxOfSpearsSpriteRenderer;
+    bool withBoxOfSpears = true;
+
     float spearSpeed;
     float throwingRadius = 4;
     float fightingRadius = 2f;
@@ -13,7 +17,7 @@ public class Skeleton : Monster
     float throwDilation = .5f;
     float preparedToThrowTime = 0f;
 
-    float spearPreferedCoef = 1.5f;  // if toSpearDistance < toPlayerDistance * coef; => prefer to obtain spear
+    float spearPreferedCoef = 0.9f;  // if toSpearDistance < toPlayerDistance * coef; => prefer to obtain spear
 
     Spear spear;
     bool withSpear = true;
@@ -39,6 +43,9 @@ public class Skeleton : Monster
         pseudoSpearDistance = spear.transform.localPosition.y + spriteRenderer.bounds.size.y / 2;
         // Debug.LogWarning("pseudo disnatnce is " + pseudoSpearDistance);
         spear.OnPickup(pseudoSpearDistance);
+
+        boxOfSpearsSpriteRenderer = boxOfSpears.GetComponent<SpriteRenderer>();
+        boxOfSpears.SetActive(withBoxOfSpears);
     }
 
     protected override void Update()
@@ -96,14 +103,22 @@ public class Skeleton : Monster
     protected override void Rotate()
     {
         // rotate to spear
-        if (spear != null && !withSpear && ToSpearDistance() <= spearPreferedCoef * ToTargetDistance())
-        {
-            if (spriteRenderer.flipX != Mathf.Sign(ToSpearVector().x) <= 0)
-            {
-                spriteRenderer.flipX = !spriteRenderer.flipX;
-            }
-        }
-        else if (preparing)
+        // if (spear != null && !withSpear)
+        // {
+        //     if (ToSpearDistance() < spearPreferedCoef * ToTargetDistance())
+        //     {
+        //         if (spriteRenderer.flipX != Mathf.Sign(ToSpearVector().x) < 0)
+        //         {
+        //             spriteRenderer.flipX = !spriteRenderer.flipX;
+        //         }
+        //     }
+        //     else
+        //     {
+        //         base.Rotate();
+        //     }
+        // }
+        // else 
+        if (preparing)
         {
             if (spriteRenderer.flipX != Mathf.Sign(ToTargetVector().x) < 0)
             {
@@ -114,9 +129,14 @@ public class Skeleton : Monster
         {
             base.Rotate();
         }
+
+        if (boxOfSpearsSpriteRenderer.flipX != spriteRenderer.flipX)
+        {
+            boxOfSpearsSpriteRenderer.flipX = spriteRenderer.flipX;
+        }
     }
 
-    internal void HandleSpear()  // todo add dilation between throwings
+    internal void HandleSpear() // todo add extra conditions if skeleton has box of spears
     {
         if (!HasTarget()) return;
         if (spear == null) return;
