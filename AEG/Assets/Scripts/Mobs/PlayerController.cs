@@ -177,15 +177,15 @@ public class PlayerController : Creature, IBlinkable
     }
 
     // for monsters
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        var damaging = collision.gameObject.GetComponent<IDamaging>();
-        if (!(damaging is Monster)) return;
-        if (damaging == null || damaging.GetDamage() == 0) return;
-        if (((Creature)damaging).Friendly) return;
+    // private void OnTriggerStay2D(Collider2D collision)
+    // {
+    //     var damaging = collision.gameObject.GetComponent<IDamaging>();
+    //     if (!(damaging is Monster)) return;
+    //     if (damaging == null || damaging.GetDamage() == 0) return;
+    //     if (((Creature)damaging).Friendly) return;
 
-        TakeDamage(damaging.GetDamage());
-    }
+    //     TakeDamage(damaging.GetDamage());
+    // }
 
     // for launchable things
     private void OnTriggerEnter2D(Collider2D collision)

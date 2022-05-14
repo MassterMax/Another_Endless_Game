@@ -26,9 +26,9 @@ public class MonsterController : MonoBehaviour
         { "friendly", 0},
        }},
         { typeof(Golem), new Dictionary<string, float>() {
-        { "health", 3f },
-        { "maxHealth", 3f },
-        { "damage", 2f },
+        { "health", 8f },
+        { "maxHealth", 8f },
+        { "damage", 2.35f },
         { "speed", 0.4f },
         { "friendly", 1},
        }},
@@ -45,7 +45,7 @@ public class MonsterController : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         SetAttackTargets();
     }
@@ -55,11 +55,11 @@ public class MonsterController : MonoBehaviour
     {
         MakeSomeActionWithCreatures(monsters, (Monster monster) =>
         {
-            if (!monster.ShouldChaseTarget()) monster.SetMonsterTarget(GetNearestMonster(monster.transform.position, true).transform);
+            if (!monster.ShouldChaseTarget()) monster.SetMonsterTarget(GetNearestMonster(monster.transform.position, true));
         });
         MakeSomeActionWithCreatures(friendlyCreatures, (Monster monster) =>
         {
-            if (!monster.ShouldChaseTarget()) monster.SetMonsterTarget(GetNearestMonster(monster.transform.position, false).transform);
+            if (!monster.ShouldChaseTarget()) monster.SetMonsterTarget(GetNearestMonster(monster.transform.position, false));
         }
         );
     }
@@ -83,7 +83,7 @@ public class MonsterController : MonoBehaviour
             }
         }
 
-        Debug.LogError("no such monster: " + monsterType);
+        //Debug.LogError("no such monster: " + monsterType);
     }
 
     private void HandleMonster(Monster monster)
@@ -107,9 +107,9 @@ public class MonsterController : MonoBehaviour
         var monstersInArea = new List<Creature>();
 
         if (!enemies & !friendly)
-            Debug.LogWarning("asking for no monsters in monster controller!");
-        if (enemies)
-            FillWithMonstersInArea(center, radius, monsters, monstersInArea);
+            //Debug.LogWarning("asking for no monsters in monster controller!");
+            if (enemies)
+                FillWithMonstersInArea(center, radius, monsters, monstersInArea);
         if (friendly)
             FillWithMonstersInArea(center, radius, friendlyCreatures, monstersInArea);
 
@@ -118,11 +118,16 @@ public class MonsterController : MonoBehaviour
 
     private Creature GetNearestMonster(Vector2 position, bool isFriendly)
     {
+        //Debug.Log("get nearest target for someone with pos " + position);
         if (isFriendly)
         {
             var friendlyCreature = GetNearest(position, friendlyCreatures);
+            if (friendlyCreature is null)
+                return playerController;
+            if (playerController is null)
+                return friendlyCreature;
             float toPlayerDistance = ((Vector2)playerController.transform.position - position).sqrMagnitude;
-            if (friendlyCreature is null || toPlayerDistance <= ((Vector2)friendlyCreature.transform.position - position).sqrMagnitude)
+            if (toPlayerDistance <= ((Vector2)friendlyCreature.transform.position - position).sqrMagnitude)
             {
                 return playerController;
             }
@@ -140,12 +145,16 @@ public class MonsterController : MonoBehaviour
         Creature nearestCreature = null;
         for (int i = 0; i < creatures.Count(); ++i)
         {
+            //Debug.Log("get nearest");
             var creature = creatures.At(i);
-            float newPos = ((Vector2)creature.transform.position - position).sqrMagnitude;
-            if (newPos < minPos)
+            if (creature != null)
             {
-                minPos = newPos;
-                nearestCreature = creature;
+                float newPos = ((Vector2)creature.transform.position - position).sqrMagnitude;
+                if (newPos < minPos)
+                {
+                    minPos = newPos;
+                    nearestCreature = creature;
+                }
             }
         }
         return nearestCreature;
@@ -155,6 +164,7 @@ public class MonsterController : MonoBehaviour
     {
         for (int i = 0; i < creatures.Count(); ++i)
         {
+            //Debug.Log("get monster in fill");
             var creature = creatures.At(i);
             if (((Vector2)creature.transform.position - center).sqrMagnitude <= radius * radius)
             {
@@ -168,7 +178,9 @@ public class MonsterController : MonoBehaviour
         for (int i = 0; i < creatures.Count(); ++i)
         {
             var creature = creatures.At(i);
-            action(creature);
+            // here can be some race condition
+            if (creature != null)
+                action(creature);
         }
     }
 }

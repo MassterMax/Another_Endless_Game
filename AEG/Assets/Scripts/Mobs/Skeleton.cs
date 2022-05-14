@@ -102,22 +102,6 @@ public class Skeleton : Monster
 
     protected override void Rotate()
     {
-        // rotate to spear
-        // if (spear != null && !withSpear)
-        // {
-        //     if (ToSpearDistance() < spearPreferedCoef * ToTargetDistance())
-        //     {
-        //         if (spriteRenderer.flipX != Mathf.Sign(ToSpearVector().x) < 0)
-        //         {
-        //             spriteRenderer.flipX = !spriteRenderer.flipX;
-        //         }
-        //     }
-        //     else
-        //     {
-        //         base.Rotate();
-        //     }
-        // }
-        // else 
         if (preparing)
         {
             if (spriteRenderer.flipX != Mathf.Sign(ToTargetVector().x) < 0)
@@ -183,6 +167,11 @@ public class Skeleton : Monster
         }
     }
 
+    public override bool ShouldChaseTarget()
+    {
+        if (preparing) return true;
+        return base.ShouldChaseTarget();
+    }
     protected float ToSpearDistance()
     {
         return ToSpearVector().magnitude;

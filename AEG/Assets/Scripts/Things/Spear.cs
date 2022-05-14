@@ -65,7 +65,8 @@ public class Spear : Launchable, IFadestroyable
     public void StartFadingDestroy()
     {
         var coroutine = ((IFadestroyable)this).FadingDestroy(GetComponent<SpriteRenderer>());
-        StartCoroutine(coroutine);
+        if (gameObject.activeSelf)
+            StartCoroutine(coroutine);
     }
 
     protected override void OnLanding()

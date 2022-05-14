@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public abstract class Creature : MonoBehaviour, IDamaging
+public abstract class Creature : MonoBehaviour, IDamaging, IDelayable
 {
     Bar healthBar;
     BuffDrawer buffDrawer;
@@ -141,6 +141,7 @@ public abstract class Creature : MonoBehaviour, IDamaging
 
     public virtual void TakeDamage(float damage)
     {
+        Debug.Log(name + " try to get damage " + damage + " at " + Time.time);
         if (isDead) return;
 
         health -= damage;
@@ -149,6 +150,14 @@ public abstract class Creature : MonoBehaviour, IDamaging
         {
             OnDeath();
         }
+    }
+
+    public virtual void TakeDamage(float damage, float delay)
+    {
+        Debug.Log(name + " going to take damage " + damage + " with delay " + delay + " at " + Time.time);
+        var coroutine = ((IDelayable)this).ExecuteAfterDelay(delay, () => TakeDamage(damage));
+        StartCoroutine(coroutine);
+        Debug.Log("started");
     }
 
     protected void UIOff()

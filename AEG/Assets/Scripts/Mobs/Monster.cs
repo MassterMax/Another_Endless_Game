@@ -8,9 +8,17 @@ public abstract class Monster : Creature, IFadestroyable
     protected Animator animator;
     protected SpriteRenderer spriteRenderer;
     Vector2 moveDirection;
-    Transform attackTarget;
+    Creature attackTarget;
     float deathDuration = 1f;
-    float chaseTargetRadius = 5f;
+    float chaseTargetRadius = 2f;
+    protected float attackInterval = 2f;
+    protected float lastAttackTime;
+    [SerializeField] protected float attackRange = 0.3f;
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(transform.position, attackRange);
+    }
 
     protected virtual void Start()
     {
@@ -31,18 +39,62 @@ public abstract class Monster : Creature, IFadestroyable
     {
         base.Update();
         if (!isDead)
+        {
             Rotate();
+            MeleeAttack();
+        }
     }
 
-    public void SetMonsterTarget(Transform target)
+    public void SetMonsterTarget(Creature target)
     {
+        //Debug.Log(name + " set target: " + target.name);
         attackTarget = target;
+    }
+
+    protected virtual void MeleeAttack()
+    {
+        if (!CanMeleeAttack()) return;
+        Debug.LogWarning(name + " actually attacks!");
+        animator.SetTrigger("isAttacking");
+        lastAttackTime = Time.time;
+        attackTarget.TakeDamage(this.GetDamage());
+    }
+
+    protected virtual void MeleeAttack(float delay)
+    {
+        if (!CanMeleeAttack()) return;
+        Debug.LogWarning(name + " actually attacks with dilation! " + Time.time);
+        animator.SetTrigger("isAttacking");
+        lastAttackTime = Time.time;
+        attackTarget.TakeDamage(GetDamage(), delay);
+    }
+
+    protected bool TargetInAttackRange()
+    {
+        //Debug.Log(name + " target is " + attackTarget);
+        if (attackTarget is null) return false;
+        //Debug.Log(GetSqrDistanceBetweenAttackPointAndTarget());
+        return GetSqrDistanceBetweenAttackPointAndTarget() <= attackRange * attackRange;
+    }
+    protected virtual bool CanMeleeAttack()
+    {
+        if (!TargetInAttackRange())
+            return false;
+        return Time.time - lastAttackTime >= attackInterval;
+    }
+
+    protected virtual float GetSqrDistanceBetweenAttackPointAndTarget()
+    {
+        return ToTargetDistance(true);
     }
 
     public virtual bool ShouldChaseTarget()
     {
-        if (attackTarget is null) return false;
-        return ToTargetDistance() <= chaseTargetRadius;
+        //Debug.Log(name + " should chase target?");
+        float toTargetDistance = ToTargetDistance();
+        if (attackTarget == null) return false;
+        //Debug.Log(name + " should chase target: " + attackTarget);
+        return toTargetDistance <= chaseTargetRadius;
     }
 
     protected override void HandleAnimation()
@@ -61,7 +113,9 @@ public abstract class Monster : Creature, IFadestroyable
             DelayedDestroy(deathDuration);
 
             this.enabled = false;
-            GetComponent<Collider2D>().enabled = false;
+            var collider = GetComponent<Collider2D>();
+            if (collider != null)
+                collider.enabled = false;
         }
         else
         {
@@ -71,7 +125,8 @@ public abstract class Monster : Creature, IFadestroyable
 
     protected override void Move()
     {
-        transform.Translate(moveDirection * Time.deltaTime * Speed);
+        if (ToTargetDistance(true) >= attackRange * attackRange)
+            transform.Translate(moveDirection * Time.deltaTime * Speed);
     }
 
     protected void SetMoveDirection()
@@ -104,17 +159,18 @@ public abstract class Monster : Creature, IFadestroyable
     protected Vector2 TargetPosition()
     {
         if (!HasTarget()) return Vector2.zero;
-        return attackTarget.position;
+        return attackTarget.transform.position;
     }
 
     protected Vector2 ToTargetVector()
     {
         if (!HasTarget()) return Vector2.zero;
-        return attackTarget.position - transform.position;
+        return attackTarget.transform.position - transform.position;
     }
 
-    protected float ToTargetDistance()
+    protected float ToTargetDistance(bool sqrMagnitude = false)
     {
+        if (sqrMagnitude) return ToTargetVector().sqrMagnitude;
         return ToTargetVector().magnitude;
     }
 

@@ -61,6 +61,7 @@ public static class Utils
             }
 
             // Debug.Log(values.Count);
+            if (index >= values.Count) return default;
 
             return values[index];
         }
@@ -81,8 +82,13 @@ public interface IDelayable
 {
     public IEnumerator ExecuteAfterDelay(float delay, System.Action action)
     {
+        Debug.Log("going to sleep for " + delay);
         yield return new WaitForSeconds(delay);
+        //yield return new WaitForFixedUpdate();
+        Debug.Log("YES!! will make action!");
         action();
+        Debug.Log("action made");
+        //yield return new WaitForFixedUpdate();
     }
 }
 
