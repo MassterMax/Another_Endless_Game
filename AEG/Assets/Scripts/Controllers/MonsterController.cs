@@ -29,7 +29,7 @@ public class MonsterController : MonoBehaviour
         { "health", 8f },
         { "maxHealth", 8f },
         { "damage", 2.35f },
-        { "speed", 0.4f },
+        { "speed", 0.25f },
         { "friendly", 1},
        }},
     };

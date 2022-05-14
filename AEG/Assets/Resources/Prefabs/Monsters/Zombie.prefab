@@ -100,6 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dff93817082fdd54eb4d47e8f321b769, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  attackRange: 0.3
   visibleField: 3
   changeDirectonLimit: 1
 --- !u!61 &394579163
@@ -160,5 +161,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b64fd9863fe3384584be8358a360fac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  reflectAxis: {x: 0, y: 0}
   shouldHandleReflectionAngle: 1

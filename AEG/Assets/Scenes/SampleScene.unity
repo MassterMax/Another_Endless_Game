@@ -9334,10 +9334,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Zombie
       objectReference: {fileID: 0}
-    - target: {fileID: 3328252554847043082, guid: 806b2e223d2c6c449bcc19350a5142d3, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 806b2e223d2c6c449bcc19350a5142d3, type: 3}
 --- !u!1001 &4072277260687451269
@@ -9347,10 +9343,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 469326630, guid: 66d71b8e5fba1f44a9722dc4e7112ac7, type: 3}
-      propertyPath: m_SortingOrder
-      value: 9
-      objectReference: {fileID: 0}
     - target: {fileID: 4072277259657465794, guid: 66d71b8e5fba1f44a9722dc4e7112ac7, type: 3}
       propertyPath: m_Name
       value: Skeleton
@@ -9575,9 +9567,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7623464425990219630, guid: 553d02d11497d0c4db3144ffc01968fd, type: 3}
-      propertyPath: attackRange
-      value: 0.3
+    - target: {fileID: 7623464425990219632, guid: 553d02d11497d0c4db3144ffc01968fd, type: 3}
+      propertyPath: m_SpriteSortPoint
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7623464425990219633, guid: 553d02d11497d0c4db3144ffc01968fd, type: 3}
       propertyPath: m_RootOrder
