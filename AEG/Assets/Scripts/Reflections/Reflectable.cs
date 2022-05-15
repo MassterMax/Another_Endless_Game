@@ -31,6 +31,7 @@ public class Reflectable : MonoBehaviour, IBlinkable
         reflectionSpriteRenderer.maskInteraction = SpriteMaskInteraction.VisibleInsideMask;
 
         reflectionSpriteRenderer.sortingOrder = Reflecting.REFLECTION_LOWER_BOUND + spriteRenderer.sortingOrder; // hmmmmmm
+        reflectionSpriteRenderer.spriteSortPoint = spriteRenderer.spriteSortPoint;
 
         //yOffset = spriteRenderer.bounds.size.y;
 
