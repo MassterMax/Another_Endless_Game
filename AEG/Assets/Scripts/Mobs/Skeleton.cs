@@ -6,7 +6,7 @@ public class Skeleton : Monster
 {
     float spearAttackDuration = 0.3f;
     float spearAttackTime;
-    float spearAttackInterval = 1.5f;
+    float spearAttackInterval = 2f;
 
     [SerializeField] GameObject boxOfSpears;
     SpriteRenderer boxOfSpearsSpriteRenderer;
