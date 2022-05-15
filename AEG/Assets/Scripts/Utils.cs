@@ -111,20 +111,19 @@ public interface IFadestroyable
 {
     // resize = true is equal to just resizing, false equal to fading
 
-    public IEnumerator FadingDestroy(SpriteRenderer spriteRenderer, float dilation = 0f, float time = 1f, bool resize = false)
+    public IEnumerator FadingDestroy(SpriteRenderer spriteRenderer, List<SpriteRenderer> childrenSR = null, float dilation = 0f, float time = 1f, bool resize = false)
     {
         if (spriteRenderer == null) yield break;
+        if (childrenSR == null) childrenSR = new List<SpriteRenderer>();
 
         yield return new WaitForSeconds(dilation);
 
-        List<SpriteRenderer> childSpriteRenderers = new List<SpriteRenderer>() { spriteRenderer };
-        List<Color> childColorStep = new List<Color> { new Color(0, 0, 0, spriteRenderer.color.a / time) };
+        List<Color> colorSteps = new List<Color> { Color.black * spriteRenderer.color.a / time };
 
-        //foreach (var el in spriteRenderer.GetComponentsInChildren<SpriteRenderer>())
-        //{
-        //    childSpriteRenderers.Add(el);
-        //    childColorStep.Add(Color.black * el.color.a / time);
-        //}
+        foreach (var child in childrenSR)
+        {
+            colorSteps.Add(Color.black * child.color.a / time);
+        }
 
         float start = Time.time;
         Vector3 startScale = spriteRenderer.transform.localScale;
@@ -139,9 +138,10 @@ public interface IFadestroyable
                 spriteRenderer.transform.localScale -= startScale * Time.fixedDeltaTime;
             else
             {
-                for (int i = 0; i < 1; ++i) // childSpriteRenderers.Count
+                spriteRenderer.color -= colorSteps[0] * Time.fixedDeltaTime;
+                for (int i = 0; i < childrenSR.Count; ++i) // childSpriteRenderers.Count
                 {
-                    childSpriteRenderers[i].color -= childColorStep[i] * Time.fixedDeltaTime;
+                    childrenSR[i].color -= colorSteps[i + 1] * Time.fixedDeltaTime;
                 }
             }
 

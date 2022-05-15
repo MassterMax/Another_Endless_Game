@@ -69,9 +69,17 @@ public class Skeleton : Monster
             // 
             // go for player only if spear is far away
             if (spear != null && !spear.InTarget && !spear.InFlight && ToSpearDistance() <= spearPreferedCoef * toTargetDistance)
+            {
                 SetMoveDirection(ToSpearVector());
+            }
+            else if (TargetInAttackRange())
+            {
+                SetMoveDirection();
+            }
             else
+            {
                 SetMoveDirection(ToTargetVector());
+            }
             BoostSpeed(hurryBoost);
         }
         else
@@ -183,11 +191,26 @@ public class Skeleton : Monster
     }
 
     // todo maybe it will be better to create spear script with handling this case (and other possible cases)
-    private void OnDestroy()
+    // private void OnDestroy()
+    // {
+    //     if (spear != null && spear.gameObject.activeSelf)
+    //     {
+    //         spear.StartFadingDestroy();
+    //     }
+    //     // if (boxOfSpears.gameObject.activeSelf)
+    //     // {
+    //     //     boxOfSpears.StartFadingDestroy();
+    //     // }
+    // }
+
+    protected override void DelayedDestroy(float duration)
     {
-        if (spear != null && spear.gameObject.activeSelf)
-        {
-            spear.StartFadingDestroy();
-        }
+        // Debug.LogWarning(duration + " duration of death");
+        var childrenSpriteRenderers = new List<SpriteRenderer>();
+        if (spear != null) childrenSpriteRenderers.Add(spear.GetComponent<SpriteRenderer>());
+        if (boxOfSpearsSpriteRenderer != null) childrenSpriteRenderers.Add(boxOfSpearsSpriteRenderer);
+
+        var coroutine = ((IFadestroyable)this).FadingDestroy(spriteRenderer, childrenSpriteRenderers, 0, duration, false);
+        StartCoroutine(coroutine);
     }
 }

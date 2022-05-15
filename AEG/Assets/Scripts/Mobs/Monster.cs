@@ -54,20 +54,26 @@ public abstract class Monster : Creature, IFadestroyable
     protected virtual void MeleeAttack()
     {
         if (!CanMeleeAttack()) return;
-        Debug.LogWarning(name + " actually attacks!");
+        //Debug.LogWarning(name + " actually attacks!");
         animator.SetTrigger("isAttacking");
         lastAttackTime = Time.time;
+        // attackTarget.TakeDamage(this.GetDamage()); changed to handled with animation
+    }
+
+    // assign this in pre-last frame of attack animation
+    private void MakeDamageToTarget()
+    {
         attackTarget.TakeDamage(this.GetDamage());
     }
 
-    protected virtual void MeleeAttack(float delay)
-    {
-        if (!CanMeleeAttack()) return;
-        Debug.LogWarning(name + " actually attacks with dilation! " + Time.time);
-        animator.SetTrigger("isAttacking");
-        lastAttackTime = Time.time;
-        attackTarget.TakeDamage(GetDamage(), delay);
-    }
+    // protected virtual void MeleeAttack(float delay)
+    // {
+    //     if (!CanMeleeAttack()) return;
+    //     //Debug.LogWarning(name + " actually attacks with dilation! " + Time.time);
+    //     animator.SetTrigger("isAttacking");
+    //     lastAttackTime = Time.time;
+    //     attackTarget.TakeDamage(GetDamage(), delay);
+    // }
 
     protected bool TargetInAttackRange()
     {
@@ -119,6 +125,7 @@ public abstract class Monster : Creature, IFadestroyable
         }
         else
         {
+            Debug.LogWarning("monster should have animator!");
             base.OnDeath();
         }
     }
@@ -181,10 +188,10 @@ public abstract class Monster : Creature, IFadestroyable
         moveDirection *= value;
     }
 
-    protected void DelayedDestroy(float duration)
+    protected virtual void DelayedDestroy(float duration)
     {
         // Debug.LogWarning(duration + " duration of death");
-        var coroutine = ((IFadestroyable)this).FadingDestroy(spriteRenderer, 0, duration, false);
+        var coroutine = ((IFadestroyable)this).FadingDestroy(spriteRenderer, null, 0, duration, false);
         StartCoroutine(coroutine);
     }
 }

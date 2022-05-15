@@ -73,7 +73,7 @@ public class Golem : Monster
         else if (readyToAttack)
         {
             // todo remove hardcode
-            base.MeleeAttack(0.2f);
+            base.MeleeAttack();
         }
         // animator.SetTrigger("isAttacking");
 

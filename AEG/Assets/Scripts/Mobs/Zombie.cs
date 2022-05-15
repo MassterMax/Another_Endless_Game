@@ -25,9 +25,12 @@ public class Zombie : Monster
     {
         if (!HasTarget()) return;
 
-        if (ToTargetDistance() < visibleField)  // if zombie sees the target
+        if (ToTargetDistance() < visibleField)  // if zombie sees the target todo remove
         {
-            SetMoveDirection(ToTargetVector());
+            if (TargetInAttackRange())
+                SetMoveDirection();
+            else
+                SetMoveDirection(ToTargetVector());
         }
         else if (changeDirectionTimer >= changeDirectonLimit)
         {

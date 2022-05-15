@@ -152,13 +152,13 @@ public abstract class Creature : MonoBehaviour, IDamaging, IDelayable
         }
     }
 
-    public virtual void TakeDamage(float damage, float delay)
-    {
-        Debug.Log(name + " going to take damage " + damage + " with delay " + delay + " at " + Time.time);
-        var coroutine = ((IDelayable)this).ExecuteAfterDelay(delay, () => TakeDamage(damage));
-        StartCoroutine(coroutine);
-        Debug.Log("started");
-    }
+    // public virtual void TakeDamage(float damage, float delay)
+    // {
+    //     Debug.Log(name + " going to take damage " + damage + " with delay " + delay + " at " + Time.time);
+    //     var coroutine = ((IDelayable)this).ExecuteAfterDelay(delay, () => TakeDamage(damage));
+    //     StartCoroutine(coroutine);
+    //     Debug.Log("started");
+    // }
 
     protected void UIOff()
     {
