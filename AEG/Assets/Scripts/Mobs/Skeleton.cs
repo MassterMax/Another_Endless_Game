@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Skeleton : Monster
 {
+    float spearAttackDuration = 0.3f;
+    float spearAttackTime;
+    float spearAttackInterval = 1.5f;
+
     [SerializeField] GameObject boxOfSpears;
     SpriteRenderer boxOfSpearsSpriteRenderer;
     bool withBoxOfSpears = true;
@@ -25,6 +29,8 @@ public class Skeleton : Monster
     Vector2 defaultSpearPos;
     Vector2 lastSpearTarget;
     float pseudoSpearDistance;
+
+    protected override float AttackRange => withSpear ? base.AttackRange * 1.5f : base.AttackRange;
 
     public override float Damage { get => withSpear ? base.Damage * 3 : base.Damage; }
     // todo spear has own collider and maybe I should separate it as entity
@@ -162,6 +168,7 @@ public class Skeleton : Monster
             var spearDirection = TargetPosition() - (Vector2)spear.transform.position;
             spear.transform.eulerAngles = new Vector3(0, 0, Utils.VectorToAngle(spearDirection) - 90);
 
+            // launch spear
             if ((preparing || toTargetDistance <= throwingRadius && fightingRadius < toTargetDistance)
                 && (Time.time - preparedToThrowTime) > throwDilation)
             {
@@ -173,6 +180,48 @@ public class Skeleton : Monster
                 spear.LaunchObject(lastSpearTarget, spearSpeed);  // todo remove hardcode
             }
         }
+    }
+
+    protected override void MeleeAttack()
+    {
+        if (!withSpear)
+        {
+            base.MeleeAttack();
+        }
+        else
+        {
+            if (!CanMeleeAttack())
+                return;
+            if (Time.time - spearAttackTime < spearAttackInterval)
+                return;
+
+            spearAttackTime = Time.time;
+            StartCoroutine(MeleeAttackWithSpearCoroutine());
+        }
+    }
+
+    public IEnumerator MeleeAttackWithSpearCoroutine()
+    {
+        Vector2 startPos = spear.transform.localPosition;
+        float deltaPos = 0.6f;
+        bool targetDamaged = false;
+
+        float progress = 0;
+        while (progress < 1)
+        {
+            if (!targetDamaged && progress > 0.5f)
+            {
+                MakeDamageToTarget();
+                targetDamaged = true;
+            }
+            progress = (Time.time - spearAttackTime) / spearAttackDuration;
+            spear.transform.localPosition += spear.transform.TransformDirection(Vector3.up) * deltaPos * Mathf.Sign(0.5f - progress) * Time.fixedDeltaTime;
+            spear.SetPseudoY(spear.transform.localPosition.y + spriteRenderer.bounds.size.y / 2);
+            yield return new WaitForFixedUpdate();
+        }
+
+        spear.transform.localPosition = startPos;
+        spear.SetPseudoY(pseudoSpearDistance);
     }
 
     public override bool ShouldChaseTarget()

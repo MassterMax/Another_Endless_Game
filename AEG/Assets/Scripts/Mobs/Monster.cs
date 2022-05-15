@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -13,12 +11,8 @@ public abstract class Monster : Creature, IFadestroyable
     float chaseTargetRadius = 2f;
     protected float attackInterval = 2f;
     protected float lastAttackTime;
-    [SerializeField] protected float attackRange = 0.3f;
-
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawWireSphere(transform.position, attackRange);
-    }
+    private float attackRange = 0.3f;
+    protected virtual float AttackRange => attackRange;
 
     protected virtual void Start()
     {
@@ -55,14 +49,16 @@ public abstract class Monster : Creature, IFadestroyable
     {
         if (!CanMeleeAttack()) return;
         //Debug.LogWarning(name + " actually attacks!");
+        Debug.Log(name + " make melee attack " + this.GetDamage() + " " + attackTarget.name);
         animator.SetTrigger("isAttacking");
         lastAttackTime = Time.time;
         // attackTarget.TakeDamage(this.GetDamage()); changed to handled with animation
     }
 
     // assign this in pre-last frame of attack animation
-    private void MakeDamageToTarget()
+    protected void MakeDamageToTarget()
     {
+        Debug.Log(name + " make damage to target " + this.GetDamage() + " " + attackTarget.name);
         attackTarget.TakeDamage(this.GetDamage());
     }
 
@@ -77,10 +73,13 @@ public abstract class Monster : Creature, IFadestroyable
 
     protected bool TargetInAttackRange()
     {
-        //Debug.Log(name + " target is " + attackTarget);
-        if (attackTarget is null) return false;
+        // Debug.Log(name + " target is " + attackTarget);
+        // Debug.Log(attackTarget is null);
+        // Debug.Log(attackTarget == null);
+
+        if (attackTarget == null) return false;
         //Debug.Log(GetSqrDistanceBetweenAttackPointAndTarget());
-        return GetSqrDistanceBetweenAttackPointAndTarget() <= attackRange * attackRange;
+        return GetSqrDistanceBetweenAttackPointAndTarget() <= AttackRange * AttackRange;
     }
     protected virtual bool CanMeleeAttack()
     {
@@ -132,7 +131,7 @@ public abstract class Monster : Creature, IFadestroyable
 
     protected override void Move()
     {
-        if (ToTargetDistance(true) >= attackRange * attackRange)
+        if (ToTargetDistance(true) >= AttackRange * AttackRange)
             transform.Translate(moveDirection * Time.deltaTime * Speed);
     }
 

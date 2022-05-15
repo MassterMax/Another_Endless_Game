@@ -55,7 +55,7 @@ public static class Utils
             // var value = values[index];
             // Debug.Log("trying to get element on place: " + index);
 
-            while (index < values.Count && values[index].Equals(null))
+            while (index < values.Count && (values[index].Equals(null) || values == null))
             {
                 RemoveAt(index);
             }
@@ -82,13 +82,13 @@ public interface IDelayable
 {
     public IEnumerator ExecuteAfterDelay(float delay, System.Action action)
     {
-        Debug.Log("going to sleep for " + delay);
+        // Debug.Log("going to sleep for " + delay);
         yield return new WaitForSeconds(delay);
-        //yield return new WaitForFixedUpdate();
-        Debug.Log("YES!! will make action!");
+        // yield return new WaitForFixedUpdate();
+        // Debug.Log("YES!! will make action!");
         action();
-        Debug.Log("action made");
-        //yield return new WaitForFixedUpdate();
+        // Debug.Log("action made");
+        // yield return new WaitForFixedUpdate();
     }
 }
 

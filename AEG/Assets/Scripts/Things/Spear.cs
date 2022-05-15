@@ -21,12 +21,21 @@ public class Spear : Launchable, IFadestroyable
         SetPseudoY();
     }
 
+    // in flight
     void SetPseudoY()
     {
         if (inFlight && reflectable != null)
         {
             //Debug.Log("set pseudo y on flight");
             reflectable.SetPseudoYOffset(currentY + height);
+        }
+    }
+
+    public void SetPseudoY(float value)
+    {
+        if (reflectable != null)
+        {
+            reflectable.SetPseudoYOffset(value);
         }
     }
 
@@ -62,6 +71,7 @@ public class Spear : Launchable, IFadestroyable
         return true;
     }
 
+    // todo maybe remove
     public void StartFadingDestroy()
     {
         var coroutine = ((IFadestroyable)this).FadingDestroy(GetComponent<SpriteRenderer>());

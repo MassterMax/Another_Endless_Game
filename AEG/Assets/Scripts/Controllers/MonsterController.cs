@@ -107,9 +107,9 @@ public class MonsterController : MonoBehaviour
         var monstersInArea = new List<Creature>();
 
         if (!enemies & !friendly)
-            //Debug.LogWarning("asking for no monsters in monster controller!");
-            if (enemies)
-                FillWithMonstersInArea(center, radius, monsters, monstersInArea);
+            Debug.LogWarning("asking for no monsters in monster controller!");
+        if (enemies)
+            FillWithMonstersInArea(center, radius, monsters, monstersInArea);
         if (friendly)
             FillWithMonstersInArea(center, radius, friendlyCreatures, monstersInArea);
 
@@ -122,9 +122,9 @@ public class MonsterController : MonoBehaviour
         if (isFriendly)
         {
             var friendlyCreature = GetNearest(position, friendlyCreatures);
-            if (friendlyCreature is null)
+            if (friendlyCreature == null)
                 return playerController;
-            if (playerController is null)
+            if (playerController == null)
                 return friendlyCreature;
             float toPlayerDistance = ((Vector2)playerController.transform.position - position).sqrMagnitude;
             if (toPlayerDistance <= ((Vector2)friendlyCreature.transform.position - position).sqrMagnitude)

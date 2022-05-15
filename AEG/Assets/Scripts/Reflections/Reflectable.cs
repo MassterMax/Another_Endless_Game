@@ -71,14 +71,12 @@ public class Reflectable : MonoBehaviour, IBlinkable
         // reflection.transform.position = (Vector2)gameObject.transform.position + downVector() * yOffset * Mathf.Cos(gameObject.transform.rotation.z) + downVector() * 2 * pseudoYOffset;
 
         if (pseudoYOffset != 0)
+        {
             reflection.transform.position = (Vector2)gameObject.transform.position + downVector() * 2 * pseudoYOffset;
+        }
         else
         {
             reflection.transform.position = (Vector2)gameObject.transform.position + downVector() * yOffset * Mathf.Cos(gameObject.transform.rotation.z * Mathf.Deg2Rad);
-            if (gameObject.name.Equals("Spear"))
-            {
-                Debug.Log("new spear pos is " + reflection.transform.position);
-            }
         }
         SetReflectionAngle();
     }

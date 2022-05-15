@@ -11,30 +11,17 @@ public class Golem : Monster
     float changeDirectonLimit = 2;
     float changeDirectionTimer = 0;
 
+    protected override float AttackRange => base.AttackRange + 0.1f;
+
     protected override void Start()
     {
         base.Start();
-        attackRange = 0.4f;
     }
 
     // Update is called once per frame
     protected override void Update()
     {
         base.Update();
-
-        // if (Input.GetKeyDown(KeyCode.R))
-        // {
-        //     PrepareToFight();
-        // }
-        // else if (Input.GetKeyDown(KeyCode.T))
-        // {
-        //     MeleeAttack();
-        // }
-        // else if (Input.GetKeyDown(KeyCode.Y))
-        // {
-        //     StopFight();
-        // }
-        // Debug.LogWarning(Time.time + " current clip is " + animator.GetCurrentAnimatorClipInfo(0)[0].clip.name);
     }
 
     protected void PrepareToFight()
