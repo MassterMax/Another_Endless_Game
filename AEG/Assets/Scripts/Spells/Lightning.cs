@@ -12,7 +12,8 @@ public class Lightning : Spell, IKnowMonsterController, IKnowSpellManager
 
     public override void CastSpell(Vector2 start, Vector2 end, Vector2 center)
     {
-        StartCoroutine(DelayedCast(end, 0.1f));
+        var coroutine = DelayedCast(end, 0.15f);
+        StartCoroutine(coroutine);
     }
 
     private IEnumerator DelayedCast(Vector2 end, float delay)
@@ -26,16 +27,29 @@ public class Lightning : Spell, IKnowMonsterController, IKnowSpellManager
 
         foreach (var spell in SpellManager.GetSpellsInArea(end, damageRadius))
         {
-            if (spell is Puddle)
+            switch (spell)
             {
-                // make puddle electric!!!
-                ((Puddle)spell).ChargeByLightning();
+                case Puddle puddle:
+                    puddle.ChargeByLightning();
+                    break;
+                case Meadow:
+                    SpellManager.CombineTwoSpells(this, spell, false, true);
+                    break;
+                case Dirt dirt:
+                    SpellManager.CombineTwoSpells(this, spell, false, false);
+                    dirt.CallDelayedDestroy();
+                    break;
             }
-            else if (spell is Meadow)
-            {
-                // fire the meadow
-                SpellManager.CombineTwoSpells(this, spell);
-            }
+            // if (spell is Puddle)
+            // {
+            //     // make puddle electric!!!
+            //     ((Puddle)spell).ChargeByLightning();
+            // }
+            // else if (spell is Meadow)
+            // {
+            //     // fire the meadow
+            //     SpellManager.CombineTwoSpells(this, spell, false, true);
+            // }
         }
     }
 }

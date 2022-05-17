@@ -102,6 +102,13 @@ public class MonsterController : MonoBehaviour
         HandleMonster(monster);
     }
 
+    public void CreateMonster(UnityEngine.Object prefab, Vector2 pos)
+    {
+        var monsterObject = Instantiate(prefab, pos, Quaternion.identity) as GameObject;
+        var monster = monsterObject.GetComponent<Monster>();
+        HandleMonster(monster);
+    }
+
     public List<Creature> GetMonstersInArea(Vector2 center, float radius, bool enemies = true, bool friendly = false)
     {
         var monstersInArea = new List<Creature>();

@@ -22,11 +22,15 @@ public class SpellManager : MonoBehaviour
         { "meadow", "Meadow" },
     };
 
+    const string SPELLS = "Spells";
+    const string MONSTERS = "Monsters";
+
     // mapping from two types to prefab name
     private Dictionary<List<Type>, string> combinationsList = new()
     {
-        { new() { typeof(Puddle), typeof(Meadow) }, "Dirt" },
-        { new() { typeof(Lightning), typeof(Meadow) }, "FireMeadow" },
+        { new() { typeof(Puddle), typeof(Meadow) }, $"{SPELLS}/Dirt" },
+        { new() { typeof(Lightning), typeof(Meadow) }, $"{SPELLS}/FireMeadow" },
+        { new() { typeof(Lightning), typeof(Dirt) }, $"{MONSTERS}/Golem" },
     };
 
     // maybe use this approach with manacost or create a script with constants?
@@ -125,33 +129,41 @@ public class SpellManager : MonoBehaviour
         }
     }
 
-    private bool FindSpells(List<Type> types, Type type1, Type type2)
+    private bool FindCombinations(List<Type> types, Type type1, Type type2)
     {
         return type1.Equals(types[0]) && type2.Equals(types[1]) || type1.Equals(types[1]) && type2.Equals(types[0]);
     }
 
-    public void CombineTwoSpells(Spell spell1, Spell spell2)
+    public void CombineTwoSpells(Spell spell1, Spell spell2, bool destroyFirst = true, bool destroySecond = true)
     {
-        foreach (var spells in combinationsList)
+        foreach (var combination in combinationsList)
         {
-            if (FindSpells(spells.Key, spell1.GetType(), spell2.GetType()))
+            if (FindCombinations(combination.Key, spell1.GetType(), spell2.GetType()))
             {
                 Vector2 newPos = (spell1.transform.position + spell2.transform.position) / 2;
-                var spellPrefab = Resources.Load($"Prefabs/Spells/{spells.Value}");
-                GameObject spellObject = Instantiate(spellPrefab, newPos, Quaternion.identity) as GameObject;
-                CombinedSpell combinedSpell = spellObject.GetComponent<CombinedSpell>();
+                var resultPrefab = Resources.Load($"Prefabs/{combination.Value}");
 
-                Debug.Log("combination: " + combinedSpell.name);
+                if (combination.Value.StartsWith(SPELLS))
+                {
+                    GameObject resultObject = Instantiate(resultPrefab, newPos, Quaternion.identity) as GameObject;
+                    CombinedSpell combinedSpell = resultObject.GetComponent<CombinedSpell>();
 
-                // we should set some requiremets befare casting TODO TODO TODO
-                //SetSpellRequirements(spell);
+                    // Debug.Log("combination: " + combinedSpell.name);
 
-                this.spells.Add(combinedSpell);
+                    // we should set some requiremets befare casting TODO TODO TODO
+                    //SetSpellRequirements(spell);
 
-                combinedSpell.CastSpell(spell1.transform.position, spell2.transform.position, newPos);
+                    this.spells.Add(combinedSpell);
 
-                Destroy(spell1.gameObject);
-                Destroy(spell2.gameObject);
+                    combinedSpell.CastSpell(spell1.transform.position, spell2.transform.position, newPos);
+                }
+                else if (combination.Value.StartsWith(MONSTERS))
+                {
+                    monsterController.CreateMonster(resultPrefab, newPos);
+                }
+
+                if (destroyFirst) Destroy(spell1.gameObject);
+                if (destroySecond) Destroy(spell2.gameObject);
 
                 return;
             }
