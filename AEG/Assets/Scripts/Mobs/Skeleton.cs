@@ -11,10 +11,10 @@ public class Skeleton : Monster
     [SerializeField] GameObject boxOfSpears;
     SpriteRenderer boxOfSpearsSpriteRenderer;
     bool withBoxOfSpears = true;
-
+    float spearRotationSpeed = 5f;
     float spearSpeed;
     float throwingRadius = 4;
-    float fightingRadius = 2f;
+    float fightingRadius = 3f;
     float hurryBoost = 2f;
 
     // todo make timer because I zadolbalsya
@@ -166,7 +166,9 @@ public class Skeleton : Monster
         else
         {
             var spearDirection = TargetPosition() - (Vector2)spear.transform.position;
-            spear.transform.eulerAngles = new Vector3(0, 0, Utils.VectorToAngle(spearDirection) - 90);
+            var currentAngle = spear.transform.eulerAngles.z;
+            var targetAngle = Utils.VectorToAngle(spearDirection) - 90;
+            spear.transform.eulerAngles = new Vector3(0, 0, Mathf.LerpAngle(currentAngle, targetAngle, spearRotationSpeed * Time.deltaTime));
 
             // launch spear
             if ((preparing || toTargetDistance <= throwingRadius && fightingRadius < toTargetDistance)
