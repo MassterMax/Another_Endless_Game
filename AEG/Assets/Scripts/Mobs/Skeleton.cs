@@ -28,6 +28,7 @@ public class Skeleton : Monster
     bool preparing = false;
     Vector2 defaultSpearPos;
     Vector2 lastSpearTarget;
+    Vector2 interpolatePos;
     float pseudoSpearDistance;
 
     protected override float AttackRange => withSpear ? base.AttackRange * 1.5f : base.AttackRange;
@@ -100,6 +101,7 @@ public class Skeleton : Monster
             {
                 SetMoveDirection();
                 preparing = true;
+                interpolatePos = TargetPosition();
             }
         }
 
@@ -174,7 +176,8 @@ public class Skeleton : Monster
             if ((preparing || toTargetDistance <= throwingRadius && fightingRadius < toTargetDistance)
                 && (Time.time - preparedToThrowTime) > throwDilation)
             {
-                lastSpearTarget = TargetPosition();
+                var targetPos = TargetPosition();
+                lastSpearTarget = targetPos + (targetPos - interpolatePos) / throwDilation * GetTargetSpeed() * 1.8f;
                 spear.transform.parent = null;
                 withSpear = false;
                 preparing = false;

@@ -162,6 +162,12 @@ public abstract class Monster : Creature, IFadestroyable
         return attackTarget != null;
     }
 
+    // todo change to get target characteristics
+    protected float GetTargetSpeed()
+    {
+        return attackTarget.Speed;
+    }
+
     protected Vector2 TargetPosition()
     {
         if (!HasTarget()) return Vector2.zero;

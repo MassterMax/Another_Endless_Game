@@ -102,4 +102,17 @@ public class Golem : Monster
 
         base.Move();
     }
+
+    // todo generalize or remove rigidbody to new thing
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        var damaging = collision.gameObject.GetComponent<IDamaging>();
+        if (!(damaging is Launchable)) return;
+        if (damaging == null || damaging.GetDamage() == 0) return;
+
+        if (((Launchable)damaging).LandInTarget(transform))
+        {
+            TakeDamage(damaging.GetDamage());
+        }
+    }
 }
