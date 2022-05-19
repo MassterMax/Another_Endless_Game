@@ -178,8 +178,8 @@ public class Skeleton : Monster
             {
                 var targetPos = TargetPosition();
                 lastSpearTarget = targetPos;
-                if (!TargetIsPlayer())
-                    lastSpearTarget += (targetPos - interpolatePos) / throwDilation * GetTargetSpeed() * 1.8f;
+                // if (!TargetIsPlayer())
+                //     lastSpearTarget += (targetPos - interpolatePos) / throwDilation * GetTargetSpeed() * 1.8f;
                 spear.transform.parent = null;
                 withSpear = false;
                 preparing = false;

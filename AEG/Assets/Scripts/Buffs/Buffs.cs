@@ -129,7 +129,7 @@ public class ElectricityDamageBuff : CoroutineBuff
 
     public override float GetValue(Creature creature)
     {
-        return 0.5f;
+        return 0.25f;
     }
 
     public override IEnumerator StartBuff(Creature creature)
