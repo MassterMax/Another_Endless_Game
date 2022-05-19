@@ -12,7 +12,7 @@ public enum BuffTargetField
 
 public abstract class Buff
 {
-    public float applyTime; 
+    public float applyTime;
     public abstract BuffTargetField TargetField { get; }
     public abstract bool IsDebuff { get; }
     public abstract bool IsMultiplier { get; }
@@ -32,15 +32,15 @@ public abstract class Buff
 
 public interface ISpecialApplicable
 {
-    public void SpecialApply(Creature creature);
+    public abstract void SpecialApply(Creature creature);
 }
 
 public interface ISpecialConditionable
 {
-    public bool CanApply(Creature creature);
+    public abstract bool CanApply(Creature creature);
 }
 
-public abstract class CoroutineBuff: Buff
+public abstract class CoroutineBuff : Buff
 {
     public abstract IEnumerator StartBuff(Creature creature);
 }
@@ -62,7 +62,7 @@ public class MeadowHealBuff : CoroutineBuff
 
     public override IEnumerator StartBuff(Creature creature)
     {
-        while(Time.time < applyTime + Duration)
+        while (Time.time < applyTime + Duration)
         {
             creature.Heal(GetValue(creature));
             yield return new WaitForSeconds(1);
@@ -111,6 +111,33 @@ public class FireMeadowBuff : CoroutineBuff, ISpecialConditionable
             //Debug.Log("Apply time: " + applyTime);
             creature.TakeDamage(GetValue(creature));
             yield return new WaitForSeconds(1);
+        }
+
+        creature.RemoveBuff(this.GetType());
+    }
+}
+
+public class ElectricityDamageBuff : CoroutineBuff
+{
+    public override BuffTargetField TargetField => BuffTargetField.Health;
+
+    public override bool IsDebuff => true;
+
+    public override bool IsMultiplier => false;
+
+    public override float Duration => 0.5f;
+
+    public override float GetValue(Creature creature)
+    {
+        return 0.5f;
+    }
+
+    public override IEnumerator StartBuff(Creature creature)
+    {
+        while (Time.time < applyTime + Duration)
+        {
+            creature.TakeDamage(GetValue(creature));
+            yield return new WaitForSeconds(Duration + 0.001f);
         }
 
         creature.RemoveBuff(this.GetType());

@@ -78,6 +78,8 @@ public class Puddle : GroundedSpell, IKnowSpellManager
         {
             // Debug.Log("apply Buff.....");
             creature.ApplyBuff(typeof(PuddleSlowBuff));
+            if (charged)
+                creature.ApplyBuff(typeof(ElectricityDamageBuff));
             return;
         }
     }

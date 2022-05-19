@@ -108,9 +108,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 32
-        width: 64
-        height: 32
+        y: 108
+        width: 52
+        height: 36
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,10 +128,10 @@ TextureImporter:
       name: puddle_electricity_1
       rect:
         serializedVersion: 2
-        x: 64
-        y: 32
-        width: 64
-        height: 32
+        x: 0
+        y: 72
+        width: 52
+        height: 36
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -150,9 +150,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 64
-        height: 32
+        y: 36
+        width: 52
+        height: 36
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -170,10 +170,10 @@ TextureImporter:
       name: puddle_electricity_3
       rect:
         serializedVersion: 2
-        x: 64
+        x: 0
         y: 0
-        width: 64
-        height: 32
+        width: 52
+        height: 36
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -181,8 +181,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e35d3d656c23be14c804ff97fefe33bb
-      internalID: 829990931
+      spriteID: 615e8d1a485616d4caf58c086204f0c0
+      internalID: -1444697536
       vertices: []
       indices: 
       edges: []
@@ -198,7 +198,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      puddle_electricity_3: 829990931
+      puddle_electricity_3: -1444697536
       puddle_electricity_2: 324041407
       puddle_electricity_1: -110761334
       puddle_electricity_0: -1160849397

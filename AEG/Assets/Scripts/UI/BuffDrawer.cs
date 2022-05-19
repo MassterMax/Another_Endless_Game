@@ -11,6 +11,7 @@ public class BuffDrawer : MonoBehaviour
         { typeof(PuddleSlowBuff), 1 },
         { typeof(FireMeadowBuff), 2 },
         { typeof(MeadowHealBuff), 3 },
+        {typeof(ElectricityDamageBuff), 4},
     };
 
     [SerializeField] List<GameObject> icons;
@@ -23,7 +24,7 @@ public class BuffDrawer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void DrawBuffs(List<Buff> buffs)
@@ -31,14 +32,14 @@ public class BuffDrawer : MonoBehaviour
         int count = buffs.Count;
         //if (count == 0)
         //{
-            foreach (var icon in icons)
-                icon.SetActive(false);
+        foreach (var icon in icons)
+            icon.SetActive(false);
         //    return;
         //}
 
         int startX = -16 * ((count - 1) / 2) - 8 * ((count + 1) % 2);
         int i = 0;
-        foreach(var buff in buffs)
+        foreach (var buff in buffs)
         {
             if (!buffTypeToPos.ContainsKey(buff.GetType()))
             {

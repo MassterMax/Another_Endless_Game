@@ -168,6 +168,11 @@ public abstract class Monster : Creature, IFadestroyable
         return attackTarget.Speed;
     }
 
+    protected bool TargetIsPlayer()
+    {
+        return attackTarget.GetComponent<PlayerController>();
+    }
+
     protected Vector2 TargetPosition()
     {
         if (!HasTarget()) return Vector2.zero;
