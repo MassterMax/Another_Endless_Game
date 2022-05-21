@@ -5,11 +5,40 @@ using UnityEngine;
 public class MenuController : MonoBehaviour
 {
     [SerializeField] GameObject reflectionOffButton, reflectionOnButton;
+    [SerializeField] GameObject pauseMenuPanel;
 
     private static bool reflectionsTurnedOn;
 
     public static bool ReflectionsTurnedOn { get => reflectionsTurnedOn; }
 
+    private bool paused;
+
+    private void Start()
+    {
+        OnReflectionOffButton();
+        paused = false;
+        SwitchPauseMenu(false);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OnPauseButton();
+        }
+    }
+
+    public void OnPauseButton()
+    {
+        paused = !paused;
+        SwitchPauseMenu(paused);
+    }
+
+    private void SwitchPauseMenu(bool turnOn)
+    {
+        Time.timeScale = turnOn ? 0f : 1f;
+        pauseMenuPanel?.SetActive(turnOn);
+    }
 
     // we press on reflection [ON] button and it switches to off button -> reflections turn off
     public void OnReflectionOnButton()
@@ -41,10 +70,5 @@ public class MenuController : MonoBehaviour
         {
             reflecting.Turn(on);
         }
-    }
-
-    private void Start()
-    {
-        OnReflectionOffButton();
     }
 }

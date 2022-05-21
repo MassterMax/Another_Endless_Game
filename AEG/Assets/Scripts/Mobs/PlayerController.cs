@@ -76,6 +76,9 @@ public class PlayerController : Creature, IBlinkable
 
     protected override void Move()
     {
+        // skip if paused, todo -> make better!
+        if (Time.timeScale == 0f) return;
+
         if (dashTimer == 0)
         {
             direction = Vector2.zero;
@@ -99,6 +102,9 @@ public class PlayerController : Creature, IBlinkable
 
     void Dash()
     {
+        // skip if paused, todo -> make better!
+        if (Time.timeScale == 0f) return;
+
         if (Input.GetKeyDown(KeyCode.Space) && dashTimer == 0)
         {
             dashTimer = 0.25f;
@@ -107,6 +113,9 @@ public class PlayerController : Creature, IBlinkable
 
     void Rotate()
     {
+        // skip if paused, todo -> make better!
+        if (Time.timeScale == 0f) return;
+
         Vector2 dir = Input.mousePosition - Camera.main.WorldToScreenPoint(transform.position);
 
         if (playerSpriteRenderer.flipX != Mathf.Sign(dir.x) < 0)
