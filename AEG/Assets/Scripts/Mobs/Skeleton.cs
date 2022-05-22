@@ -51,6 +51,7 @@ public class Skeleton : Monster
         // Debug.LogWarning("pseudo disnatnce is " + pseudoSpearDistance);
         spear.OnPickup(pseudoSpearDistance);
 
+        Debug.Log(boxOfSpearsSpriteRenderer);
         boxOfSpearsSpriteRenderer = boxOfSpears.GetComponent<SpriteRenderer>();
         boxOfSpears.SetActive(withBoxOfSpears);
     }
@@ -129,6 +130,9 @@ public class Skeleton : Monster
         {
             base.Rotate();
         }
+
+        // Debug.Log(boxOfSpearsSpriteRenderer);
+        // Debug.Log(spriteRenderer);
 
         if (boxOfSpearsSpriteRenderer.flipX != spriteRenderer.flipX)
         {

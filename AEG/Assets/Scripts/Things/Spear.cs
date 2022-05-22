@@ -9,7 +9,7 @@ public class Spear : Launchable, IFadestroyable
 
     private float height;
 
-    void Start()
+    void Awake()
     {
         Damage = 3f;  // todo remake
         reflectable = GetComponent<Reflectable>();
