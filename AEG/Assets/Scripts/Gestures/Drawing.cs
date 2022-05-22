@@ -26,7 +26,7 @@ public class Drawing : MonoBehaviour
     {
         float x = 0;
         float y = 0;
-        foreach(var point in coords)
+        foreach (var point in coords)
         {
             x += point.x;
             y += point.y;
@@ -43,6 +43,9 @@ public class Drawing : MonoBehaviour
 
     void Update()
     {
+        // todo improve pause check
+        if (Time.timeScale == 0f) return;
+
         if (Input.GetKey(KeyCode.Mouse0))
         {
             Vector2 newPos = Input.mousePosition;
@@ -66,7 +69,8 @@ public class Drawing : MonoBehaviour
                 }
                 lastPointTime = Time.time;
             }
-        } else
+        }
+        else
         {
             if (lr.positionCount > 0 && Time.time - lastPointTime > afterGestureDuration)
             {

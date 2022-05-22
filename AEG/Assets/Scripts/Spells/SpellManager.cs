@@ -102,10 +102,12 @@ public class SpellManager : MonoBehaviour
                 spells.Add(spell);
 
                 spell.CastSpell(drawingManager.GetFirstPoint(), drawingManager.GetLastPoint(), drawingManager.GetMeanPoint());
-                if (spell is GroundedSpell)
-                {
-                    ((GroundedSpell)spell).AfterCastSpell();
-                }
+
+                // todo maybe return this logic
+                // if (spell is GroundedSpell)
+                // {
+                //     ((GroundedSpell)spell).AfterCastSpell();
+                // }
 
                 return;
             }

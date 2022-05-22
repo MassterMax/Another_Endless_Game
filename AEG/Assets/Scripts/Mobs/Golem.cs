@@ -16,6 +16,10 @@ public class Golem : Monster
     protected override void Start()
     {
         base.Start();
+        canMoveInPostition = false;
+        // wait to play spawn animation, todo get correct timings!!!
+        var coroutine = ((IDelayable)this).ExecuteAfterDelay(0.5f, () => { canMoveInPostition = true; });
+        StartCoroutine(coroutine);
     }
 
     // Update is called once per frame

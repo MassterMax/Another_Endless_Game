@@ -97,7 +97,7 @@ public class GestureRecognizer : MonoBehaviour
                     // https://forum.unity.com/threads/prevent-mouse-clicking-through-ui.1027765/
                     if (EventSystem.current.IsPointerOverGameObject())
                     {
-                        Debug.LogWarning("Do not start gesture!");
+                        //Debug.LogWarning("Do not start gesture!");
                         return;
                     }
 
