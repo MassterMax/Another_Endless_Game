@@ -6,6 +6,9 @@ using UnityEngine.SceneManagement;
 public class MainMenuController : MonoBehaviour
 {
 
+    [SerializeField] GameObject controlsPanel;
+    [SerializeField] GameObject menuPanel;
+
     public void OnNewGameButton()
     {
         Debug.Log("new game");
@@ -15,12 +18,20 @@ public class MainMenuController : MonoBehaviour
 
     public void OnControlsButton()
     {
-        Debug.Log("controls");
+        menuPanel.SetActive(false);
+        controlsPanel.SetActive(true);
+    }
+
+    public void OnOkButton()
+    {
+        menuPanel.SetActive(true);
+        controlsPanel.SetActive(false);
     }
 
     void Start()
     {
         Time.timeScale = 1f;
+        controlsPanel.SetActive(false);
     }
 
     // Update is called once per frame

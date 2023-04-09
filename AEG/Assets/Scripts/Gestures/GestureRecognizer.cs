@@ -45,7 +45,7 @@ public class GestureRecognizer : MonoBehaviour
 
     void Start()
     {
-        LoadTemplates();
+        StartCoroutine("LoadTemplates");
         varInitialization();
     }
 
@@ -149,14 +149,30 @@ public class GestureRecognizer : MonoBehaviour
         File.WriteAllText(filePath, saveData);
     }
 
-    private void LoadTemplates()
+    IEnumerator LoadTemplates()
     {
         templates = new GestureTemplates();
-        string filePath = Path.Combine(Application.streamingAssetsPath, gestureFileName);
-        if (File.Exists(filePath))
+        // string filePath = Path.Combine(Application.streamingAssetsPath, gestureFileName);
+        string filePath = Application.dataPath + "/StreamingAssets/" + gestureFileName;
+        Debug.LogWarning("gestures filePath is " + filePath);
+
+        if (filePath.Contains("://") || filePath.Contains(":///"))
+        {
+            UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequest.Get(filePath);
+            yield return www.Send();
+            var dataAsJson = www.downloadHandler.text;
+            templates = JsonUtility.FromJson<GestureTemplates>(dataAsJson);
+            Debug.LogWarning("successfully read WEB gestures");
+        }
+        else if (File.Exists(filePath))
         {
             string data = File.ReadAllText(filePath);
             templates = JsonUtility.FromJson<GestureTemplates>(data);
+            Debug.LogWarning("successfully read OS gestures");
+        }
+        else
+        {
+            Debug.LogWarning("can not read gestures :(");
         }
 
         if (templates == null) templates = new GestureTemplates();
