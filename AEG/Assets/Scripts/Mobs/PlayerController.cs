@@ -17,6 +17,8 @@ public class PlayerController : Creature, IBlinkable
     GameObject stick;
 
     float dashTimer = 0f;
+    float dashCooldown = 1f;
+    float dashDuration = 0.25f;
     float invincibilityTime = 0f;
     float invincibilityDuration = 1f;
 
@@ -89,7 +91,7 @@ public class PlayerController : Creature, IBlinkable
         // skip if paused, todo -> make better!
         if (Time.timeScale == 0f) return;
 
-        if (dashTimer == 0)
+        if (dashTimer < dashCooldown)
         {
             direction = Vector2.zero;
 
@@ -100,12 +102,9 @@ public class PlayerController : Creature, IBlinkable
             direction = direction.normalized;
 
         }
-        else
-        {
-            dashTimer = Mathf.Max(0, dashTimer - Time.deltaTime);
-        }
+        dashTimer = Mathf.Max(0, dashTimer - Time.deltaTime);
 
-        float dashMultiplyer = dashTimer > 0 ? 3f : 1f;
+        float dashMultiplyer = dashTimer > dashCooldown ? 3f : 1f;
 
         transform.Translate(direction * Time.deltaTime * Speed * dashMultiplyer);
     }
@@ -117,7 +116,7 @@ public class PlayerController : Creature, IBlinkable
 
         if (Input.GetKeyDown(KeyCode.Space) && dashTimer == 0)
         {
-            dashTimer = 0.25f;
+            dashTimer = dashDuration + dashCooldown;
         }
     }
 
