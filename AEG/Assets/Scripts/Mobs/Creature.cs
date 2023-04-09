@@ -18,6 +18,8 @@ public abstract class Creature : MonoBehaviour, IDamaging, IDelayable
     private bool friendly;
     private bool protection = false;
 
+    protected float score = 0;
+
     public bool Friendly { get => friendly; }
     public bool Protection { get => protection; set => protection = value; }
 
@@ -186,7 +188,7 @@ public abstract class Creature : MonoBehaviour, IDamaging, IDelayable
 
     protected abstract void HandleAnimation();
 
-    public virtual void SetAttributes(float health, float maxHealth, float damage, float speed, bool friendly)
+    public virtual void SetAttributes(float health, float maxHealth, float damage, float speed, bool friendly, float score)
     {
         if (set)
             throw new System.Exception("creature already set");
@@ -196,6 +198,7 @@ public abstract class Creature : MonoBehaviour, IDamaging, IDelayable
         this.maxHealth = maxHealth;
         this.damage = damage;
         this.friendly = friendly;
+        this.score = score;
         this.speed = speed;
 
         GameObject healthBarObject = Instantiate(Resources.Load("Prefabs/UI/HealthCanvas"), transform.position, Quaternion.identity) as GameObject;

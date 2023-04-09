@@ -3,6 +3,7 @@ using UnityEngine;
 
 public abstract class Monster : Creature, IFadestroyable
 {
+    protected MonsterController monsterController;
     protected Animator animator;
     protected SpriteRenderer spriteRenderer;
     Vector2 moveDirection;
@@ -37,6 +38,11 @@ public abstract class Monster : Creature, IFadestroyable
             Rotate();
             MeleeAttack();
         }
+    }
+
+    public void SetMonsterController(MonsterController monsterController)
+    {
+        this.monsterController = monsterController;
     }
 
     public void SetMonsterTarget(Creature target)
@@ -127,6 +133,8 @@ public abstract class Monster : Creature, IFadestroyable
             Debug.LogWarning("monster should have animator!");
             base.OnDeath();
         }
+
+        monsterController?.ChangeScore(this.score);
     }
 
     protected override void Move()

@@ -32,7 +32,7 @@ public class WaveController : MonoBehaviour
         {
             for (int i = 0; i < monsterCount; ++i)
             {
-                var pos = Random.insideUnitCircle.normalized * 10f;
+                var pos = Random.insideUnitCircle.normalized * 10f + monsterController.GetPlayerPos();
                 string monster;
                 if (Random.value < 0.75)
                 {

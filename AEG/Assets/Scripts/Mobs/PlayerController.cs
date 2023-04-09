@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : Creature, IBlinkable
 {
@@ -25,12 +26,21 @@ public class PlayerController : Creature, IBlinkable
     float maxMana = 100;
     float manaRegen = 2f;
 
+    private float totalScore = 0;
+    [SerializeField] Text playerScore;
+
     Dictionary<KeyCode, Vector2> keyToVector = new Dictionary<KeyCode, Vector2>() {
         { KeyCode.W, Vector2.up},
         { KeyCode.S, Vector2.down },
         { KeyCode.D, Vector2.right },
         { KeyCode.A, Vector2.left }
     };
+
+    public void ChangeScore(float value)
+    {
+        this.totalScore += value;
+        playerScore.text = "score: " + (int)this.totalScore;
+    }
 
     void Start()
     {
@@ -40,7 +50,7 @@ public class PlayerController : Creature, IBlinkable
         stick = transform.GetChild(0).gameObject;
         stickSpriteRenderer = stick.GetComponent<SpriteRenderer>();
 
-        SetAttributes(playerHealth, playerHealth, playerDamage, playerSpeed, true);
+        SetAttributes(playerHealth, playerHealth, playerDamage, playerSpeed, true, 0f);
         SetBarStyle(110);
         SetupManaBar();
     }
@@ -212,5 +222,13 @@ public class PlayerController : Creature, IBlinkable
     public float GetHeight()
     {
         return playerSpriteRenderer.bounds.size.y;
+    }
+
+
+    protected override void OnDeath()
+    {
+        base.OnDeath();
+        var endScore = (int)this.totalScore;
+        FindObjectOfType<MenuController>().OnDeath(endScore);
     }
 }

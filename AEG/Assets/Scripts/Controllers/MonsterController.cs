@@ -17,6 +17,7 @@ public class MonsterController : MonoBehaviour
         { "damage", 1.5f },
         { "speed", 0.4f },
         { "friendly", 0},
+        { "score", 3f},
        }},
       { typeof(Skeleton), new Dictionary<string, float>() {
         { "health", 5f },
@@ -24,6 +25,7 @@ public class MonsterController : MonoBehaviour
         { "damage", 1f },
         { "speed", 0.5f },
         { "friendly", 0},
+        { "score", 5f},
        }},
         { typeof(Golem), new Dictionary<string, float>() {
         { "health", 8f },
@@ -31,8 +33,14 @@ public class MonsterController : MonoBehaviour
         { "damage", 2.35f },
         { "speed", 0.25f },
         { "friendly", 1},
+        { "score", 0f},
        }},
     };
+
+    public Vector2 GetPlayerPos()
+    {
+        return playerController.transform.position;
+    }
 
     private void Awake()
     {
@@ -77,8 +85,9 @@ public class MonsterController : MonoBehaviour
                 float damage = stats["damage"];
                 float speed = stats["speed"];
                 bool friendly = stats["friendly"] > 0;
+                float score = stats["score"];
 
-                monster.SetAttributes(health, maxHealth, damage, speed, friendly);
+                monster.SetAttributes(health, maxHealth, damage, speed, friendly, score);
                 return;
             }
         }
@@ -93,6 +102,12 @@ public class MonsterController : MonoBehaviour
             friendlyCreatures.Add(monster);
         else
             monsters.Add(monster);
+        monster.SetMonsterController(this);
+    }
+
+    public void ChangeScore(float value)
+    {
+        playerController.ChangeScore(value);
     }
 
     public void CreateMonster(string monsterName, Vector2 pos)

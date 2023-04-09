@@ -1,28 +1,35 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
     [SerializeField] GameObject reflectionOffButton, reflectionOnButton;
     [SerializeField] GameObject pauseMenuPanel;
+    [SerializeField] Text pauseMenuText;
+    [SerializeField] GameObject totalScorePanel;
+    [SerializeField] GameObject reflectionPanel;
 
     private static bool reflectionsTurnedOn;
 
     public static bool ReflectionsTurnedOn { get => reflectionsTurnedOn; }
 
     private bool paused;
+    private bool ended = false;
 
     private void Start()
     {
         OnReflectionOffButton();
         paused = false;
         SwitchPauseMenu(false);
+        totalScorePanel.SetActive(false);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (!ended && Input.GetKeyDown(KeyCode.Escape))
         {
             OnPauseButton();
         }
@@ -32,6 +39,25 @@ public class MenuController : MonoBehaviour
     {
         paused = !paused;
         SwitchPauseMenu(paused);
+    }
+
+    public void OnDeath(int totalScore)
+    {
+        ended = true;
+        Debug.Log("total score is " + totalScore);
+        paused = true;
+        SwitchPauseMenu(paused);
+
+        pauseMenuText.text = "GAME OVER!\n-";
+        reflectionPanel.SetActive(false);
+        totalScorePanel.SetActive(true);
+        totalScorePanel.GetComponentInChildren<Text>().text = "TOTAL SCORE IS " + totalScore;
+    }
+
+    public void OnMenuButton()
+    {
+        Debug.Log("bye!");
+        SceneManager.LoadScene(0);
     }
 
     private void SwitchPauseMenu(bool turnOn)

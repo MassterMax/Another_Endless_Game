@@ -40,8 +40,8 @@ public class Zombie : Monster
             }
             else
             {
-                // with 50% prob random direction or target
-                if (Random.value < 0.5)
+                // with 20% prob random direction or target
+                if (Random.value < 0.2)
                     SetMoveDirection(Random.insideUnitCircle.normalized);
                 else
                     SetMoveDirection(ToTargetVector());
