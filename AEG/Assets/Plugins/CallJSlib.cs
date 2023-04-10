@@ -10,7 +10,7 @@ public class CallJSlib : MonoBehaviour
 
 
     [DllImport("__Internal")]
-    private static extern void SetToleaderboard(int value);
+    private static extern void SetToLeaderboard(int value);
 
     public void HelloButton()
     {
@@ -21,7 +21,7 @@ public class CallJSlib : MonoBehaviour
     {
         try
         {
-            SetToleaderboard(value);
+            SetToLeaderboard(value);
         }
         catch (System.Exception e)
         {
