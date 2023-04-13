@@ -97,4 +97,10 @@ public class MenuController : MonoBehaviour
             reflecting.Turn(on);
         }
     }
+
+    void OnApplicationPause(bool pause)
+    {
+        if (pause && !paused)
+            OnPauseButton();
+    }
 }
