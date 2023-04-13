@@ -1527,7 +1527,7 @@ GameObject:
   - component: {fileID: 945513892}
   - component: {fileID: 945513893}
   m_Layer: 0
-  m_Name: CallJsLib
+  m_Name: CallJSlib
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

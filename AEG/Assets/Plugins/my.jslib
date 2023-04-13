@@ -19,20 +19,24 @@ mergeInto(LibraryManager.library, {
 
   LogIn: function () {
     console.log("try to log in");
+
     initPlayer().then(_player => {
       if (_player.getMode() === 'lite') {
-
+        console.log("not auth yet");
         ysdk.auth.openAuthDialog().then(() => {
+          console.log("auth success :)");
 
-          initPlayer().catch(err => {
-
+          initPlayer().then(_player => {
+            myGameInstance.SendMessage('CallJSlib', 'UpdateUsername', _player.getName());
+          }).catch(err => {
+            console.log("player init error");
           });
         }).catch(() => {
-
+          console.log("not auth :(");
         });
       }
     }).catch(err => {
-
+      console.log("player init error");
     });
   },
 
@@ -41,7 +45,7 @@ mergeInto(LibraryManager.library, {
     .then(lb => lb.getLeaderboardPlayerEntry('GameScoreLeaderboard'))
     .then(res => {
       console.log(res);
-      myGameInstance.SendMessage('CallJsLib', 'UpdateHighScore', res);
+      myGameInstance.SendMessage('CallJSlib', 'UpdateHighScore', res);
     })
     .catch(err => {
       if (err.code === 'LEADERBOARD_PLAYER_NOT_PRESENT') {
@@ -49,8 +53,5 @@ mergeInto(LibraryManager.library, {
     });
   },
 
-  GetUsername: function () {
-      myGameInstance.SendMessage('CallJsLib', 'UpdateUsername', player.getName());
-  },
 
 });

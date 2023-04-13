@@ -22,9 +22,6 @@ public class CallJSlib : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void GetHighscore();
 
-    [DllImport("__Internal")]
-    private static extern void GetUsername();
-
     public static CallJSlib SingletonInstance { get; private set; }
 
     private bool loggined = false;
@@ -99,7 +96,6 @@ public class CallJSlib : MonoBehaviour
             Debug.Log("sucessfully logged in");
             loggined = true;
             // try to update user leaderboard hs with current value
-            GetUsername();
             GetHighscore();
         }
         catch (System.Exception e)
