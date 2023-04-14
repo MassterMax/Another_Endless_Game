@@ -34,6 +34,9 @@ mergeInto(LibraryManager.library, {
         }).catch(() => {
           console.log("not auth :(");
         });
+      } else {
+        console.log("already authorized");
+        myGameInstance.SendMessage('CallJSlib', 'UpdateUsername', _player.getName());
       }
     }).catch(err => {
       console.log("player init error");
@@ -45,13 +48,26 @@ mergeInto(LibraryManager.library, {
     .then(lb => lb.getLeaderboardPlayerEntry('GameScoreLeaderboard'))
     .then(res => {
       console.log(res);
-      myGameInstance.SendMessage('CallJSlib', 'UpdateHighScore', res);
+      console.log(res.score);
+      myGameInstance.SendMessage('CallJSlib', 'UpdateHighScore', res.score);
     })
     .catch(err => {
       if (err.code === 'LEADERBOARD_PLAYER_NOT_PRESENT') {
+        console.log("LEADERBOARD_PLAYER_NOT_PRESENT");
+        myGameInstance.SendMessage('CallJSlib', 'UpdateHighScore', 0);
       }
     });
   },
 
+  SendDataAfterAuth: function() {
+    tryToAuth();
+    tryToInitLB();
+  },
+
+  AllowData: function() {
+    initPlayer().then(_player => {
+      myGameInstance.SendMessage('CallJSlib', 'UpdateUsername', _player.getName());
+    });
+  },
 
 });
