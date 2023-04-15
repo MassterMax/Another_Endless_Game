@@ -59,6 +59,8 @@ public class CallJSlib : MonoBehaviour
         loggined = true;
     }
 
+
+    // todo max 15 username characters
     public string Username()
     {
         if (username == "") return "player!";
