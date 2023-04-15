@@ -62,6 +62,11 @@ public class CallJSlib : MonoBehaviour
         {
             transilted = "player!";
         }
+
+        if (transilted.Length > 13)
+        {
+            return transilted.Substring(0, 10) + "...";
+        }
         return transilted;
     }
 
