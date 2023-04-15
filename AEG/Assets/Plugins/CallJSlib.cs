@@ -29,6 +29,9 @@ public class CallJSlib : MonoBehaviour
     [DllImport("__Internal")]
     private static extern void AllowData();
 
+    [DllImport("__Internal")]
+    private static extern string GetLanguage();
+
     public void SendDataAfterAuthYandex() { try { SendDataAfterAuth(); } catch (System.Exception e) { Debug.LogException(e); } }
     public static CallJSlib SingletonInstance { get; private set; }
 
@@ -37,6 +40,7 @@ public class CallJSlib : MonoBehaviour
     private int highScore = 0;
     private string username = "none";
 
+    public string language;  // ru en
 
     public void AllowUserData()
     {
@@ -57,17 +61,10 @@ public class CallJSlib : MonoBehaviour
 
     public string Username()
     {
-        var transilted = Transliteration.Front(username);
-        if (transilted == "")
-        {
-            transilted = "player!";
-        }
-
-        if (transilted.Length > 13)
-        {
-            return transilted.Substring(0, 10) + "...";
-        }
-        return transilted;
+        if (username == "") return "player!";
+        if (language == "ru") return "ru: " + username;
+        // if (language == "en")
+        return Transliteration.Front(username);
     }
 
     public bool IsLoggined() { return loggined; }
@@ -91,6 +88,7 @@ public class CallJSlib : MonoBehaviour
             SingletonInstance = this;
             DontDestroyOnLoad(this.gameObject);
         }
+        language = GetLanguage();
     }
 
     public void HelloButton()

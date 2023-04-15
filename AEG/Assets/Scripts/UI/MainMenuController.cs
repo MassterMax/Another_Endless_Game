@@ -13,7 +13,7 @@ public class MainMenuController : MonoBehaviour
     [SerializeField] Text highscoreText;
     [SerializeField] GameObject loggingButton;
     [SerializeField] GameObject spinner;
-    [SerializeField] GameObject allowDataButton;
+    // [SerializeField] GameObject allowDataButton;
     [SerializeField] Text loggingText;
     bool updateAfterLoggingStarted = false;
 
@@ -49,7 +49,7 @@ public class MainMenuController : MonoBehaviour
 
     void Start()
     {
-        allowDataButton.SetActive(false);
+        // allowDataButton.SetActive(false);
         Time.timeScale = 1f;
         controlsPanel.SetActive(false);
         jSlib = FindObjectOfType<CallJSlib>();
@@ -60,10 +60,10 @@ public class MainMenuController : MonoBehaviour
             loggingButton.SetActive(false);
             loggingText.gameObject.SetActive(true);
             loggingText.text = "hello, " + jSlib.Username();
-            if (jSlib.Username() == "player!")
-            {
-                allowDataButton.SetActive(true);
-            }
+            // if (jSlib.Username() == "player!")
+            // {
+            //     allowDataButton.SetActive(true);
+            // }
         }
         else
         {
@@ -79,7 +79,7 @@ public class MainMenuController : MonoBehaviour
         jSlib.AllowUserData();
         loggingText.gameObject.SetActive(false);
         spinner.SetActive(true);
-        allowDataButton.SetActive(false);
+        // allowDataButton.SetActive(false);
         StartCoroutine("AfterAllowUserDataButton");
     }
 
@@ -98,10 +98,10 @@ public class MainMenuController : MonoBehaviour
         loggingText.gameObject.SetActive(true);
         spinner.SetActive(false);
         loggingText.text = "hello, " + jSlib.Username();
-        if (jSlib.Username() == "player!")
-        {
-            allowDataButton.SetActive(true);
-        }
+        // if (jSlib.Username() == "player!")
+        // {
+        //     allowDataButton.SetActive(true);
+        // }
     }
 
     public IEnumerator UpdateAfterLogging()
@@ -134,10 +134,10 @@ public class MainMenuController : MonoBehaviour
             spinner.SetActive(false);
             loggingButton.SetActive(true);
         }
-        if (jSlib.Username() == "player!")
-        {
-            allowDataButton.SetActive(true);
-        }
+        // if (jSlib.Username() == "player!")
+        // {
+        //     allowDataButton.SetActive(true);
+        // }
 
         updateAfterLoggingStarted = false;
     }
