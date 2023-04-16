@@ -2448,7 +2448,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87d5bf2543aa64b4ea5a192e45988ae7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  language: 
+  language: ru
 --- !u!1 &955667946
 GameObject:
   m_ObjectHideFlags: 0
@@ -3037,6 +3037,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cef64282c82ef2841b3ea3c02507ddbe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  newGameText: {fileID: 1702448766}
+  controlsText: {fileID: 1754042400}
+  controlsMenuText:
+  - {fileID: 883006962}
+  - {fileID: 880022291}
+  - {fileID: 888715709}
+  - {fileID: 64615690}
+  - {fileID: 1745691786}
+  - {fileID: 2064460874}
   controlsPanel: {fileID: 733697489}
   menuPanel: {fileID: 276086237}
   highscoreText: {fileID: 1410744458}

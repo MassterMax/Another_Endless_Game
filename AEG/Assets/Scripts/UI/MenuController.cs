@@ -12,6 +12,9 @@ public class MenuController : MonoBehaviour
     [SerializeField] GameObject totalScorePanel;
     [SerializeField] GameObject reflectionPanel;
 
+    [SerializeField] List<Text> pauseMenuTexts;
+
+    CallJSlib jSlib;
     private static bool reflectionsTurnedOn;
 
     public static bool ReflectionsTurnedOn { get => reflectionsTurnedOn; }
@@ -21,10 +24,12 @@ public class MenuController : MonoBehaviour
 
     private void Start()
     {
+        jSlib = FindObjectOfType<CallJSlib>();
         OnReflectionOffButton();
         paused = false;
         SwitchPauseMenu(false);
         totalScorePanel.SetActive(false);
+        SetPauseMenuTexts();
     }
 
     private void Update()
@@ -32,6 +37,24 @@ public class MenuController : MonoBehaviour
         if (!ended && Input.GetKeyDown(KeyCode.Escape))
         {
             OnPauseButton();
+        }
+    }
+
+    private void SetPauseMenuTexts()
+    {
+        if (jSlib.IsRussian())
+        {
+            pauseMenuTexts[0].text = "ПАУЗА";
+            pauseMenuTexts[1].text = "отражения";
+            pauseMenuTexts[2].text = "выход";
+            pauseMenuTexts[3].text = "нажми esc для продолжения";
+        }
+        else
+        {
+            pauseMenuTexts[0].text = "PAUSED";
+            pauseMenuTexts[1].text = "reflections";
+            pauseMenuTexts[2].text = "exit";
+            pauseMenuTexts[3].text = "press esc to resume";
         }
     }
 
@@ -48,10 +71,20 @@ public class MenuController : MonoBehaviour
         paused = true;
         SwitchPauseMenu(paused);
 
-        pauseMenuText.text = "GAME OVER!\n-";
+        if (jSlib.IsRussian())
+        {
+            pauseMenuText.text = "ИГРА ОКОНЧЕНА\n\n-";
+            totalScorePanel.GetComponentInChildren<Text>().text = "итоговый счёт: " + totalScore;
+        }
+        else
+        {
+            pauseMenuText.text = "GAME OVER\n\n-";
+            totalScorePanel.GetComponentInChildren<Text>().text = "total score is " + totalScore;
+        }
+
         reflectionPanel.SetActive(false);
         totalScorePanel.SetActive(true);
-        totalScorePanel.GetComponentInChildren<Text>().text = "TOTAL SCORE IS " + totalScore;
+        pauseMenuTexts[3].gameObject.SetActive(false);
     }
 
     public void OnMenuButton()

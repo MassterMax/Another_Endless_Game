@@ -31,6 +31,7 @@ public class PlayerController : Creature, IBlinkable
     private float totalScore = 0;
     [SerializeField] Text playerScore;
 
+    bool isRussian;
     Dictionary<KeyCode, Vector2> keyToVector = new Dictionary<KeyCode, Vector2>() {
         { KeyCode.W, Vector2.up},
         { KeyCode.S, Vector2.down },
@@ -41,7 +42,10 @@ public class PlayerController : Creature, IBlinkable
     public void ChangeScore(float value)
     {
         this.totalScore += value;
-        playerScore.text = "score: " + (int)this.totalScore;
+        if (isRussian)
+            playerScore.text = "счёт: " + (int)this.totalScore;
+        else
+            playerScore.text = "score: " + (int)this.totalScore;
     }
 
     void Start()
@@ -55,6 +59,8 @@ public class PlayerController : Creature, IBlinkable
         SetAttributes(playerHealth, playerHealth, playerDamage, playerSpeed, true, 0f);
         SetBarStyle(110);
         SetupManaBar();
+        isRussian = FindObjectOfType<CallJSlib>().IsRussian();
+        ChangeScore(0);
     }
 
     protected override void Update()

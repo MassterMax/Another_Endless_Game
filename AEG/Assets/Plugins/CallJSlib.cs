@@ -42,6 +42,11 @@ public class CallJSlib : MonoBehaviour
 
     public string language;  // ru en
 
+    public bool IsRussian()
+    {
+        return language == "ru";
+    }
+
     public void AllowUserData()
     {
         AllowData();
@@ -63,10 +68,16 @@ public class CallJSlib : MonoBehaviour
     // todo max 15 username characters
     public string Username()
     {
-        if (username == "") return "player!";
-        if (language == "ru") return "ru: " + username;
+        string login;
+        if (username == "") login = "player!";
+        else if (language == "ru") login = username;
         // if (language == "en")
-        return Transliteration.Front(username);
+        else login = Transliteration.Front(username);
+
+        if (login.Length > 15)
+            return login.Substring(0, 12) + "...";
+        else
+            return login;
     }
 
     public bool IsLoggined() { return loggined; }
