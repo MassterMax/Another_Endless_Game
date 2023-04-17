@@ -4,94 +4,53 @@ using UnityEngine;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
+
+[System.Serializable]
+public class UserData
+{
+    public int score;
+
+    public static UserData CreateFromJSON(string jsonString)
+    {
+        return JsonUtility.FromJson<UserData>(jsonString);
+    }
+}
+
 public class CallJSlib : MonoBehaviour
 {
     [DllImport("__Internal")]
-    private static extern void Hello();
-
-
-    [DllImport("__Internal")]
-    private static extern void SetToLeaderboard(int value);
-
+    private static extern string GetLanguage();
 
     [DllImport("__Internal")]
-    private static extern void InitLb();
+    private static extern string SaveExtern(string data);
+
+    [DllImport("__Internal")]
+    private static extern string LoadExtern();
+
+    [DllImport("__Internal")]
+    private static extern void TryToAuthorize();
 
     [DllImport("__Internal")]
     private static extern void LogIn();
 
     [DllImport("__Internal")]
-    private static extern void GetHighscore();
+    private static extern void SetToLeaderboard(int value);
 
-    [DllImport("__Internal")]
-    private static extern void SendDataAfterAuth();
-
-    [DllImport("__Internal")]
-    private static extern void AllowData();
-
-    [DllImport("__Internal")]
-    private static extern string GetLanguage();
-
-    public void SendDataAfterAuthYandex() { try { SendDataAfterAuth(); } catch (System.Exception e) { Debug.LogException(e); } }
-    public static CallJSlib SingletonInstance { get; private set; }
-
-    private bool loggined = false;
-    private bool highScoreUpdated = false;
-    private int highScore = 0;
-    private string username = "none";
-
+    private string username = "";
+    public bool authorized = false;
     public string language;  // ru en
-
-    public bool IsRussian()
-    {
-        return language == "ru";
-    }
-
-    public void AllowUserData()
-    {
-        AllowData();
-    }
-
-    public int ReturnHighScore()
-    {
-        return highScore;
-    }
-
-    public void UpdateUsername(string value)
-    {
-        Debug.Log("Unity: update username to " + value);
-        username = value;
-        loggined = true;
-    }
-
-
-    // todo max 15 username characters
-    public string Username()
-    {
-        string login;
-        if (username == "") login = "player!";
-        else if (language == "ru") login = username;
-        // if (language == "en")
-        else login = Transliteration.Front(username);
-
-        if (login.Length > 15)
-            return login.Substring(0, 12) + "...";
-        else
-            return login;
-    }
-
-    public bool IsLoggined() { return loggined; }
-    public bool IsHighScoreUpdated() { return highScoreUpdated; }
-
-    public void UpdateHighScore(int value)
-    {
-        Debug.Log("Unity: UpdateHighScore");
-        highScore = value;
-        highScoreUpdated = true;
-    }
+    public int highScore = 0;
+    public static CallJSlib SingletonInstance { get; private set; }
 
     void Awake()
     {
+        if (SingletonInstance == null)
+        {
+            language = GetLanguage();
+            LoadExtern();
+            TryToAuthorize();
+        }
+
         if (SingletonInstance != null && SingletonInstance != this)
         {
             Destroy(this);
@@ -100,46 +59,80 @@ public class CallJSlib : MonoBehaviour
         {
             SingletonInstance = this;
             DontDestroyOnLoad(this.gameObject);
+
         }
-        language = GetLanguage();
     }
 
-    public void HelloButton()
+    public bool IsRussian()
     {
-        Hello();
+        return language == "ru";
     }
 
-    // // call this from js after logging
-    // public void SetLeaderboardHighscore(int value)
-    // {
-    //     highScore = Mathf.Max(highScore, value);
-    // }
-
-    public void SetToYandexleaderboard(int value)
+    public string Username()
     {
-        highScore = Mathf.Max(highScore, value);
-        try
+        string login;
+        if (username == "")
         {
-            if (loggined && highScoreUpdated)
-                SetToLeaderboard(highScore);
+            if (language == "ru") login = "игрок!";
+            else login = "player!";
         }
-        catch (System.Exception e)
+        else if (language == "ru") login = username;
+        else login = Transliteration.Front(username);
+
+        if (login.Length > 15)
+            return login.Substring(0, 12) + "...";
+        else
+            return login;
+    }
+
+    public bool IsDefaultUsername()
+    {
+        return Username() == "player!" || Username() == "игрок!";
+    }
+
+    public void LoadUserData(string data)
+    {
+        var userData = UserData.CreateFromJSON(data);
+        highScore = userData.score;
+    }
+
+    public void SetAuthorized(string value)
+    {
+        authorized = (value == "1");
+    }
+
+    public void SetUsername(string value)
+    {
+        Debug.Log("Unity: update username to " + value);
+        username = value;
+    }
+
+    public void UpdateHighScore(int score)
+    {
+        this.highScore = Mathf.Max(highScore, score);
+        SaveUserData(highScore);
+        if (authorized)
         {
-            Debug.LogException(e);
+            SetToLeaderboard(highScore);
         }
     }
+    void SaveUserData(int score)
+    {
+        string data = "{ \"score\": " + score + "}";
+        SaveExtern(data);
+    }
+
 
     public void LogInYandex()
     {
-        if (loggined && highScoreUpdated) return;
         try
         {
             Debug.Log("Unity: attempt to log in");
             LogIn();
-            InitLb();
-            // try to update user leaderboard hs with current value
-            // GetHighscore();
-            StartCoroutine("GetHS");
+            // InitLb();
+            // // try to update user leaderboard hs with current value
+            // // GetHighscore();
+            // StartCoroutine("GetHS");
         }
         catch (System.Exception e)
         {
@@ -147,31 +140,152 @@ public class CallJSlib : MonoBehaviour
         }
     }
 
-    public IEnumerator GetHS()
-    {
-        yield return new WaitForSeconds(1f);
-        if (loggined)
-        {
-            Debug.Log("Unity: try to get high score [0]");
-            GetHighscore();
-            for (int attempt = 0; attempt < 3; ++attempt)
-            {
-                if (!highScoreUpdated)
-                {
-                    yield return new WaitForSeconds(1.5f);
-                    Debug.Log("Unity: try to get high score [" + attempt + "]");
-                    GetHighscore();
-                }
-            }
-        }
-        else
-        {
-            Debug.Log("Unity: will not get high score:(");
-        }
-    }
+
+
+    // [DllImport("__Internal")]
+    // private static extern void Hello();
+
+
+    // [DllImport("__Internal")]
+    // private static extern void SetToLeaderboard(int value);
+
+
+    // [DllImport("__Internal")]
+    // private static extern void InitLb();
+
+    // [DllImport("__Internal")]
+    // private static extern void LogIn();
+
+    // [DllImport("__Internal")]
+    // private static extern void GetHighscore();
+
+    // [DllImport("__Internal")]
+    // private static extern void SendDataAfterAuth();
+
+    // [DllImport("__Internal")]
+    // private static extern void AllowData();
+
+    // public void SendDataAfterAuthYandex() { try { SendDataAfterAuth(); } catch (System.Exception e) { Debug.LogException(e); } }
+    // public static CallJSlib SingletonInstance { get; private set; }
+
+    // private bool loggined = false;
+    // private bool highScoreUpdated = false;
+    // private int highScore = 0;
+
+
+    // public void AllowUserData()
+    // {
+    //     AllowData();
+    // }
+
+    // public int ReturnHighScore()
+    // {
+    //     return highScore;
+    // }
+
+    // public void UpdateUsername(string value)
+    // {
+    //     Debug.Log("Unity: update username to " + value);
+    //     username = value;
+    //     loggined = true;
+    // }
+
+
+
+
+    // public bool IsLoggined() { return loggined; }
+    // public bool IsHighScoreUpdated() { return highScoreUpdated; }
+
+    // public void UpdateHighScore(int value)
+    // {
+    //     Debug.Log("Unity: UpdateHighScore");
+    //     highScore = value;
+    //     highScoreUpdated = true;
+    // }
+
+    // void Awake()
+    // {
+    //     if (SingletonInstance != null && SingletonInstance != this)
+    //     {
+    //         Destroy(this);
+    //     }
+    //     else
+    //     {
+    //         SingletonInstance = this;
+    //         DontDestroyOnLoad(this.gameObject);
+    //     }
+    //     language = GetLanguage();
+    // }
+
+    // public void HelloButton()
+    // {
+    //     Hello();
+    // }
+
+    // // // call this from js after logging
+    // // public void SetLeaderboardHighscore(int value)
+    // // {
+    // //     highScore = Mathf.Max(highScore, value);
+    // // }
+
+    // public void SetToYandexleaderboard(int value)
+    // {
+    //     highScore = Mathf.Max(highScore, value);
+    //     try
+    //     {
+    //         SaveExtern("{ \"highscore\": " + value + "}");
+    //         if (loggined && highScoreUpdated)
+    //             SetToLeaderboard(highScore);
+    //     }
+    //     catch (System.Exception e)
+    //     {
+    //         Debug.LogException(e);
+    //     }
+    // }
+
+    // public void LogInYandex()
+    // {
+    //     if (loggined && highScoreUpdated) return;
+    //     try
+    //     {
+    //         Debug.Log("Unity: attempt to log in");
+    //         LogIn();
+    //         InitLb();
+    //         // try to update user leaderboard hs with current value
+    //         // GetHighscore();
+    //         StartCoroutine("GetHS");
+    //     }
+    //     catch (System.Exception e)
+    //     {
+    //         Debug.LogException(e);
+    //     }
+    // }
+
+    // public IEnumerator GetHS()
+    // {
+    //     yield return new WaitForSeconds(1f);
+    //     if (loggined)
+    //     {
+    //         Debug.Log("Unity: try to get high score [0]");
+    //         GetHighscore();
+    //         for (int attempt = 0; attempt < 3; ++attempt)
+    //         {
+    //             if (!highScoreUpdated)
+    //             {
+    //                 yield return new WaitForSeconds(1.5f);
+    //                 Debug.Log("Unity: try to get high score [" + attempt + "]");
+    //                 GetHighscore();
+    //             }
+    //         }
+    //     }
+    //     else
+    //     {
+    //         Debug.Log("Unity: will not get high score:(");
+    //     }
+    // }
 }
 
-
+// --------------------------------------------------------------------------------------------------------
 
 public enum TransliterationType { Gost, ISO }
 public static class Transliteration

@@ -14,6 +14,8 @@ public class MenuController : MonoBehaviour
 
     [SerializeField] List<Text> pauseMenuTexts;
 
+    [SerializeField] GameObject pauseButton;
+
     CallJSlib jSlib;
     private static bool reflectionsTurnedOn;
 
@@ -22,6 +24,7 @@ public class MenuController : MonoBehaviour
     private bool paused;
     private bool ended = false;
 
+    private bool isRussian;
     private void Start()
     {
         jSlib = FindObjectOfType<CallJSlib>();
@@ -29,32 +32,33 @@ public class MenuController : MonoBehaviour
         paused = false;
         SwitchPauseMenu(false);
         totalScorePanel.SetActive(false);
+        isRussian = jSlib.IsRussian();
         SetPauseMenuTexts();
     }
 
     private void Update()
     {
-        if (!ended && Input.GetKeyDown(KeyCode.Escape))
-        {
-            OnPauseButton();
-        }
+        // if (!ended && Input.GetKeyDown(KeyCode.Escape))
+        // {
+        //     OnPauseButton();
+        // }
     }
 
     private void SetPauseMenuTexts()
     {
-        if (jSlib.IsRussian())
+        if (isRussian)
         {
             pauseMenuTexts[0].text = "ПАУЗА";
             pauseMenuTexts[1].text = "отражения";
             pauseMenuTexts[2].text = "выход";
-            pauseMenuTexts[3].text = "нажми esc для продолжения";
+            pauseMenuTexts[3].text = "нажми для продолжения";
         }
         else
         {
             pauseMenuTexts[0].text = "PAUSED";
             pauseMenuTexts[1].text = "reflections";
             pauseMenuTexts[2].text = "exit";
-            pauseMenuTexts[3].text = "press esc to resume";
+            pauseMenuTexts[3].text = "press to resume";
         }
     }
 
@@ -71,7 +75,7 @@ public class MenuController : MonoBehaviour
         paused = true;
         SwitchPauseMenu(paused);
 
-        if (jSlib.IsRussian())
+        if (isRussian)
         {
             pauseMenuText.text = "ИГРА ОКОНЧЕНА\n\n-";
             totalScorePanel.GetComponentInChildren<Text>().text = "итоговый счёт: " + totalScore;
@@ -97,6 +101,7 @@ public class MenuController : MonoBehaviour
     {
         Time.timeScale = turnOn ? 0f : 1f;
         pauseMenuPanel?.SetActive(turnOn);
+        pauseButton.SetActive(!turnOn);
     }
 
     // we press on reflection [ON] button and it switches to off button -> reflections turn off

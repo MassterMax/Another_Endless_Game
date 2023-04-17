@@ -235,6 +235,6 @@ public class PlayerController : Creature, IBlinkable
         base.OnDeath();
         var endScore = (int)this.totalScore;
         FindObjectOfType<MenuController>().OnDeath(endScore);
-        FindObjectOfType<CallJSlib>().SetToYandexleaderboard(endScore);
+        FindObjectOfType<CallJSlib>().UpdateHighScore(endScore);
     }
 }
