@@ -26,7 +26,7 @@ public class PlayerController : Creature, IBlinkable
     Bar manaBar;
     float mana = 100;  // todo change
     float maxMana = 100;
-    float manaRegen = 2f;
+    float manaRegen = 5f;
 
     private float totalScore = 0;
     [SerializeField] Text playerScore;

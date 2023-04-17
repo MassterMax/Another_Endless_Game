@@ -1498,7 +1498,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &733697490
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2446,7 +2446,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   authorized: 0
-  language: ru
+  playerInitialized: 0
+  language: en
   highScore: 0
 --- !u!1 &955667946
 GameObject:
@@ -3037,6 +3038,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   newGameText: {fileID: 1702448766}
+  newGameButton: {fileID: 1694634029}
   controlsText: {fileID: 1754042400}
   controlsMenuText:
   - {fileID: 883006962}

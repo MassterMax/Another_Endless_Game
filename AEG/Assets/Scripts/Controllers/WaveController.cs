@@ -56,12 +56,12 @@ public class WaveController : MonoBehaviour
 
     void ChangeMonsterCount()
     {
-        monsterCount = (int)((Time.time - startTime) / 60f) + 1;
+        monsterCount = (int)((Time.time - startTime) / 90f) + 1;
 
     }
 
     void ChangeSpawnDilation()
     {
-        spawnDilation = Mathf.Max(2f, startSpawnDilation - (Time.time - startTime) / 90f);
+        spawnDilation = Mathf.Max(3f, startSpawnDilation - (Time.time - startTime) / 90f);
     }
 }

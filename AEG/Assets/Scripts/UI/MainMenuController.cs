@@ -8,6 +8,7 @@ public class MainMenuController : MonoBehaviour
 {
 
     [SerializeField] Text newGameText;
+    [SerializeField] Button newGameButton;
     [SerializeField] Text controlsText;
     [SerializeField] List<Text> controlsMenuText;
     [SerializeField] GameObject controlsPanel;
@@ -96,25 +97,11 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
-    void Start()
+
+    private void SetText()
     {
-        // allowDataButton.SetActive(false);
-        Time.timeScale = 1f;
-        controlsPanel.SetActive(false);
-        jSlib = FindObjectOfType<CallJSlib>();
+        Debug.Log("Unity: SetText() started");
         SetHighScoreText();
-        // spinner.SetActive(false);
-        // if (jSlib.IsLoggined())
-        // {
-        //     loggingButton.SetActive(false);
-        //     loggingText.gameObject.SetActive(true);
-        //     SetLoginText();
-        // }
-        // else
-        // {
-        //     jSlib.SendDataAfterAuthYandex();
-        //     StartCoroutine("UpdateAfterLogging");
-        // }
         if (jSlib.IsRussian())
         {
             newGameText.text = "новая игра";
@@ -128,7 +115,82 @@ public class MainMenuController : MonoBehaviour
             loggingButton.GetComponentInChildren<Text>().text = "log in";
         }
         SetControlsMenuText();
+        Debug.Log("Unity: SetText() finished");
+    }
+    void Start()
+    {
+        // allowDataButton.SetActive(false);
+        Time.timeScale = 1f;
+        controlsPanel.SetActive(false);
+        jSlib = FindObjectOfType<CallJSlib>();
+        // SetText();
+        StartCoroutine("SetLanguageUI");
+        StartCoroutine("SetNewGameUI");
         StartCoroutine("SetLoginUI");
+    }
+
+    private void SetNotInitGameText()
+    {
+        newGameText.fontSize = 100;
+        if (jSlib.IsRussian())
+        {
+            newGameText.text = "не получилось синхронизировать данные игрока, обновите страницу";
+        }
+        else
+        {
+            newGameText.text = "failed to get user data, please, refresh the page";
+        }
+    }
+
+    public IEnumerator SetLanguageUI()
+    {
+        Debug.Log("Unity: SetLanguageUI start");
+        SetText();
+        int attempts = 8;
+        while (attempts > 0)
+        {
+            Debug.Log("Unity: SetLanguageUI attempt " + (4 - attempts));
+            attempts -= 1;
+            if (jSlib.InitLang())
+            {
+                break;
+            }
+            else
+            {
+                yield return new WaitForSeconds(0.25f);
+            }
+        }
+        SetText();
+    }
+
+    public IEnumerator SetNewGameUI()
+    {
+        newGameButton.interactable = false;
+        newGameText.color = new Color(1, 1, 1, 0.5f);
+
+        int attempts = 3;
+        while (attempts > 0)
+        {
+            attempts -= 1;
+            if (jSlib.playerInitialized)
+            {
+                break;
+            }
+            else
+            {
+                yield return new WaitForSeconds(1);
+            }
+        }
+        // SetText();
+        if (jSlib.playerInitialized)
+        {
+            newGameButton.interactable = true;
+            newGameText.color = new Color(1, 1, 1, 1);
+        }
+        else
+        {
+            SetNotInitGameText();
+        }
     }
 
     public IEnumerator SetLoginUI()
@@ -162,45 +224,12 @@ public class MainMenuController : MonoBehaviour
         {
             loggingText.gameObject.SetActive(false);
             loggingButton.SetActive(true);
+            if (!jSlib.playerInitialized)
+            {
+                loggingButton.SetActive(false);
+            }
         }
         SetHighScoreText();
     }
 
-    // public IEnumerator UpdateAfterLogging()
-    // {
-    //     updateAfterLoggingStarted = true;
-    //     Debug.Log("Unity: try to UpdateAfterLogging");
-    //     loggingText.gameObject.SetActive(false);
-    //     loggingButton.SetActive(false);
-    //     spinner.SetActive(true);
-    //     int attempts = 4;
-    //     while (attempts > 0)
-    //     {
-    //         attempts -= 1;
-    //         if (jSlib.IsLoggined() && jSlib.IsHighScoreUpdated())
-    //         {
-    //             spinner.SetActive(false);
-    //             loggingText.gameObject.SetActive(true);
-    //             SetLoginText();
-    //             SetHighScoreText();
-    //             break;
-    //         }
-    //         else
-    //         {
-    //             yield return new WaitForSeconds(4 - attempts);
-    //         }
-    //     }
-
-    //     if (!jSlib.IsLoggined() || !jSlib.IsHighScoreUpdated())
-    //     {
-    //         spinner.SetActive(false);
-    //         loggingButton.SetActive(true);
-    //     }
-    //     // if (jSlib.Username() == "player!")
-    //     // {
-    //     //     allowDataButton.SetActive(true);
-    //     // }
-
-    //     updateAfterLoggingStarted = false;
-    // }
 }
